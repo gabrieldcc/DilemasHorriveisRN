@@ -1,6 +1,19 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut, SlideInLeft, runOnJS, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import * as Sharing from 'expo-sharing';
@@ -10,6 +23,14 @@ import { AdBanner } from '../components/ads/AdBanner';
 import { OptionButton } from '../components/OptionButton';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo } from '../models/game';
+import {
+  adicionarComentarioPergunta,
+  alternarLikeComentario,
+  buscarComentariosPergunta,
+  ComentarioPergunta,
+  contarComentariosPergunta,
+  removerComentarioPergunta,
+} from '../services/commentsService';
 import { useGame } from '../hooks/useGame';
 import { getModoLabel, isModoJogo } from '../utils/gameModes';
 
@@ -20,6 +41,14 @@ export function GameScreen() {
   const [isSharing, setIsSharing] = useState(false);
   const [transitionType, setTransitionType] = useState<'default' | 'back'>('default');
   const [shouldShowLoadingOverlay, setShouldShowLoadingOverlay] = useState(false);
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
+  const [comments, setComments] = useState<ComentarioPergunta[]>([]);
+  const [commentsCount, setCommentsCount] = useState(0);
+  const [isCommentsLoading, setIsCommentsLoading] = useState(false);
+  const [commentInput, setCommentInput] = useState('');
+  const [isSendingComment, setIsSendingComment] = useState(false);
+  const [likingCommentIds, setLikingCommentIds] = useState<Record<string, boolean>>({});
+  const likingInFlightRef = useRef<Record<string, boolean>>({});
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -55,6 +84,35 @@ export function GameScreen() {
     toggleFavorite,
     reload,
   } = useGame(modo);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadCommentsCount = async () => {
+      if (!currentQuestion) {
+        if (isMounted) {
+          setCommentsCount(0);
+        }
+        return;
+      }
+
+      try {
+        const totalComments = await contarComentariosPergunta(currentQuestion);
+        if (isMounted) {
+          setCommentsCount(totalComments);
+        }
+      } catch {
+        if (isMounted) {
+          setCommentsCount(0);
+        }
+      }
+    };
+
+    void loadCommentsCount();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentQuestion?.id, currentQuestion?.modo]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -140,6 +198,132 @@ export function GameScreen() {
     }
   };
 
+  const loadComments = async () => {
+    if (!currentQuestion) {
+      return;
+    }
+    setIsCommentsLoading(true);
+    try {
+      const loaded = await buscarComentariosPergunta(currentQuestion);
+      setComments(loaded);
+      setCommentsCount(loaded.length);
+    } catch (error) {
+      Alert.alert('Erro ao carregar comentarios', error instanceof Error ? error.message : 'Tente novamente.');
+    } finally {
+      setIsCommentsLoading(false);
+    }
+  };
+
+  const handleOpenComments = () => {
+    setShowCommentsModal(true);
+    void loadComments();
+  };
+
+  const handleSubmitComment = async () => {
+    if (!currentQuestion || isSendingComment) {
+      return;
+    }
+
+    const normalized = commentInput.trim();
+    if (normalized.length < 3) {
+      Alert.alert('Comentario curto', 'Digite pelo menos 3 caracteres.');
+      return;
+    }
+
+    setIsSendingComment(true);
+    try {
+      await adicionarComentarioPergunta(currentQuestion, normalized);
+      setCommentInput('');
+      await loadComments();
+    } catch (error) {
+      Alert.alert('Erro ao comentar', error instanceof Error ? error.message : 'Nao foi possivel enviar comentario.');
+    } finally {
+      setIsSendingComment(false);
+    }
+  };
+
+  const handleToggleLikeComment = (commentId: string) => {
+    if (!currentQuestion || likingInFlightRef.current[commentId]) {
+      return;
+    }
+    likingInFlightRef.current[commentId] = true;
+
+    const previousComments = comments;
+    const optimisticComments = previousComments.map((comment) => {
+      if (comment.id !== commentId) {
+        return comment;
+      }
+
+      const willBeLiked = !comment.likedByCurrentUser;
+      return {
+        ...comment,
+        likedByCurrentUser: willBeLiked,
+        likeCount: Math.max(0, comment.likeCount + (willBeLiked ? 1 : -1)),
+      };
+    });
+
+    setComments(optimisticComments);
+    setLikingCommentIds((prev) => ({ ...prev, [commentId]: true }));
+
+    void alternarLikeComentario(currentQuestion, commentId)
+      .then((likedAfterToggle) => {
+        setComments((current) =>
+          current.map((comment) => {
+            if (comment.id !== commentId) {
+              return comment;
+            }
+
+            if (comment.likedByCurrentUser === likedAfterToggle) {
+              return comment;
+            }
+
+            return {
+              ...comment,
+              likedByCurrentUser: likedAfterToggle,
+              likeCount: Math.max(0, comment.likeCount + (likedAfterToggle ? 1 : -1)),
+            };
+          })
+        );
+      })
+      .catch((error) => {
+        setComments(previousComments);
+        Alert.alert('Erro ao curtir', error instanceof Error ? error.message : 'Nao foi possivel atualizar o like.');
+      })
+      .finally(() => {
+        delete likingInFlightRef.current[commentId];
+        setLikingCommentIds((prev) => {
+          const next = { ...prev };
+          delete next[commentId];
+          return next;
+        });
+      });
+  };
+
+  const handleDeleteComment = (commentId: string) => {
+    if (!currentQuestion) {
+      return;
+    }
+
+    Alert.alert('Excluir comentario', 'Deseja excluir este comentario?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Excluir',
+        style: 'destructive',
+        onPress: () => {
+          const previousComments = comments;
+          setComments((current) => current.filter((comment) => comment.id !== commentId));
+          setCommentsCount((value) => Math.max(0, value - 1));
+
+          void removerComentarioPergunta(currentQuestion, commentId).catch((error) => {
+            setComments(previousComments);
+            setCommentsCount(previousComments.length);
+            Alert.alert('Erro ao excluir', error instanceof Error ? error.message : 'Nao foi possivel excluir o comentario.');
+          });
+        },
+      },
+    ]);
+  };
+
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
 
   return (
@@ -190,6 +374,18 @@ export function GameScreen() {
               ) : (
                 <Text style={styles.shareIconText}>↗</Text>
               )}
+            </Pressable>
+            <Pressable
+              onPress={handleOpenComments}
+              disabled={!currentQuestion}
+              style={({ pressed }) => [
+                styles.commentIconButton,
+                pressed && styles.commentIconButtonPressed,
+                !currentQuestion && styles.commentIconButtonDisabled,
+              ]}
+            >
+              <Text style={styles.commentIconText}>💬</Text>
+              {commentsCount > 0 ? <Text style={styles.commentCountText}>{commentsCount}</Text> : null}
             </Pressable>
           </View>
         </View>
@@ -297,6 +493,91 @@ export function GameScreen() {
           <AdBanner />
         </View>
       </GestureDetector>
+      <Modal visible={showCommentsModal} animationType="slide" transparent onRequestClose={() => setShowCommentsModal(false)}>
+        <Pressable
+          style={styles.commentsBackdrop}
+          onPress={() => {
+            Keyboard.dismiss();
+            setShowCommentsModal(false);
+          }}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 24 : 0}
+            style={styles.commentsKeyboardLayer}
+          >
+            <Pressable style={styles.commentsCard} onPress={() => {}}>
+            <View style={styles.commentsHeader}>
+              <Text style={styles.commentsTitle}>Comentarios</Text>
+              <Pressable
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setShowCommentsModal(false);
+                }}
+                style={styles.commentsCloseButton}
+              >
+                <Text style={styles.commentsCloseText}>Fechar</Text>
+              </Pressable>
+            </View>
+            <ScrollView
+              style={styles.commentsList}
+              contentContainerStyle={styles.commentsListContent}
+              keyboardShouldPersistTaps="always"
+            >
+              {isCommentsLoading ? <ActivityIndicator color="#22d3ee" /> : null}
+              {!isCommentsLoading && comments.length === 0 ? (
+                <Text style={styles.commentsEmptyText}>Seja o primeiro a comentar essa pergunta.</Text>
+              ) : null}
+              {comments.map((comment) => (
+                <View key={comment.id} style={styles.commentItem}>
+                  <View style={styles.commentBodyTapArea}>
+                    <Text style={styles.commentAuthor}>{comment.autorNome}</Text>
+                    <Text style={styles.commentText}>{comment.texto}</Text>
+                  </View>
+                  <View style={styles.commentFooter}>
+                    {comment.canDelete ? (
+                      <Pressable
+                        onPress={() => handleDeleteComment(comment.id)}
+                        style={({ pressed }) => [styles.commentDeleteButton, pressed && styles.commentDeleteButtonPressed]}
+                      >
+                        <Text style={styles.commentDeleteText}>Excluir</Text>
+                      </Pressable>
+                    ) : null}
+                    <Pressable
+                      onPressIn={() => handleToggleLikeComment(comment.id)}
+                      disabled={Boolean(likingCommentIds[comment.id])}
+                      style={[
+                        styles.commentLikeButton,
+                        comment.likedByCurrentUser && styles.commentLikeButtonActive,
+                      ]}
+                    >
+                      <Text style={styles.commentLikeIcon}>{comment.likedByCurrentUser ? '❤' : '♡'}</Text>
+                      <Text style={styles.commentLikeCount}>{comment.likeCount}</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            <TextInput
+              value={commentInput}
+              onChangeText={setCommentInput}
+              placeholder="Conte sua historia..."
+              placeholderTextColor="#64748b"
+              multiline
+              maxLength={220}
+              style={styles.commentInput}
+            />
+            <Pressable
+              onPress={() => void handleSubmitComment()}
+              disabled={isSendingComment}
+              style={({ pressed }) => [styles.commentSendButton, pressed && styles.commentSendButtonPressed, isSendingComment && styles.commentSendButtonDisabled]}
+            >
+              <Text style={styles.commentSendButtonText}>{isSendingComment ? 'Enviando...' : 'Enviar comentario'}</Text>
+            </Pressable>
+            </Pressable>
+          </KeyboardAvoidingView>
+        </Pressable>
+      </Modal>
     </ScreenContainer>
   );
 }
@@ -396,6 +677,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 16,
     fontWeight: '700',
+  },
+  commentIconButton: {
+    minWidth: 40,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+    paddingHorizontal: 6,
+  },
+  commentIconButtonPressed: {
+    opacity: 0.85,
+  },
+  commentIconButtonDisabled: {
+    opacity: 0.5,
+  },
+  commentIconText: {
+    fontSize: 14,
+  },
+  commentCountText: {
+    color: '#f8fafc',
+    fontSize: 10,
+    fontWeight: '700',
+    marginTop: -2,
   },
   questionContainer: {
     flex: 1,
@@ -558,5 +865,161 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
     fontWeight: '700',
     fontSize: 16,
+  },
+  commentsBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(2,6,23,0.7)',
+    justifyContent: 'flex-end',
+  },
+  commentsCard: {
+    maxHeight: '78%',
+    backgroundColor: '#0f172a',
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    borderWidth: 1,
+    borderColor: '#1e293b',
+    padding: 14,
+  },
+  commentsKeyboardLayer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  commentsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  commentsTitle: {
+    color: '#f8fafc',
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  commentsCloseButton: {
+    backgroundColor: '#1f2937',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  commentsCloseText: {
+    color: '#e2e8f0',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  commentsList: {
+    maxHeight: 280,
+  },
+  commentsListContent: {
+    paddingBottom: 12,
+  },
+  commentsEmptyText: {
+    color: '#94a3b8',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 14,
+  },
+  commentItem: {
+    backgroundColor: '#111827',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#1f2937',
+    padding: 10,
+    marginBottom: 8,
+  },
+  commentAuthor: {
+    color: '#93c5fd',
+    fontWeight: '700',
+    marginBottom: 4,
+    fontSize: 12,
+  },
+  commentText: {
+    color: '#e2e8f0',
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  commentBodyTapArea: {
+    borderRadius: 10,
+  },
+  commentFooter: {
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
+  },
+  commentDeleteButton: {
+    borderWidth: 1,
+    borderColor: '#7f1d1d',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#2b0b0b',
+  },
+  commentDeleteButtonPressed: {
+    opacity: 0.86,
+  },
+  commentDeleteText: {
+    color: '#fecaca',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  commentLikeButton: {
+    minWidth: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#0b1220',
+  },
+  commentLikeButtonActive: {
+    borderColor: '#fb7185',
+    backgroundColor: '#3f1421',
+  },
+  commentLikeIcon: {
+    color: '#fecdd3',
+    fontSize: 14,
+    lineHeight: 16,
+    marginTop: -1,
+    fontWeight: '700',
+  },
+  commentLikeCount: {
+    color: '#f8fafc',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  commentInput: {
+    minHeight: 72,
+    maxHeight: 120,
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+    borderRadius: 12,
+    color: '#f8fafc',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    textAlignVertical: 'top',
+    marginTop: 4,
+  },
+  commentSendButton: {
+    marginTop: 10,
+    backgroundColor: '#0e7490',
+    borderRadius: 12,
+    paddingVertical: 12,
+  },
+  commentSendButtonPressed: {
+    opacity: 0.88,
+  },
+  commentSendButtonDisabled: {
+    opacity: 0.65,
+  },
+  commentSendButtonText: {
+    color: '#ecfeff',
+    textAlign: 'center',
+    fontWeight: '800',
   },
 });

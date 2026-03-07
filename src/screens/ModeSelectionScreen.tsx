@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { hasSeenModeTutorial, hasSeenTutorial } from '../hooks/useTutorialGate';
 import { ModoJogo } from '../models/game';
+import { getUserProfile, saveUserProfile } from '../services/profileService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
 
@@ -18,6 +19,28 @@ export function ModeSelectionScreen() {
   const [logoTapCount, setLogoTapCount] = useState(0);
   const [adminGestureArmed, setAdminGestureArmed] = useState(false);
   const [loadingMode, setLoadingMode] = useState<string | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadProfile = async () => {
+      const profile = await getUserProfile();
+      if (!isMounted) {
+        return;
+      }
+      setShowProfileModal(!profile);
+    };
+
+    void loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleLogoTap = () => {
     const nextCount = logoTapCount + 1;
@@ -58,6 +81,10 @@ export function ModeSelectionScreen() {
   };
 
   const handleSelectMode = async (mode: ModoJogo) => {
+    if (showProfileModal) {
+      return;
+    }
+
     setLoadingMode(mode);
     try {
       const seenModeTutorial = await hasSeenModeTutorial(mode);
@@ -83,6 +110,23 @@ export function ModeSelectionScreen() {
       });
     } finally {
       setLoadingMode(null);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (isSavingProfile) {
+      return;
+    }
+
+    setProfileError(null);
+    setIsSavingProfile(true);
+    try {
+      await saveUserProfile(firstName, lastName);
+      setShowProfileModal(false);
+    } catch (error) {
+      setProfileError(error instanceof Error ? error.message : 'Nao foi possivel salvar seu nome.');
+    } finally {
+      setIsSavingProfile(false);
     }
   };
 
@@ -126,6 +170,46 @@ export function ModeSelectionScreen() {
                 <Text style={styles.modalButtonText}>Entrar</Text>
               </Pressable>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={showProfileModal} transparent animationType="fade" onRequestClose={() => {}}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Como podemos te chamar?</Text>
+            <Text style={styles.profileHelperText}>Esse nome sera usado nos seus comentarios.</Text>
+            <TextInput
+              value={firstName}
+              onChangeText={setFirstName}
+              placeholder="Nome"
+              placeholderTextColor="#64748b"
+              autoCapitalize="words"
+              returnKeyType="next"
+              style={styles.modalInput}
+            />
+            <TextInput
+              value={lastName}
+              onChangeText={setLastName}
+              placeholder="Sobrenome"
+              placeholderTextColor="#64748b"
+              autoCapitalize="words"
+              returnKeyType="done"
+              style={styles.modalInput}
+            />
+            {profileError ? <Text style={styles.modalError}>{profileError}</Text> : null}
+            <Pressable
+              style={({ pressed }) => [
+                styles.modalButtonPrimary,
+                styles.profileSaveButton,
+                pressed && styles.profileSaveButtonPressed,
+                isSavingProfile && styles.profileSaveButtonDisabled,
+              ]}
+              disabled={isSavingProfile}
+              onPress={() => void handleSaveProfile()}
+            >
+              <Text style={styles.modalButtonText}>{isSavingProfile ? 'Salvando...' : 'Continuar'}</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -184,11 +268,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
+    marginBottom: 10,
   },
   modalError: {
     color: '#fca5a5',
     marginTop: 8,
     fontSize: 13,
+  },
+  profileHelperText: {
+    color: '#94a3b8',
+    marginBottom: 12,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  profileSaveButton: {
+    marginTop: 8,
+    alignSelf: 'flex-end',
+  },
+  profileSaveButtonPressed: {
+    opacity: 0.9,
+  },
+  profileSaveButtonDisabled: {
+    opacity: 0.65,
   },
   modalActions: {
     flexDirection: 'row',
