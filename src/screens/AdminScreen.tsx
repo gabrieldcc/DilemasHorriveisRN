@@ -55,6 +55,7 @@ export function AdminScreen() {
   const [editOpcaoB, setEditOpcaoB] = useState('');
   const [editModo, setEditModo] = useState<ModoJogoConteudo>(ModoJogo.leve);
   const [moderationBusyId, setModerationBusyId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'perguntas' | 'sugestoes'>('sugestoes');
 
   useEffect(() => {
     if (!isAdminUnlocked) {
@@ -235,6 +236,28 @@ export function AdminScreen() {
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Painel Admin</Text>
         <Text style={styles.subtitle}>Gerencie perguntas e modere sugestoes</Text>
+        <View style={styles.topTabsWrap}>
+          <Pressable
+            onPress={() => setActiveTab('sugestoes')}
+            style={({ pressed }) => [
+              styles.topTabButton,
+              activeTab === 'sugestoes' && styles.topTabButtonActive,
+              pressed && styles.modeButtonPressed,
+            ]}
+          >
+            <Text style={[styles.topTabText, activeTab === 'sugestoes' && styles.topTabTextActive]}>Sugestoes</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setActiveTab('perguntas')}
+            style={({ pressed }) => [
+              styles.topTabButton,
+              activeTab === 'perguntas' && styles.topTabButtonActive,
+              pressed && styles.modeButtonPressed,
+            ]}
+          >
+            <Text style={[styles.topTabText, activeTab === 'perguntas' && styles.topTabTextActive]}>Perguntas</Text>
+          </Pressable>
+        </View>
         <Pressable
           onPress={() => {
             lockAdmin();
@@ -245,93 +268,102 @@ export function AdminScreen() {
           <Text style={styles.logoutText}>Sair do admin</Text>
         </Pressable>
 
-        <Text style={styles.sectionTitle}>Modo</Text>
-        <View style={styles.modeWrap}>
-          {CONTENT_GAME_MODES.map((item) => (
+        {activeTab === 'perguntas' ? (
+          <>
+            <Text style={styles.sectionTitle}>Modo</Text>
+            <View style={styles.modeWrap}>
+              {CONTENT_GAME_MODES.map((item) => (
+                <Pressable
+                  key={item.value}
+                  onPress={() => setModo(item.value)}
+                  style={({ pressed }) => [
+                    styles.modeButton,
+                    modo === item.value && styles.modeButtonSelected,
+                    pressed && styles.modeButtonPressed,
+                  ]}
+                >
+                  <Text style={[styles.modeText, modo === item.value && styles.modeTextSelected]}>{item.label}</Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <Text style={styles.sectionTitle}>Nova Pergunta</Text>
+            <TextInput
+              placeholder="Titulo"
+              placeholderTextColor="#64748b"
+              value={titulo}
+              onChangeText={setTitulo}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Opcao A"
+              placeholderTextColor="#64748b"
+              value={opcaoA}
+              onChangeText={setOpcaoA}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="Opcao B"
+              placeholderTextColor="#64748b"
+              value={opcaoB}
+              onChangeText={setOpcaoB}
+              style={styles.input}
+            />
             <Pressable
-              key={item.value}
-              onPress={() => setModo(item.value)}
-              style={({ pressed }) => [
-                styles.modeButton,
-                modo === item.value && styles.modeButtonSelected,
-                pressed && styles.modeButtonPressed,
-              ]}
+              style={({ pressed }) => [styles.saveButton, pressed && styles.saveButtonPressed, saving && styles.disabled]}
+              onPress={handleSave}
+              disabled={saving}
             >
-              <Text style={[styles.modeText, modo === item.value && styles.modeTextSelected]}>{item.label}</Text>
+              <Text style={styles.saveButtonText}>{saving ? 'Salvando...' : 'Salvar pergunta'}</Text>
             </Pressable>
-          ))}
-        </View>
 
-        <Text style={styles.sectionTitle}>Nova Pergunta</Text>
-        <TextInput
-          placeholder="Titulo"
-          placeholderTextColor="#64748b"
-          value={titulo}
-          onChangeText={setTitulo}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Opcao A"
-          placeholderTextColor="#64748b"
-          value={opcaoA}
-          onChangeText={setOpcaoA}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Opcao B"
-          placeholderTextColor="#64748b"
-          value={opcaoB}
-          onChangeText={setOpcaoB}
-          style={styles.input}
-        />
-        <Pressable
-          style={({ pressed }) => [styles.saveButton, pressed && styles.saveButtonPressed, saving && styles.disabled]}
-          onPress={handleSave}
-          disabled={saving}
-        >
-          <Text style={styles.saveButtonText}>{saving ? 'Salvando...' : 'Salvar pergunta'}</Text>
-        </Pressable>
-
-        <Text style={styles.sectionTitle}>Perguntas de {getModoLabel(modo)}</Text>
-        {loading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        {!loading && !error && items.length === 0 ? <Text style={styles.emptyText}>Nenhuma pergunta nesse modo.</Text> : null}
-        {items.map((item) => (
-          <View key={item.id} style={styles.itemCard}>
-            <Text style={styles.itemTitle}>{item.titulo}</Text>
-            <Text style={styles.itemOption}>A: {item.opcaoA}</Text>
-            <Text style={styles.itemOption}>B: {item.opcaoB}</Text>
-            <Pressable onPress={() => handleDelete(item.id)} style={styles.deleteButton}>
-              <Text style={styles.deleteText}>Remover</Text>
-            </Pressable>
-          </View>
-        ))}
-
-        <Text style={styles.sectionTitle}>{suggestionSectionTitle}</Text>
-        <View style={styles.filterWrap}>
-          {SUGGESTION_FILTERS.map((item) => (
-            <Pressable
-              key={item.key}
-              onPress={() => setSuggestionFilter(item.key)}
-              style={({ pressed }) => [
-                styles.filterButton,
-                suggestionFilter === item.key && styles.filterButtonSelected,
-                pressed && styles.modeButtonPressed,
-              ]}
-            >
-              <Text style={[styles.filterButtonText, suggestionFilter === item.key && styles.filterButtonTextSelected]}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-        {suggestionsLoading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
-        {suggestionsError ? <Text style={styles.errorText}>{suggestionsError}</Text> : null}
-        {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
-          <Text style={styles.emptyText}>Nenhuma sugestao encontrada.</Text>
+            <Text style={styles.sectionTitle}>Perguntas de {getModoLabel(modo)}</Text>
+            {loading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            {!loading && !error && items.length === 0 ? <Text style={styles.emptyText}>Nenhuma pergunta nesse modo.</Text> : null}
+            {items.map((item) => (
+              <View key={item.id} style={styles.itemCard}>
+                <Text style={styles.itemTitle}>{item.titulo}</Text>
+                <Text style={styles.itemOption}>A: {item.opcaoA}</Text>
+                <Text style={styles.itemOption}>B: {item.opcaoB}</Text>
+                <Pressable onPress={() => handleDelete(item.id)} style={styles.deleteButton}>
+                  <Text style={styles.deleteText}>Remover</Text>
+                </Pressable>
+              </View>
+            ))}
+          </>
         ) : null}
 
-        {suggestions.map((item) => {
+        {activeTab === 'sugestoes' ? (
+          <>
+            <Text style={styles.sectionTitle}>{suggestionSectionTitle}</Text>
+            <View style={styles.filterWrap}>
+              {SUGGESTION_FILTERS.map((item) => (
+                <Pressable
+                  key={item.key}
+                  onPress={() => setSuggestionFilter(item.key)}
+                  style={({ pressed }) => [
+                    styles.filterButton,
+                    suggestionFilter === item.key && styles.filterButtonSelected,
+                    pressed && styles.modeButtonPressed,
+                  ]}
+                >
+                  <Text style={[styles.filterButtonText, suggestionFilter === item.key && styles.filterButtonTextSelected]}>
+                    {item.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            {suggestionsLoading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
+            {suggestionsError ? <Text style={styles.errorText}>{suggestionsError}</Text> : null}
+            {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
+              <Text style={styles.emptyText}>Nenhuma sugestao encontrada.</Text>
+            ) : null}
+          </>
+        ) : null}
+
+        {activeTab === 'sugestoes'
+          ? suggestions.map((item) => {
           const isEditing = editingSuggestionId === item.id;
           const isBusy = moderationBusyId === item.id;
           const canModerate = item.status === 'pendente';
@@ -439,7 +471,8 @@ export function AdminScreen() {
               </View>
             </View>
           );
-        })}
+            })
+          : null}
       </ScrollView>
     </ScreenContainer>
   );
@@ -469,7 +502,32 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontSize: 16,
     marginTop: 6,
+    marginBottom: 10,
+  },
+  topTabsWrap: {
+    flexDirection: 'row',
+    gap: 8,
     marginBottom: 8,
+  },
+  topTabButton: {
+    backgroundColor: '#111827',
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  topTabButtonActive: {
+    backgroundColor: '#0e7490',
+    borderColor: '#22d3ee',
+  },
+  topTabText: {
+    color: '#cbd5e1',
+    fontWeight: '700',
+    fontSize: 13,
+  },
+  topTabTextActive: {
+    color: '#ecfeff',
   },
   logoutButton: {
     alignSelf: 'flex-start',
@@ -704,4 +762,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
