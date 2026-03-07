@@ -2,6 +2,8 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const plugins: ExpoConfig['plugins'] = ['expo-router'];
+  plugins.push('@react-native-firebase/app');
+  plugins.push('@react-native-firebase/crashlytics');
 
   if (process.env.EXPO_PUBLIC_ADMOB_ANDROID_APP_ID || process.env.EXPO_PUBLIC_ADMOB_IOS_APP_ID) {
     plugins.push([

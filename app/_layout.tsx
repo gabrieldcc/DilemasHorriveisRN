@@ -4,18 +4,22 @@ import { StatusBar } from 'expo-status-bar';
 import { doc, getDoc } from 'firebase/firestore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
 
 export default function RootLayout() {
   useEffect(() => {
+    void initializeCrashlytics();
     const runFirebaseStartupCheck = async () => {
       try {
         const db = getFirebaseFirestore();
         await getDoc(doc(db, 'perguntas', 'leve'));
+        logCrashlyticsMessage('Firebase startup check concluido com sucesso.');
         if (__DEV__) {
           console.info('[Firebase] Startup check concluido com sucesso.');
         }
       } catch (error) {
+        recordCrashlyticsError(error, 'Falha no Firebase startup check');
         if (__DEV__) {
           const message = error instanceof Error ? error.message : 'Erro desconhecido no startup check.';
           console.error(`[Firebase] Startup check falhou: ${message}`);
