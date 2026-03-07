@@ -4,8 +4,8 @@ export const GAME_MODES = [
   { value: ModoJogo.leve, label: 'Leve' },
   { value: ModoJogo.pesado, label: 'Pesado' },
   { value: ModoJogo.nerd, label: 'Nerd' },
-  { value: ModoJogo.culturaBR, label: 'Cultura Brasileira' },
-  { value: ModoJogo.adultos, label: 'Adultos' },
+  // { value: ModoJogo.culturaBR, label: 'Cultura Brasileira' },
+  // { value: ModoJogo.adultos, label: 'Adultos' },
 ] as const;
 
 export function isModoJogo(value: string): value is ModoJogo {

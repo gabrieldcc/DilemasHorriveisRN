@@ -1,5 +1,5 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { OptionButton } from '../components/OptionButton';
@@ -93,23 +93,29 @@ export function GameScreen() {
           exiting={FadeOut.duration(140)}
           style={styles.questionContainer}
         >
-          <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
-          <View style={styles.optionsContainer}>
-            <OptionButton
-              label="Opcao A"
-              value={currentQuestion.opcaoA}
-              isSelected={selectedOption === 'A'}
-              onPress={() => selectOption('A')}
-              disabled={selectedOption !== null}
-            />
-            <OptionButton
-              label="Opcao B"
-              value={currentQuestion.opcaoB}
-              isSelected={selectedOption === 'B'}
-              onPress={() => selectOption('B')}
-              disabled={selectedOption !== null}
-            />
-          </View>
+          <ScrollView
+            style={styles.scrollArea}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
+            <View style={styles.optionsContainer}>
+              <OptionButton
+                label="Opcao A"
+                value={currentQuestion.opcaoA}
+                isSelected={selectedOption === 'A'}
+                onPress={() => selectOption('A')}
+                disabled={selectedOption !== null}
+              />
+              <OptionButton
+                label="Opcao B"
+                value={currentQuestion.opcaoB}
+                isSelected={selectedOption === 'B'}
+                onPress={() => selectOption('B')}
+                disabled={selectedOption !== null}
+              />
+            </View>
+          </ScrollView>
         </Animated.View>
       ) : null}
     </ScreenContainer>
@@ -164,6 +170,12 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flex: 1,
+  },
+  scrollArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 24,
   },
   questionTitle: {
     color: '#f8fafc',
