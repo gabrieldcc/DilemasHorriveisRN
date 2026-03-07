@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
-import { markModeTutorialAsSeen, markTutorialAsSeen } from '../hooks/useTutorialGate';
+import { hasSeenTutorial, markModeTutorialAsSeen, markTutorialAsSeen } from '../hooks/useTutorialGate';
 import { ModoJogo } from '../models/game';
 import { isModoJogo } from '../utils/gameModes';
 
@@ -52,9 +52,16 @@ export function TutorialScreen() {
     }
 
     setLoading(true);
+    const firstAppTutorial = !(await hasSeenTutorial());
     await markTutorialAsSeen();
     await markModeTutorialAsSeen(mode as ModoJogo);
-    router.replace({ pathname: '/game', params: { mode: mode as string } });
+    router.replace({
+      pathname: '/game',
+      params: {
+        mode: mode as string,
+        favoriteHint: firstAppTutorial ? '1' : undefined,
+      },
+    });
   };
 
   return (

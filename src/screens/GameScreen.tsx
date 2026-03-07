@@ -1,4 +1,5 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 
@@ -10,7 +11,14 @@ import { getModoLabel, isModoJogo } from '../utils/gameModes';
 
 export function GameScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ mode?: string }>();
+  const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string }>();
+  const [showFavoriteHint, setShowFavoriteHint] = useState(false);
+
+  useEffect(() => {
+    if (params.favoriteHint === '1') {
+      setShowFavoriteHint(true);
+    }
+  }, [params.favoriteHint]);
 
   if (!params.mode || !isModoJogo(params.mode)) {
     return (
@@ -86,6 +94,20 @@ export function GameScreen() {
           </Pressable>
         </View>
       </View>
+      {showFavoriteHint ? (
+        <View style={styles.favoriteHintOverlay}>
+          <View style={styles.favoriteHintBubble}>
+            <Text style={styles.favoriteHintTitle}>Dica rapida</Text>
+            <Text style={styles.favoriteHintText}>
+              Toque na estrela para favoritar este dilema e acessar depois no modo Favoritas.
+            </Text>
+            <Pressable onPress={() => setShowFavoriteHint(false)} style={styles.favoriteHintButton}>
+              <Text style={styles.favoriteHintButtonText}>Entendi</Text>
+            </Pressable>
+          </View>
+          <Text style={styles.favoriteHintArrow}>↗</Text>
+        </View>
+      ) : null}
 
       {isLoading ? (
         <View style={styles.centered}>
@@ -234,6 +256,51 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flex: 1,
+  },
+  favoriteHintOverlay: {
+    position: 'absolute',
+    right: 18,
+    top: 64,
+    zIndex: 10,
+    alignItems: 'flex-end',
+  },
+  favoriteHintBubble: {
+    maxWidth: 270,
+    backgroundColor: '#0f172a',
+    borderWidth: 1,
+    borderColor: '#1e293b',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  favoriteHintTitle: {
+    color: '#f8fafc',
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  favoriteHintText: {
+    color: '#cbd5e1',
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  favoriteHintButton: {
+    marginTop: 8,
+    alignSelf: 'flex-end',
+    backgroundColor: '#0e7490',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  favoriteHintButtonText: {
+    color: '#ecfeff',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+  favoriteHintArrow: {
+    color: '#38bdf8',
+    fontSize: 20,
+    marginTop: 2,
+    marginRight: 8,
   },
   scrollArea: {
     flex: 1,
