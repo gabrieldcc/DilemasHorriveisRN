@@ -490,12 +490,12 @@ const styles = StyleSheet.create({
   lockedText: {
     color: '#fca5a5',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   title: {
     color: '#f8fafc',
     fontSize: 34,
-    fontWeight: '800',
+    fontWeight: '500',
     marginTop: 8,
   },
   subtitle: {
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
   },
   topTabText: {
     color: '#cbd5e1',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 13,
   },
   topTabTextActive: {
@@ -539,14 +539,14 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#ffedd5',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   sectionTitle: {
     color: '#cbd5e1',
     marginTop: 14,
     marginBottom: 8,
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 16,
   },
   modeWrap: {
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
   modeText: {
     color: '#cbd5e1',
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   modeTextSelected: {
     color: '#ecfeff',
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#ecfeff',
     textAlign: 'center',
-    fontWeight: '800',
+    fontWeight: '500',
     fontSize: 16,
   },
   disabled: {
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     color: '#f8fafc',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 17,
     marginBottom: 6,
   },
@@ -651,7 +651,7 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     color: '#fee2e2',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   filterWrap: {
@@ -674,7 +674,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     color: '#cbd5e1',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   filterButtonTextSelected: {
@@ -698,17 +698,17 @@ const styles = StyleSheet.create({
   suggestionAuthor: {
     color: '#93c5fd',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   suggestionMeta: {
     color: '#94a3b8',
     fontSize: 11,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   suggestionMode: {
     color: '#67e8f9',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '500',
     marginTop: 2,
   },
   editInput: {
@@ -759,6 +759,6 @@ const styles = StyleSheet.create({
   actionText: {
     color: '#f8fafc',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '500',
   },
 });

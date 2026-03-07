@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#f8fafc',
     fontSize: 30,
-    fontWeight: '800',
+    fontWeight: '500',
     marginTop: 6,
   },
   subtitle: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#cbd5e1',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 6,
     marginTop: 8,
   },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   modeText: {
     color: '#cbd5e1',
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   modeTextSelected: {
     color: '#ecfeff',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     color: '#ecfeff',
-    fontWeight: '800',
+    fontWeight: '500',
     fontSize: 16,
   },
   secondaryButton: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#f8fafc',
-    fontWeight: '700',
+    fontWeight: '500',
   },
   disabled: {
     opacity: 0.65,

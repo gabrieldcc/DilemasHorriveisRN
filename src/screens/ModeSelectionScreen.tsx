@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
     fontSize: 34,
     lineHeight: 38,
-    fontWeight: '800',
+    fontWeight: '500',
     textAlign: 'center',
   },
   subtitle: {
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   },
   suggestButtonText: {
     color: '#e2e8f0',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 15,
   },
   modalBackdrop: {
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     color: '#f8fafc',
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 12,
   },
   modalInput: {
@@ -335,6 +335,6 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: '#f8fafc',
-    fontWeight: '700',
+    fontWeight: '500',
   },
 });

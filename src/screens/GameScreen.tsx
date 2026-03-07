@@ -640,13 +640,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 14,
   },
   progress: {
     color: '#94a3b8',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   topBarRight: {
     flexDirection: 'row',
@@ -669,7 +669,7 @@ const styles = StyleSheet.create({
   tutorialIconText: {
     color: '#e2e8f0',
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '500',
     lineHeight: 20,
   },
   favoriteIconButton: {
@@ -717,7 +717,7 @@ const styles = StyleSheet.create({
     color: '#bae6fd',
     fontSize: 16,
     lineHeight: 16,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   commentIconButton: {
     minWidth: 40,
@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
   commentCountText: {
     color: '#f8fafc',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '500',
     marginTop: -2,
   },
   questionContainer: {
@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
   },
   favoriteHintTitle: {
     color: '#f8fafc',
-    fontWeight: '800',
+    fontWeight: '500',
     marginBottom: 4,
   },
   favoriteHintText: {
@@ -784,7 +784,7 @@ const styles = StyleSheet.create({
   },
   favoriteHintButtonText: {
     color: '#ecfeff',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   favoriteHintArrow: {
@@ -812,7 +812,7 @@ const styles = StyleSheet.create({
   shareExportAppName: {
     color: '#ffffff',
     fontSize: 27,
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 12,
     textAlign: 'left',
   },
@@ -827,7 +827,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 27,
     lineHeight: 33,
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 14,
   },
   shareExportOption: {
@@ -842,7 +842,7 @@ const styles = StyleSheet.create({
   shareExportOptionLabel: {
     color: '#a5f3fc',
     textTransform: 'uppercase',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: 11,
     marginBottom: 4,
   },
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
     fontSize: 17,
     lineHeight: 23,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   shareExportVsWrap: {
     alignItems: 'center',
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
   shareExportVsText: {
     color: '#a5f3fc',
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '500',
     letterSpacing: 1,
   },
   shareExportCtaRow: {
@@ -877,13 +877,13 @@ const styles = StyleSheet.create({
   shareExportStoreText: {
     color: '#cbd5e1',
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   questionTitle: {
     color: '#f8fafc',
     fontSize: 34,
     lineHeight: 40,
-    fontWeight: '800',
+    fontWeight: '500',
     marginBottom: 20,
   },
   optionsContainer: {
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
   doneTitle: {
     color: '#f8fafc',
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: '500',
   },
   secondaryButton: {
     backgroundColor: '#1e293b',
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#f8fafc',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 16,
   },
   commentsBackdrop: {
@@ -979,7 +979,7 @@ const styles = StyleSheet.create({
   commentsTitle: {
     color: '#f8fafc',
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '500',
   },
   commentsCloseButton: {
     backgroundColor: '#1f2937',
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
   },
   commentsCloseText: {
     color: '#e2e8f0',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   commentsList: {
@@ -1014,7 +1014,7 @@ const styles = StyleSheet.create({
   },
   commentAuthor: {
     color: '#93c5fd',
-    fontWeight: '700',
+    fontWeight: '500',
     marginBottom: 4,
     fontSize: 12,
   },
@@ -1046,7 +1046,7 @@ const styles = StyleSheet.create({
   },
   commentDeleteText: {
     color: '#fecaca',
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 12,
   },
   commentLikeButton: {
@@ -1071,12 +1071,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
     marginTop: -1,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   commentLikeCount: {
     color: '#f8fafc',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   commentInput: {
     minHeight: 72,
@@ -1106,6 +1106,6 @@ const styles = StyleSheet.create({
   commentSendButtonText: {
     color: '#ecfeff',
     textAlign: 'center',
-    fontWeight: '800',
+    fontWeight: '500',
   },
 });

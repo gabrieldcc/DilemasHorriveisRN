@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#f8fafc',
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: '500',
     textAlign: 'center',
   },
 });

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#f8fafc',
     fontSize: 34,
-    fontWeight: '800',
+    fontWeight: '500',
     marginBottom: 20,
   },
   text: {
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   modeTipsTitle: {
     color: '#e2e8f0',
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: '500',
     marginTop: 10,
     marginBottom: 8,
   },
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ecfeff',
     textAlign: 'center',
-    fontWeight: '800',
+    fontWeight: '500',
     fontSize: 18,
   },
 });

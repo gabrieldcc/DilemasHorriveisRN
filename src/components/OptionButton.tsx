@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   optionLabel: {
     color: '#93c5fd',
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: '500',
     marginBottom: 8,
     textTransform: 'uppercase',
   },
@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
     fontSize: 24,
     lineHeight: 30,
-    fontWeight: '700',
+    fontWeight: '500',
   },
 });
