@@ -1,6 +1,6 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 
 import { OptionButton } from '../components/OptionButton';
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -39,6 +39,16 @@ export function GameScreen() {
     toggleFavorite,
     reload,
   } = useGame(modo);
+  const favoriteScale = useSharedValue(1);
+
+  const favoriteIconAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: favoriteScale.value }],
+  }));
+
+  const handleFavoritePress = () => {
+    favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
+    void toggleFavorite();
+  };
 
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
 
@@ -57,7 +67,7 @@ export function GameScreen() {
             <Text style={styles.tutorialIconText}>?</Text>
           </Pressable>
           <Pressable
-            onPress={() => void toggleFavorite()}
+            onPress={handleFavoritePress}
             disabled={!currentQuestion || isFavoriteLoading}
             style={({ pressed }) => [
               styles.favoriteIconButton,
@@ -66,7 +76,13 @@ export function GameScreen() {
               (!currentQuestion || isFavoriteLoading) && styles.favoriteIconButtonDisabled,
             ]}
           >
-            <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
+            <Animated.View style={favoriteIconAnimatedStyle}>
+              {isFavoriteLoading ? (
+                <ActivityIndicator size="small" color="#fde68a" />
+              ) : (
+                <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
+              )}
+            </Animated.View>
           </Pressable>
         </View>
       </View>

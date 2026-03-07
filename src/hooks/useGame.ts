@@ -85,6 +85,9 @@ export function useGame(modo: ModoJogo) {
       return;
     }
 
+    const previousValue = isFavorite;
+    const optimisticValue = !previousValue;
+    setIsFavorite(optimisticValue);
     setIsFavoriteLoading(true);
     try {
       const nextValue = await alternarPerguntaFavorita(currentQuestion);
@@ -93,10 +96,15 @@ export function useGame(modo: ModoJogo) {
       if (modo === ModoJogo.favoritas && !nextValue) {
         await loadQuestions(modo);
       }
+    } catch (error) {
+      setIsFavorite(previousValue);
+      if (__DEV__) {
+        console.error('[useGame] Falha ao alternar favorito:', error);
+      }
     } finally {
       setIsFavoriteLoading(false);
     }
-  }, [currentQuestion, isFavoriteLoading, loadQuestions, modo]);
+  }, [currentQuestion, isFavorite, isFavoriteLoading, loadQuestions, modo]);
 
   return {
     currentQuestion,
