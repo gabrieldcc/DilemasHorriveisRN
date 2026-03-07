@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { doc, getDoc } from 'firebase/firestore';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getFirebaseFirestore } from '../src/services/firebase';
 
@@ -26,7 +27,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -42,6 +43,6 @@ export default function RootLayout() {
         <Stack.Screen name="game" options={{ title: 'Dilemas Horríveis' }} />
         <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
       </Stack>
-    </>
+    </GestureHandlerRootView>
   );
 }

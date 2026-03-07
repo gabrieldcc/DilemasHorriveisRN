@@ -1,7 +1,8 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, PanResponder, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, SlideInLeft, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeOut, SlideInLeft, runOnJS, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
 
@@ -18,6 +19,7 @@ export function GameScreen() {
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [transitionType, setTransitionType] = useState<'default' | 'back'>('default');
+  const [shouldShowLoadingOverlay, setShouldShowLoadingOverlay] = useState(false);
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -53,27 +55,41 @@ export function GameScreen() {
     toggleFavorite,
     reload,
   } = useGame(modo);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setShouldShowLoadingOverlay(false);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setShouldShowLoadingOverlay(true);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [isLoading]);
   const favoriteScale = useSharedValue(1);
   const shareTemplateRef = useRef<View | null>(null);
-  const swipePanResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) =>
-        Math.abs(gestureState.dx) > 18 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy) * 1.2,
-      onPanResponderRelease: (_, gestureState) => {
-        if (selectedOption !== null) {
-          return;
-        }
-
-        if (gestureState.dx > 70 && Math.abs(gestureState.dy) < 40) {
-          setTransitionType('back');
-          previousQuestion();
-        }
-      },
-    })
-  ).current;
   const favoriteIconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: favoriteScale.value }],
   }));
+
+  const handleSwipeBack = () => {
+    if (selectedOption !== null) {
+      return;
+    }
+    setTransitionType('back');
+    previousQuestion();
+  };
+
+  const swipeGesture = Gesture.Pan()
+    .activeOffsetX([30, 9999])
+    .failOffsetY([-20, 20])
+    .onEnd((event: { translationX: number; translationY: number }) => {
+      if (event.translationX > 70 && Math.abs(event.translationY) < 40) {
+        runOnJS(handleSwipeBack)();
+      }
+    });
 
   const handleFavoritePress = () => {
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
@@ -128,8 +144,9 @@ export function GameScreen() {
 
   return (
     <ScreenContainer>
-      <View style={styles.gestureLayer} {...swipePanResponder.panHandlers}>
-        <View style={styles.topBar}>
+      <GestureDetector gesture={swipeGesture}>
+        <View style={styles.gestureLayer}>
+          <View style={styles.topBar}>
           <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
           <View style={styles.topBarRight}>
             <Text style={styles.progress}>
@@ -190,13 +207,6 @@ export function GameScreen() {
             <Text style={styles.favoriteHintArrow}>↗</Text>
           </View>
         ) : null}
-        {isLoading ? (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color="#22d3ee" />
-            <Text style={styles.helperText}>Carregando perguntas...</Text>
-          </View>
-        ) : null}
-
         {!isLoading && error ? (
           <View style={styles.centered}>
             <Text style={styles.errorText}>{error}</Text>
@@ -228,7 +238,7 @@ export function GameScreen() {
           </View>
         ) : null}
 
-        {currentQuestion ? (
+          {currentQuestion ? (
           <Animated.View
             key={currentQuestion.id}
             entering={transitionType === 'back' ? SlideInLeft.duration(190) : FadeIn.duration(220)}
@@ -261,8 +271,14 @@ export function GameScreen() {
               </View>
             </ScrollView>
           </Animated.View>
-        ) : null}
-        {currentQuestion ? (
+          ) : null}
+          {isLoading && shouldShowLoadingOverlay ? (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#22d3ee" />
+            <Text style={styles.loadingText}>Carregando perguntas...</Text>
+          </View>
+          ) : null}
+          {currentQuestion ? (
           <View style={styles.hiddenShareCanvas} pointerEvents="none">
             <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
               <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
@@ -277,9 +293,10 @@ export function GameScreen() {
               </View>
             </View>
           </View>
-        ) : null}
-        <AdBanner />
-      </View>
+          ) : null}
+          <AdBanner />
+        </View>
+      </GestureDetector>
     </ScreenContainer>
   );
 }
@@ -497,6 +514,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   helperText: {
+    marginTop: 12,
+    color: '#cbd5e1',
+    textAlign: 'center',
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(11, 18, 32, 0.95)',
+    zIndex: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  loadingText: {
     marginTop: 12,
     color: '#cbd5e1',
     textAlign: 'center',

@@ -27,7 +27,14 @@ export const useGameStore = create<GameState>((set, get) => ({
   isLoading: false,
   error: null,
   loadQuestions: async (modo) => {
-    set({ isLoading: true, error: null, mode: modo, selectedOption: null, currentIndex: 0 });
+    set({
+      isLoading: true,
+      error: null,
+      mode: modo,
+      selectedOption: null,
+      currentIndex: 0,
+      questions: [],
+    });
 
     try {
       const perguntas = await buscarPerguntasPorModo(modo);
