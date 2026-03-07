@@ -90,7 +90,7 @@ export function ModeSelectionScreen() {
     <ScreenContainer>
       <View style={styles.headerContainer}>
         <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
-          <Text style={styles.title}>Dilemas Horriveis</Text>
+          <Text style={styles.title}>Dilemas Horríveis</Text>
         </Pressable>
         <Text style={styles.subtitle}>Escolha um modo para comecar</Text>
       </View>
@@ -135,19 +135,22 @@ export function ModeSelectionScreen() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: 20,
+    marginTop: 48,
     marginBottom: 24,
+    alignItems: 'center',
   },
   title: {
     color: '#f8fafc',
-    fontSize: 40,
-    lineHeight: 44,
+    fontSize: 34,
+    lineHeight: 38,
     fontWeight: '800',
+    textAlign: 'center',
   },
   subtitle: {
     marginTop: 8,
     color: '#94a3b8',
     fontSize: 18,
+    textAlign: 'center',
   },
   listContainer: {
     flex: 1,
