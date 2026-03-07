@@ -478,14 +478,24 @@ export function GameScreen() {
           <View style={styles.hiddenShareCanvas} pointerEvents="none">
             <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
               <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
-              <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
-              <View style={styles.shareExportOption}>
-                <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
-                <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
+              <View style={styles.shareExportCard}>
+                <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
+                <View style={styles.shareExportOption}>
+                  <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
+                  <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
+                </View>
+                <View style={styles.shareExportVsWrap}>
+                  <Text style={styles.shareExportVsText}>VS</Text>
+                </View>
+                <View style={styles.shareExportOption}>
+                  <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
+                  <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
+                </View>
               </View>
-              <View style={styles.shareExportOption}>
-                <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
-                <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
+              <View style={styles.shareExportCtaRow}>
+                <Text style={styles.shareExportCtaText}>Baixe o app</Text>
+                <Text style={styles.shareExportStoreText}> App Store</Text>
+                <Text style={styles.shareExportStoreText}>▶ Google Play</Text>
               </View>
             </View>
           </View>
@@ -764,45 +774,79 @@ const styles = StyleSheet.create({
     top: 0,
   },
   shareExportContainer: {
-    width: 340,
-    padding: 16,
+    width: 360,
+    padding: 18,
     backgroundColor: 'transparent',
   },
   shareExportAppName: {
     color: '#ffffff',
-    fontSize: 24,
-    fontWeight: '900',
+    fontSize: 27,
+    fontWeight: '700',
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: 'left',
+  },
+  shareExportCard: {
+    borderWidth: 2,
+    borderColor: '#67e8f9',
+    borderRadius: 18,
+    padding: 14,
+    backgroundColor: '#0b1220cc',
   },
   shareExportQuestion: {
     color: '#ffffff',
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: '800',
+    fontSize: 27,
+    lineHeight: 33,
+    fontWeight: '700',
     marginBottom: 14,
   },
   shareExportOption: {
-    borderWidth: 2,
-    borderColor: '#67e8f9',
+    borderWidth: 1,
+    borderColor: '#22d3ee',
     borderRadius: 14,
-    paddingVertical: 10,
+    paddingVertical: 11,
     paddingHorizontal: 12,
-    marginBottom: 10,
-    backgroundColor: '#0b122033',
+    marginBottom: 8,
+    backgroundColor: '#0f172acc',
   },
   shareExportOptionLabel: {
     color: '#a5f3fc',
     textTransform: 'uppercase',
-    fontWeight: '800',
-    fontSize: 12,
+    fontWeight: '600',
+    fontSize: 11,
     marginBottom: 4,
   },
   shareExportOptionText: {
     color: '#f8fafc',
-    fontSize: 18,
-    lineHeight: 24,
-    fontWeight: '700',
+    fontSize: 17,
+    lineHeight: 23,
+    fontWeight: '600',
+  },
+  shareExportVsWrap: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  shareExportVsText: {
+    color: '#a5f3fc',
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 1,
+  },
+  shareExportCtaRow: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  shareExportCtaText: {
+    color: '#bae6fd',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  shareExportStoreText: {
+    color: '#cbd5e1',
+    fontSize: 11,
+    fontWeight: '600',
   },
   questionTitle: {
     color: '#f8fafc',

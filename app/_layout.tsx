@@ -41,6 +41,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="tutorial" options={{ title: 'Tutorial' }} />
         <Stack.Screen name="game" options={{ title: 'Dilemas Horríveis' }} />
+        <Stack.Screen name="suggest" options={{ title: 'Sugerir dilema' }} />
         <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
       </Stack>
     </GestureHandlerRootView>

@@ -149,6 +149,13 @@ export function ModeSelectionScreen() {
         ))}
       </View>
 
+      <Pressable
+        onPress={() => router.push('/suggest' as never)}
+        style={({ pressed }) => [styles.suggestButton, pressed && styles.suggestButtonPressed]}
+      >
+        <Text style={styles.suggestButtonText}>Sugerir novo dilema</Text>
+      </Pressable>
+
       <Modal visible={showAdminModal} transparent animationType="fade" onRequestClose={() => setShowAdminModal(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
@@ -239,6 +246,23 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     justifyContent: 'center',
+  },
+  suggestButton: {
+    backgroundColor: '#1f2937',
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  suggestButtonPressed: {
+    opacity: 0.9,
+  },
+  suggestButtonText: {
+    color: '#e2e8f0',
+    fontWeight: '700',
+    fontSize: 15,
   },
   modalBackdrop: {
     flex: 1,
