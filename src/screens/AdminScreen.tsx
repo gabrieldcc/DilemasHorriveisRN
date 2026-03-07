@@ -1,12 +1,17 @@
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo, Pergunta } from '../models/game';
 import { adicionarPergunta, buscarPerguntasPorModo, removerPergunta } from '../services/questionsService';
+import { useAdminStore } from '../store/adminStore';
 import { GAME_MODES, getModoLabel } from '../utils/gameModes';
 
 export function AdminScreen() {
+  const router = useRouter();
+  const isAdminUnlocked = useAdminStore((state) => state.isUnlocked);
+  const lockAdmin = useAdminStore((state) => state.lock);
   const [titulo, setTitulo] = useState('');
   const [opcaoA, setOpcaoA] = useState('');
   const [opcaoB, setOpcaoB] = useState('');
@@ -15,6 +20,12 @@ export function AdminScreen() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isAdminUnlocked) {
+      router.replace('/');
+    }
+  }, [isAdminUnlocked, router]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -78,6 +89,16 @@ export function AdminScreen() {
     ]);
   };
 
+  if (!isAdminUnlocked) {
+    return (
+      <ScreenContainer>
+        <View style={styles.lockedWrap}>
+          <Text style={styles.lockedText}>Acesso admin bloqueado.</Text>
+        </View>
+      </ScreenContainer>
+    );
+  }
+
   return (
     <ScreenContainer>
       <FlatList
@@ -87,6 +108,15 @@ export function AdminScreen() {
           <View>
             <Text style={styles.title}>Painel Admin</Text>
             <Text style={styles.subtitle}>Gerencie perguntas por modo</Text>
+            <Pressable
+              onPress={() => {
+                lockAdmin();
+                router.replace('/');
+              }}
+              style={styles.logoutButton}
+            >
+              <Text style={styles.logoutText}>Sair do admin</Text>
+            </Pressable>
 
             <Text style={styles.sectionTitle}>Modo</Text>
             <View style={styles.modeWrap}>
@@ -163,6 +193,16 @@ const styles = StyleSheet.create({
   content: {
     paddingBottom: 24,
   },
+  lockedWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lockedText: {
+    color: '#fca5a5',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   title: {
     color: '#f8fafc',
     fontSize: 34,
@@ -173,7 +213,20 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontSize: 16,
     marginTop: 6,
-    marginBottom: 14,
+    marginBottom: 8,
+  },
+  logoutButton: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#7c2d12',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginBottom: 10,
+  },
+  logoutText: {
+    color: '#ffedd5',
+    fontWeight: '700',
+    fontSize: 12,
   },
   sectionTitle: {
     color: '#cbd5e1',

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "511354106014",
+    "project_id": "dilemas-horriveis-rn",
+    "storage_bucket": "dilemas-horriveis-rn.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511354106014:android:c19a97800eba88790a4b8f",
+        "android_client_info": {
+          "package_name": "com.gab.dilemas.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiyz2lyqb_9QUN-FQWkYqbC2OM7IjZ5KQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

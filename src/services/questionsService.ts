@@ -1,8 +1,8 @@
-import { get, push, ref, remove, set } from 'firebase/database';
+import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 
 import { ModoJogo, Pergunta } from '../models/game';
 import { parseFirebaseError } from '../utils/firebaseError';
-import { getFirebaseDatabase } from './firebase';
+import { getFirebaseFirestore } from './firebase';
 
 export interface NovaPerguntaInput {
   titulo: string;
@@ -13,22 +13,20 @@ export interface NovaPerguntaInput {
 
 export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]> {
   try {
-    const db = getFirebaseDatabase();
-    const snapshot = await get(ref(db, `perguntas/${modo}`));
+    const db = getFirebaseFirestore();
+    const questionsRef = collection(db, 'perguntas', modo, 'itens');
+    const snapshot = await getDocs(questionsRef);
 
-    if (!snapshot.exists()) {
-      return [];
-    }
-
-    const raw = snapshot.val() as Record<string, Omit<Pergunta, 'id' | 'modo'>>;
-
-    return Object.entries(raw).map(([id, item]) => ({
-      id,
-      titulo: item.titulo,
-      opcaoA: item.opcaoA,
-      opcaoB: item.opcaoB,
-      modo,
-    }));
+    return snapshot.docs.map((questionDoc) => {
+      const data = questionDoc.data() as Omit<Pergunta, 'id' | 'modo'>;
+      return {
+        id: questionDoc.id,
+        titulo: data.titulo,
+        opcaoA: data.opcaoA,
+        opcaoB: data.opcaoB,
+        modo,
+      };
+    });
   } catch (error) {
     throw new Error(parseFirebaseError(error));
   }
@@ -36,11 +34,9 @@ export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]
 
 export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void> {
   try {
-    const db = getFirebaseDatabase();
-    const perguntasRef = ref(db, `perguntas/${input.modo}`);
-    const newRef = push(perguntasRef);
-
-    await set(newRef, {
+    const db = getFirebaseFirestore();
+    const questionsRef = collection(db, 'perguntas', input.modo, 'itens');
+    await addDoc(questionsRef, {
       titulo: input.titulo,
       opcaoA: input.opcaoA,
       opcaoB: input.opcaoB,
@@ -52,8 +48,8 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
 
 export async function removerPergunta(modo: ModoJogo, id: string): Promise<void> {
   try {
-    const db = getFirebaseDatabase();
-    await remove(ref(db, `perguntas/${modo}/${id}`));
+    const db = getFirebaseFirestore();
+    await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
   } catch (error) {
     throw new Error(parseFirebaseError(error));
   }
