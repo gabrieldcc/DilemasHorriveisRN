@@ -1,5 +1,6 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { BlurView } from 'expo-blur';
 import {
   ActivityIndicator,
   Alert,
@@ -39,6 +40,7 @@ export function GameScreen() {
   const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string }>();
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [isShareOverlayVisible, setIsShareOverlayVisible] = useState(false);
   const [transitionType, setTransitionType] = useState<'default' | 'back'>('default');
   const [shouldShowLoadingOverlay, setShouldShowLoadingOverlay] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
@@ -49,6 +51,7 @@ export function GameScreen() {
   const [isSendingComment, setIsSendingComment] = useState(false);
   const [likingCommentIds, setLikingCommentIds] = useState<Record<string, boolean>>({});
   const likingInFlightRef = useRef<Record<string, boolean>>({});
+  const shareGhostTapUntilRef = useRef(0);
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -132,7 +135,12 @@ export function GameScreen() {
     transform: [{ scale: favoriteScale.value }],
   }));
 
+  const isShareGhostTapActive = () => Date.now() < shareGhostTapUntilRef.current;
+
   const handleSwipeBack = () => {
+    if (isShareOverlayVisible || isShareGhostTapActive()) {
+      return;
+    }
     if (selectedOption !== null) {
       return;
     }
@@ -150,25 +158,35 @@ export function GameScreen() {
     });
 
   const handleFavoritePress = () => {
+    if (isShareOverlayVisible || isShareGhostTapActive()) {
+      return;
+    }
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
     void toggleFavorite();
   };
 
   const handleSelectOptionA = () => {
+    if (isShareOverlayVisible || isShareGhostTapActive()) {
+      return;
+    }
     setTransitionType('default');
     selectOption('A');
   };
 
   const handleSelectOptionB = () => {
+    if (isShareOverlayVisible || isShareGhostTapActive()) {
+      return;
+    }
     setTransitionType('default');
     selectOption('B');
   };
 
   const handleShareQuestion = async () => {
-    if (!currentQuestion || !shareTemplateRef.current || isSharing) {
+    if (!currentQuestion || !shareTemplateRef.current || isSharing || isShareOverlayVisible || isShareGhostTapActive()) {
       return;
     }
 
+    setIsShareOverlayVisible(true);
     setIsSharing(true);
     try {
       const available = await Sharing.isAvailableAsync();
@@ -195,6 +213,9 @@ export function GameScreen() {
       }
     } finally {
       setIsSharing(false);
+      // Absorb residual close-tap from native share sheet without extra user action.
+      shareGhostTapUntilRef.current = Date.now() + 180;
+      setIsShareOverlayVisible(false);
     }
   };
 
@@ -325,11 +346,12 @@ export function GameScreen() {
   };
 
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
+  const shouldBlockGameTouches = showCommentsModal || isShareOverlayVisible;
 
   return (
     <ScreenContainer>
       <GestureDetector gesture={swipeGesture}>
-        <View style={styles.gestureLayer}>
+        <View style={styles.gestureLayer} pointerEvents={shouldBlockGameTouches ? 'none' : 'auto'}>
           <View style={styles.topBar}>
           <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
           <View style={styles.topBarRight}>
@@ -344,12 +366,12 @@ export function GameScreen() {
             </Pressable>
             <Pressable
               onPress={handleFavoritePress}
-              disabled={!currentQuestion || isFavoriteLoading}
+              disabled={!currentQuestion || isFavoriteLoading || isShareOverlayVisible}
               style={({ pressed }) => [
                 styles.favoriteIconButton,
                 isFavorite && styles.favoriteIconButtonActive,
                 pressed && styles.favoriteIconButtonPressed,
-                (!currentQuestion || isFavoriteLoading) && styles.favoriteIconButtonDisabled,
+                (!currentQuestion || isFavoriteLoading || isShareOverlayVisible) && styles.favoriteIconButtonDisabled,
               ]}
             >
               <Animated.View style={favoriteIconAnimatedStyle}>
@@ -362,11 +384,11 @@ export function GameScreen() {
             </Pressable>
             <Pressable
               onPress={() => void handleShareQuestion()}
-              disabled={!currentQuestion || isSharing}
+              disabled={!currentQuestion || isSharing || isShareOverlayVisible}
               style={({ pressed }) => [
                 styles.shareIconButton,
                 pressed && styles.shareIconButtonPressed,
-                (!currentQuestion || isSharing) && styles.shareIconButtonDisabled,
+                (!currentQuestion || isSharing || isShareOverlayVisible) && styles.shareIconButtonDisabled,
               ]}
             >
               {isSharing ? (
@@ -454,14 +476,14 @@ export function GameScreen() {
                     value={currentQuestion.opcaoA}
                     isSelected={selectedOption === 'A'}
                     onPress={handleSelectOptionA}
-                    disabled={selectedOption !== null}
+                    disabled={selectedOption !== null || isShareOverlayVisible}
                   />
                   <OptionButton
                     label="Opcao B"
                     value={currentQuestion.opcaoB}
                     isSelected={selectedOption === 'B'}
                     onPress={handleSelectOptionB}
-                    disabled={selectedOption !== null}
+                    disabled={selectedOption !== null || isShareOverlayVisible}
                   />
                 </View>
               </View>
@@ -588,6 +610,15 @@ export function GameScreen() {
           </KeyboardAvoidingView>
         </Pressable>
       </Modal>
+      {isShareOverlayVisible ? (
+        <Pressable
+          style={styles.shareOverlay}
+          onPress={() => {}}
+        >
+          <BlurView intensity={60} tint="dark" style={styles.shareOverlayBlur} />
+          <View style={styles.shareOverlayTint} />
+        </Pressable>
+      ) : null}
     </ScreenContainer>
   );
 }
@@ -927,6 +958,17 @@ const styles = StyleSheet.create({
   commentsKeyboardLayer: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  shareOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1400,
+  },
+  shareOverlayBlur: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  shareOverlayTint: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(2, 6, 23, 0.52)',
   },
   commentsHeader: {
     flexDirection: 'row',
