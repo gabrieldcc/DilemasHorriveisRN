@@ -1,9 +1,10 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
-import { markTutorialAsSeen } from '../hooks/useTutorialGate';
+import { markModeTutorialAsSeen, markTutorialAsSeen } from '../hooks/useTutorialGate';
+import { ModoJogo } from '../models/game';
 import { isModoJogo } from '../utils/gameModes';
 
 export function TutorialScreen() {
@@ -14,6 +15,30 @@ export function TutorialScreen() {
   const mode = params.mode;
   const openedFromGame = params.from === 'game';
   const hasValidMode = Boolean(mode && isModoJogo(mode));
+
+  const getModeSpecificTips = () => {
+    if (!hasValidMode || !mode) {
+      return null;
+    }
+
+    if (mode === ModoJogo.favoritas) {
+      return [
+        'Modo Favoritas: aqui ficam as perguntas que voce marcou com estrela.',
+        'Use este modo para revisitar dilemas que renderam mais discussao no seu grupo.',
+      ];
+    }
+
+    if (mode === ModoJogo.comunidade) {
+      return [
+        'Modo Comunidade: mostra perguntas mais favoritadas pelos jogadores.',
+        'Quanto mais pessoas favoritarem uma pergunta, mais ela sobe no ranking.',
+      ];
+    }
+
+    return null;
+  };
+
+  const modeSpecificTips = getModeSpecificTips();
 
   const startGame = async () => {
     if (openedFromGame) {
@@ -28,40 +53,60 @@ export function TutorialScreen() {
 
     setLoading(true);
     await markTutorialAsSeen();
+    await markModeTutorialAsSeen(mode as ModoJogo);
     router.replace({ pathname: '/game', params: { mode: mode as string } });
   };
 
   return (
     <ScreenContainer>
-      <View style={styles.wrapper}>
-        <Text style={styles.title}>Como jogar</Text>
-        <Text style={styles.text}>Esse jogo pode ser jogado individualmente ou em grupo.</Text>
-        <Text style={styles.text}>A ideia e gerar um debate sobre as respostas antes de escolher.</Text>
-        <Text style={styles.text}>1. Leia o dilema exibido na tela.</Text>
-        <Text style={styles.text}>2. Escolha entre a opcao A ou B.</Text>
-        <Text style={styles.text}>3. Se estiver em grupo, escolham a resposta mais votada.</Text>
-        <Text style={styles.text}>4. A proxima pergunta aparece automaticamente.</Text>
-        <Text style={styles.text}>5. Continue ate acabar a lista do modo.</Text>
+      <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.wrapper}>
+          <Text style={styles.title}>Como jogar</Text>
+          <Text style={styles.text}>Esse jogo pode ser jogado individualmente ou em grupo.</Text>
+          <Text style={styles.text}>A ideia e gerar um debate sobre as respostas antes de escolher.</Text>
+          <Text style={styles.text}>1. Leia o dilema exibido na tela.</Text>
+          <Text style={styles.text}>2. Escolha entre a opcao A ou B.</Text>
+          <Text style={styles.text}>3. Se estiver em grupo, escolham a resposta mais votada.</Text>
+          <Text style={styles.text}>4. A proxima pergunta aparece automaticamente.</Text>
+          <Text style={styles.text}>5. Continue ate acabar a lista do modo.</Text>
+          {modeSpecificTips ? <Text style={styles.modeTipsTitle}>Sobre este modo</Text> : null}
+          {modeSpecificTips?.map((tip) => (
+            <Text key={tip} style={styles.text}>
+              • {tip}
+            </Text>
+          ))}
 
-        <Pressable onPress={startGame} disabled={loading} style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}>
-          <Text style={styles.buttonText}>
-            {openedFromGame
-              ? 'Voltar ao jogo'
-              : hasValidMode
-                ? loading
-                  ? 'Entrando...'
-                  : 'Entendi, comecar'
-                : 'Voltar aos modos'}
-          </Text>
-        </Pressable>
-      </View>
+          <Pressable
+            onPress={startGame}
+            disabled={loading}
+            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+          >
+            <Text style={styles.buttonText}>
+              {openedFromGame
+                ? 'Voltar ao jogo'
+                : hasValidMode
+                  ? loading
+                    ? 'Entrando...'
+                    : 'Entendi, comecar'
+                  : 'Voltar aos modos'}
+            </Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  scrollArea: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
+  },
+  wrapper: {
+    flexGrow: 1,
     justifyContent: 'center',
   },
   title: {
@@ -75,6 +120,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 28,
     marginBottom: 10,
+  },
+  modeTipsTitle: {
+    color: '#e2e8f0',
+    fontSize: 22,
+    fontWeight: '700',
+    marginTop: 10,
+    marginBottom: 8,
   },
   button: {
     marginTop: 24,

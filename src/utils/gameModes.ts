@@ -1,15 +1,24 @@
-import { ModoJogo } from '../models/game';
+import { ModoJogo, ModoJogoConteudo } from '../models/game';
 
-export const GAME_MODES = [
+export const CONTENT_GAME_MODES: Array<{ value: ModoJogoConteudo; label: string }> = [
   { value: ModoJogo.leve, label: 'Leve' },
   { value: ModoJogo.pesado, label: 'Pesado' },
   { value: ModoJogo.nerd, label: 'Nerd' },
-  // { value: ModoJogo.culturaBR, label: 'Cultura Brasileira' },
-  // { value: ModoJogo.adultos, label: 'Adultos' },
+];
+
+export const EXTRA_GAME_MODES = [
+  { value: ModoJogo.favoritas, label: 'Favoritas' },
+  { value: ModoJogo.comunidade, label: 'Comunidade' },
 ] as const;
+
+export const GAME_MODES = [...CONTENT_GAME_MODES, ...EXTRA_GAME_MODES];
 
 export function isModoJogo(value: string): value is ModoJogo {
   return GAME_MODES.some((mode) => mode.value === value);
+}
+
+export function isModoJogoConteudo(value: ModoJogo): value is ModoJogoConteudo {
+  return CONTENT_GAME_MODES.some((mode) => mode.value === value);
 }
 
 export function getModoLabel(modo: ModoJogo): string {

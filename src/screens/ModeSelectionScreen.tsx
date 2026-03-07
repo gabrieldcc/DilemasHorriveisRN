@@ -4,7 +4,8 @@ import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
-import { hasSeenTutorial } from '../hooks/useTutorialGate';
+import { hasSeenModeTutorial, hasSeenTutorial } from '../hooks/useTutorialGate';
+import { ModoJogo } from '../models/game';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
 
@@ -56,9 +57,18 @@ export function ModeSelectionScreen() {
     router.push('/admin');
   };
 
-  const handleSelectMode = async (mode: string) => {
+  const handleSelectMode = async (mode: ModoJogo) => {
     setLoadingMode(mode);
     try {
+      const seenModeTutorial = await hasSeenModeTutorial(mode);
+      if (!seenModeTutorial) {
+        router.push({
+          pathname: '/tutorial' as never,
+          params: { mode },
+        });
+        return;
+      }
+
       const seenTutorial = await hasSeenTutorial();
       if (seenTutorial) {
         router.push({
@@ -90,7 +100,7 @@ export function ModeSelectionScreen() {
           <ModeCard
             key={mode.value}
             title={loadingMode === mode.value ? `${mode.label}...` : mode.label}
-            onPress={() => void handleSelectMode(mode.value)}
+            onPress={() => void handleSelectMode(mode.value as ModoJogo)}
           />
         ))}
       </View>

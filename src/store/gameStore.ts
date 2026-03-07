@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { ModoJogo, OpcaoEscolha, Pergunta } from '../models/game';
 import { buscarPerguntasPorModo } from '../services/questionsService';
+import { isModoJogoConteudo } from '../utils/gameModes';
 import { shuffleArray } from '../utils/shuffle';
 
 interface GameState {
@@ -29,10 +30,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     try {
       const perguntas = await buscarPerguntasPorModo(modo);
-      const shuffled = shuffleArray(perguntas);
-      set({ questions: shuffled, isLoading: false, currentIndex: 0 });
+      const shouldShuffle = isModoJogoConteudo(modo);
+      const preparedQuestions = shouldShuffle ? shuffleArray(perguntas) : perguntas;
+      set({ questions: preparedQuestions, isLoading: false, currentIndex: 0 });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Falha ao carregar perguntas.';
+      const rawMessage = error instanceof Error ? error.message : 'Falha ao carregar perguntas.';
+      const message =
+        modo === ModoJogo.comunidade && rawMessage.toLowerCase().includes('firebase')
+          ? 'Modo Comunidade indisponivel no momento. Ajuste o indice do Firestore e tente novamente.'
+          : rawMessage;
+      console.error(`[GameStore] Erro ao carregar perguntas do modo "${modo}":`, error);
       set({ error: message, isLoading: false, questions: [], currentIndex: 0 });
     }
   },

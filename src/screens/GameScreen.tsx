@@ -26,8 +26,19 @@ export function GameScreen() {
   }
 
   const modo = params.mode as ModoJogo;
-  const { currentQuestion, currentIndex, total, isLoading, error, selectedOption, selectOption, reload } =
-    useGame(modo);
+  const {
+    currentQuestion,
+    currentIndex,
+    total,
+    isLoading,
+    error,
+    selectedOption,
+    selectOption,
+    isFavorite,
+    isFavoriteLoading,
+    toggleFavorite,
+    reload,
+  } = useGame(modo);
 
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
 
@@ -44,6 +55,18 @@ export function GameScreen() {
             style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
           >
             <Text style={styles.tutorialIconText}>?</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => void toggleFavorite()}
+            disabled={!currentQuestion || isFavoriteLoading}
+            style={({ pressed }) => [
+              styles.favoriteIconButton,
+              isFavorite && styles.favoriteIconButtonActive,
+              pressed && styles.favoriteIconButtonPressed,
+              (!currentQuestion || isFavoriteLoading) && styles.favoriteIconButtonDisabled,
+            ]}
+          >
+            <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
           </Pressable>
         </View>
       </View>
@@ -167,6 +190,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '800',
     lineHeight: 20,
+  },
+  favoriteIconButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+  },
+  favoriteIconButtonActive: {
+    backgroundColor: '#78350f',
+    borderColor: '#f59e0b',
+  },
+  favoriteIconButtonPressed: {
+    opacity: 0.85,
+  },
+  favoriteIconButtonDisabled: {
+    opacity: 0.5,
+  },
+  favoriteIconText: {
+    color: '#fde68a',
+    fontSize: 19,
+    lineHeight: 19,
   },
   questionContainer: {
     flex: 1,

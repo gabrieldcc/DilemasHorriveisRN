@@ -3,10 +3,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
-import { ModoJogo, Pergunta } from '../models/game';
+import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
 import { adicionarPergunta, buscarPerguntasPorModo, removerPergunta } from '../services/questionsService';
 import { useAdminStore } from '../store/adminStore';
-import { GAME_MODES, getModoLabel } from '../utils/gameModes';
+import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
 
 export function AdminScreen() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export function AdminScreen() {
   const [titulo, setTitulo] = useState('');
   const [opcaoA, setOpcaoA] = useState('');
   const [opcaoB, setOpcaoB] = useState('');
-  const [modo, setModo] = useState<ModoJogo>(ModoJogo.leve);
+  const [modo, setModo] = useState<ModoJogoConteudo>(ModoJogo.leve);
   const [items, setItems] = useState<Pergunta[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -120,7 +120,7 @@ export function AdminScreen() {
 
             <Text style={styles.sectionTitle}>Modo</Text>
             <View style={styles.modeWrap}>
-              {GAME_MODES.map((item) => (
+              {CONTENT_GAME_MODES.map((item) => (
                 <Pressable
                   key={item.value}
                   onPress={() => setModo(item.value)}
