@@ -35,9 +35,17 @@ export function GameScreen() {
     <ScreenContainer>
       <View style={styles.topBar}>
         <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
-        <Text style={styles.progress}>
-          {Math.min(currentIndex + 1, total)}/{total || 0}
-        </Text>
+        <View style={styles.topBarRight}>
+          <Text style={styles.progress}>
+            {Math.min(currentIndex + 1, total)}/{total || 0}
+          </Text>
+          <Pressable
+            onPress={() => router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game' } })}
+            style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
+          >
+            <Text style={styles.tutorialIconText}>?</Text>
+          </Pressable>
+        </View>
       </View>
 
       {isLoading ? (
@@ -129,6 +137,30 @@ const styles = StyleSheet.create({
     color: '#94a3b8',
     fontSize: 14,
     fontWeight: '600',
+  },
+  topBarRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  tutorialIconButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+  },
+  tutorialIconButtonPressed: {
+    opacity: 0.85,
+  },
+  tutorialIconText: {
+    color: '#e2e8f0',
+    fontSize: 20,
+    fontWeight: '800',
+    lineHeight: 20,
   },
   questionContainer: {
     flex: 1,

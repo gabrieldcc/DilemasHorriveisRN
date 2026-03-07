@@ -4,6 +4,7 @@ import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
+import { hasSeenTutorial } from '../hooks/useTutorialGate';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
 
@@ -15,6 +16,7 @@ export function ModeSelectionScreen() {
   const [adminError, setAdminError] = useState<string | null>(null);
   const [logoTapCount, setLogoTapCount] = useState(0);
   const [adminGestureArmed, setAdminGestureArmed] = useState(false);
+  const [loadingMode, setLoadingMode] = useState<string | null>(null);
 
   const handleLogoTap = () => {
     const nextCount = logoTapCount + 1;
@@ -54,6 +56,26 @@ export function ModeSelectionScreen() {
     router.push('/admin');
   };
 
+  const handleSelectMode = async (mode: string) => {
+    setLoadingMode(mode);
+    try {
+      const seenTutorial = await hasSeenTutorial();
+      if (seenTutorial) {
+        router.push({
+          pathname: '/game',
+          params: { mode },
+        });
+        return;
+      }
+      router.push({
+        pathname: '/tutorial' as never,
+        params: { mode },
+      });
+    } finally {
+      setLoadingMode(null);
+    }
+  };
+
   return (
     <ScreenContainer>
       <View style={styles.headerContainer}>
@@ -67,13 +89,8 @@ export function ModeSelectionScreen() {
         {GAME_MODES.map((mode) => (
           <ModeCard
             key={mode.value}
-            title={mode.label}
-            onPress={() =>
-              router.push({
-                pathname: '/game',
-                params: { mode: mode.value },
-              })
-            }
+            title={loadingMode === mode.value ? `${mode.label}...` : mode.label}
+            onPress={() => void handleSelectMode(mode.value)}
           />
         ))}
       </View>
