@@ -42,18 +42,24 @@ export function OptionButton({ label, value, isSelected, disabled, onPress }: Op
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1e293b',
+    backgroundColor: '#131f36',
     borderRadius: 18,
     paddingVertical: 24,
     paddingHorizontal: 18,
     marginBottom: 14,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#27405d',
     minHeight: 130,
     justifyContent: 'center',
+    shadowColor: '#0ea5e9',
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
   },
   selected: {
     borderColor: '#22d3ee',
+    backgroundColor: '#0f2a3a',
+    shadowOpacity: 0.26,
   },
   pressed: {
     opacity: 0.9,
@@ -62,16 +68,17 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   optionLabel: {
-    color: '#93c5fd',
-    fontSize: 16,
+    color: '#7dd3fc',
+    fontSize: 14,
     fontWeight: '500',
     marginBottom: 8,
     textTransform: 'uppercase',
+    letterSpacing: 1.2,
   },
   optionText: {
     color: '#f8fafc',
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: 23,
+    lineHeight: 29,
     fontWeight: '500',
   },
 });

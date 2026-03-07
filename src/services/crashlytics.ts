@@ -36,7 +36,7 @@ function getCrashlyticsInstance(): CrashlyticsInstance | null {
   } catch (error) {
     cachedCrashlytics = null;
     if (__DEV__) {
-      console.warn('[Crashlytics] Nao disponivel neste runtime.', error);
+      console.warn('[Crashlytics] Não disponível neste runtime.', error);
     }
     return cachedCrashlytics;
   }
@@ -46,7 +46,7 @@ export async function initializeCrashlytics(): Promise<boolean> {
   const crashlytics = getCrashlyticsInstance();
   if (!crashlytics) {
     if (__DEV__) {
-      console.info('[Crashlytics] Ignorado (Expo Go ou modulo nativo indisponivel).');
+      console.info('[Crashlytics] Ignorado (Expo Go ou módulo nativo indisponível).');
     }
     return false;
   }
@@ -94,4 +94,3 @@ export function recordCrashlyticsError(error: unknown, context?: string): void {
     }
   }
 }
-

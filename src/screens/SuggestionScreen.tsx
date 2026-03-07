@@ -9,7 +9,7 @@ import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
 
 export function SuggestionScreen() {
   const router = useRouter();
-  const [titulo, setTitulo] = useState('O que voce prefere?');
+  const [titulo, setTitulo] = useState('O que você prefere?');
   const [opcaoA, setOpcaoA] = useState('');
   const [opcaoB, setOpcaoB] = useState('');
   const [modoSugerido, setModoSugerido] = useState<ModoJogoConteudo>(ModoJogo.leve);
@@ -29,12 +29,12 @@ export function SuggestionScreen() {
         modoSugerido,
       });
 
-      setTitulo('O que voce prefere?');
+      setTitulo('O que você prefere?');
       setOpcaoA('');
       setOpcaoB('');
-      Alert.alert('Sugestao enviada', 'Recebemos seu dilema. Obrigado por contribuir.');
+      Alert.alert('Sugestão enviada', 'Recebemos seu dilema. Obrigado por contribuir.');
     } catch (error) {
-      Alert.alert('Erro ao enviar', error instanceof Error ? error.message : 'Nao foi possivel enviar.');
+      Alert.alert('Erro ao enviar', error instanceof Error ? error.message : 'Não foi possível enviar.');
     } finally {
       setSending(false);
     }
@@ -65,31 +65,31 @@ export function SuggestionScreen() {
           ))}
         </View>
 
-        <Text style={styles.label}>Titulo</Text>
+        <Text style={styles.label}>Título</Text>
         <TextInput
           style={styles.input}
           value={titulo}
           onChangeText={setTitulo}
-          placeholder="Titulo"
+          placeholder="Título"
           placeholderTextColor="#64748b"
         />
 
-        <Text style={styles.label}>Opcao A</Text>
+        <Text style={styles.label}>Opção A</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoA}
           onChangeText={setOpcaoA}
-          placeholder="Descreva a primeira opcao"
+          placeholder="Descreva a primeira opção"
           placeholderTextColor="#64748b"
           multiline
         />
 
-        <Text style={styles.label}>Opcao B</Text>
+        <Text style={styles.label}>Opção B</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoB}
           onChangeText={setOpcaoB}
-          placeholder="Descreva a segunda opcao"
+          placeholder="Descreva a segunda opção"
           placeholderTextColor="#64748b"
           multiline
         />
@@ -99,7 +99,7 @@ export function SuggestionScreen() {
           disabled={sending}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed, sending && styles.disabled]}
         >
-          <Text style={styles.primaryButtonText}>{sending ? 'Enviando...' : 'Enviar sugestao'}</Text>
+          <Text style={styles.primaryButtonText}>{sending ? 'Enviando...' : 'Enviar sugestão'}</Text>
         </Pressable>
 
         <Pressable onPress={() => router.back()} style={styles.secondaryButton}>
@@ -210,4 +210,3 @@ const styles = StyleSheet.create({
     opacity: 0.65,
   },
 });
-

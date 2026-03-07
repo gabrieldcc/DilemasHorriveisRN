@@ -84,7 +84,7 @@ export function AdminScreen() {
       const data = await buscarSugestoes(suggestionFilter === 'todas' ? undefined : suggestionFilter);
       setSuggestions(data);
     } catch (e) {
-      setSuggestionsError(e instanceof Error ? e.message : 'Erro ao buscar sugestoes.');
+      setSuggestionsError(e instanceof Error ? e.message : 'Erro ao buscar sugestões.');
       setSuggestions([]);
     } finally {
       setSuggestionsLoading(false);
@@ -101,7 +101,7 @@ export function AdminScreen() {
 
   const handleSave = async () => {
     if (!titulo.trim() || !opcaoA.trim() || !opcaoB.trim()) {
-      Alert.alert('Campos obrigatorios', 'Preencha titulo, opcao A e opcao B.');
+      Alert.alert('Campos obrigatórios', 'Preencha título, opção A e opção B.');
       return;
     }
 
@@ -119,7 +119,7 @@ export function AdminScreen() {
       setOpcaoB('');
       await loadPerguntas();
     } catch (e) {
-      Alert.alert('Erro ao salvar', e instanceof Error ? e.message : 'Nao foi possivel salvar.');
+      Alert.alert('Erro ao salvar', e instanceof Error ? e.message : 'Não foi possível salvar.');
     } finally {
       setSaving(false);
     }
@@ -136,7 +136,7 @@ export function AdminScreen() {
             await removerPergunta(modo, id);
             await loadPerguntas();
           } catch (e) {
-            Alert.alert('Erro', e instanceof Error ? e.message : 'Nao foi possivel remover.');
+            Alert.alert('Erro', e instanceof Error ? e.message : 'Não foi possível remover.');
           }
         },
       },
@@ -170,7 +170,7 @@ export function AdminScreen() {
       stopEditSuggestion();
       await loadSuggestions();
     } catch (error) {
-      Alert.alert('Erro ao editar', error instanceof Error ? error.message : 'Nao foi possivel salvar edicao.');
+      Alert.alert('Erro ao editar', error instanceof Error ? error.message : 'Não foi possível salvar edição.');
     } finally {
       setModerationBusyId(null);
     }
@@ -195,7 +195,7 @@ export function AdminScreen() {
       }
       await Promise.all([loadSuggestions(), loadPerguntas()]);
     } catch (error) {
-      Alert.alert('Erro ao aprovar', error instanceof Error ? error.message : 'Nao foi possivel aprovar sugestao.');
+      Alert.alert('Erro ao aprovar', error instanceof Error ? error.message : 'Não foi possível aprovar sugestão.');
     } finally {
       setModerationBusyId(null);
     }
@@ -210,7 +210,7 @@ export function AdminScreen() {
       }
       await loadSuggestions();
     } catch (error) {
-      Alert.alert('Erro ao recusar', error instanceof Error ? error.message : 'Nao foi possivel recusar sugestao.');
+      Alert.alert('Erro ao recusar', error instanceof Error ? error.message : 'Não foi possível recusar sugestão.');
     } finally {
       setModerationBusyId(null);
     }
@@ -218,7 +218,7 @@ export function AdminScreen() {
 
   const suggestionSectionTitle = useMemo(() => {
     const selected = SUGGESTION_FILTERS.find((item) => item.key === suggestionFilter);
-    return `Sugestoes (${selected?.label ?? 'Todas'})`;
+    return `Sugestões (${selected?.label ?? 'Todas'})`;
   }, [suggestionFilter]);
 
   if (!isAdminUnlocked) {
@@ -235,7 +235,7 @@ export function AdminScreen() {
     <ScreenContainer>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Painel Admin</Text>
-        <Text style={styles.subtitle}>Gerencie perguntas e modere sugestoes</Text>
+        <Text style={styles.subtitle}>Gerencie perguntas e modere sugestões</Text>
         <View style={styles.topTabsWrap}>
           <Pressable
             onPress={() => setActiveTab('sugestoes')}
@@ -245,7 +245,7 @@ export function AdminScreen() {
               pressed && styles.modeButtonPressed,
             ]}
           >
-            <Text style={[styles.topTabText, activeTab === 'sugestoes' && styles.topTabTextActive]}>Sugestoes</Text>
+            <Text style={[styles.topTabText, activeTab === 'sugestoes' && styles.topTabTextActive]}>Sugestões</Text>
           </Pressable>
           <Pressable
             onPress={() => setActiveTab('perguntas')}
@@ -289,21 +289,21 @@ export function AdminScreen() {
 
             <Text style={styles.sectionTitle}>Nova Pergunta</Text>
             <TextInput
-              placeholder="Titulo"
+              placeholder="Título"
               placeholderTextColor="#64748b"
               value={titulo}
               onChangeText={setTitulo}
               style={styles.input}
             />
             <TextInput
-              placeholder="Opcao A"
+              placeholder="Opção A"
               placeholderTextColor="#64748b"
               value={opcaoA}
               onChangeText={setOpcaoA}
               style={styles.input}
             />
             <TextInput
-              placeholder="Opcao B"
+              placeholder="Opção B"
               placeholderTextColor="#64748b"
               value={opcaoB}
               onChangeText={setOpcaoB}
@@ -357,7 +357,7 @@ export function AdminScreen() {
             {suggestionsLoading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
             {suggestionsError ? <Text style={styles.errorText}>{suggestionsError}</Text> : null}
             {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
-              <Text style={styles.emptyText}>Nenhuma sugestao encontrada.</Text>
+              <Text style={styles.emptyText}>Nenhuma sugestão encontrada.</Text>
             ) : null}
           </>
         ) : null}
@@ -383,14 +383,14 @@ export function AdminScreen() {
                     style={styles.editInput}
                     value={editTitulo}
                     onChangeText={setEditTitulo}
-                    placeholder="Titulo"
+                    placeholder="Título"
                     placeholderTextColor="#64748b"
                   />
                   <TextInput
                     style={[styles.editInput, styles.editInputMulti]}
                     value={editOpcaoA}
                     onChangeText={setEditOpcaoA}
-                    placeholder="Opcao A"
+                    placeholder="Opção A"
                     placeholderTextColor="#64748b"
                     multiline
                   />
@@ -398,7 +398,7 @@ export function AdminScreen() {
                     style={[styles.editInput, styles.editInputMulti]}
                     value={editOpcaoB}
                     onChangeText={setEditOpcaoB}
-                    placeholder="Opcao B"
+                    placeholder="Opção B"
                     placeholderTextColor="#64748b"
                     multiline
                   />
@@ -437,7 +437,7 @@ export function AdminScreen() {
                       disabled={isBusy}
                       style={({ pressed }) => [styles.actionPrimary, pressed && styles.modeButtonPressed, isBusy && styles.disabled]}
                     >
-                      <Text style={styles.actionText}>{isBusy ? 'Salvando...' : 'Salvar edicao'}</Text>
+                      <Text style={styles.actionText}>{isBusy ? 'Salvando...' : 'Salvar edição'}</Text>
                     </Pressable>
                     <Pressable onPress={stopEditSuggestion} style={({ pressed }) => [styles.actionNeutral, pressed && styles.modeButtonPressed]}>
                       <Text style={styles.actionText}>Cancelar</Text>

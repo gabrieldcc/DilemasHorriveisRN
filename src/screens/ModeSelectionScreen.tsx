@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -9,6 +9,44 @@ import { ModoJogo } from '../models/game';
 import { getUserProfile, saveUserProfile } from '../services/profileService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
+
+const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }> = {
+  [ModoJogo.leve]: {
+    icon: '🎲',
+    subtitle: 'Dilemas descontraídos para aquecer o jogo.',
+    tag: 'ARENA 1',
+  },
+  [ModoJogo.pesado]: {
+    icon: '🔥',
+    subtitle: 'Escolhas tensas para grupos sem medo de debate.',
+    tag: 'ARENA 3',
+  },
+  [ModoJogo.nerd]: {
+    icon: '🧠',
+    subtitle: 'Conflitos de cultura pop, filmes, séries e tecnologia.',
+    tag: 'ARENA 2',
+  },
+  [ModoJogo.culturaBR]: {
+    icon: '🇧🇷',
+    subtitle: 'Referências brasileiras para debate em grupo.',
+    tag: 'ARENA BR',
+  },
+  [ModoJogo.adultos]: {
+    icon: '🔞',
+    subtitle: 'Dilemas para grupos adultos e debates sem filtro.',
+    tag: 'ARENA X',
+  },
+  [ModoJogo.favoritas]: {
+    icon: '⭐',
+    subtitle: 'Seus dilemas salvos para repetir quando quiser.',
+    tag: 'SEUS PICKS',
+  },
+  [ModoJogo.comunidade]: {
+    icon: '🌍',
+    subtitle: 'As perguntas mais favoritadas pela galera.',
+    tag: 'TOP GLOBAL',
+  },
+};
 
 export function ModeSelectionScreen() {
   const router = useRouter();
@@ -59,7 +97,7 @@ export function ModeSelectionScreen() {
     }
     setAdminGestureArmed(false);
     if (!isAdminPinConfigured()) {
-      setAdminError('PIN admin nao configurado no ambiente.');
+      setAdminError('PIN admin não configurado no ambiente.');
       setShowAdminModal(true);
       return;
     }
@@ -71,7 +109,7 @@ export function ModeSelectionScreen() {
   const handleUnlockAdmin = () => {
     const isValid = unlockAdmin(adminPin.trim());
     if (!isValid) {
-      setAdminError('PIN invalido.');
+      setAdminError('PIN inválido.');
       return;
     }
     setAdminError(null);
@@ -124,7 +162,7 @@ export function ModeSelectionScreen() {
       await saveUserProfile(firstName, lastName);
       setShowProfileModal(false);
     } catch (error) {
-      setProfileError(error instanceof Error ? error.message : 'Nao foi possivel salvar seu nome.');
+      setProfileError(error instanceof Error ? error.message : 'Não foi possível salvar seu nome.');
     } finally {
       setIsSavingProfile(false);
     }
@@ -132,29 +170,44 @@ export function ModeSelectionScreen() {
 
   return (
     <ScreenContainer>
-      <View style={styles.headerContainer}>
-        <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
-          <Text style={styles.title}>Dilemas Horríveis</Text>
-        </Pressable>
-        <Text style={styles.subtitle}>Escolha um modo para comecar</Text>
-      </View>
-
-      <View style={styles.listContainer}>
-        {GAME_MODES.map((mode) => (
-          <ModeCard
-            key={mode.value}
-            title={loadingMode === mode.value ? `${mode.label}...` : mode.label}
-            onPress={() => void handleSelectMode(mode.value as ModoJogo)}
-          />
-        ))}
-      </View>
-
-      <Pressable
-        onPress={() => router.push('/suggest' as never)}
-        style={({ pressed }) => [styles.suggestButton, pressed && styles.suggestButtonPressed]}
+      <ScrollView
+        style={styles.scrollArea}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.suggestButtonText}>Sugerir novo dilema</Text>
-      </Pressable>
+        <View style={styles.headerContainer}>
+          <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
+            <View style={styles.logoWrap}>
+              <Text style={styles.logoTopLine}>DILEMAS</Text>
+              <Text style={styles.logoBottomLine}>Horríveis</Text>
+            </View>
+          </Pressable>
+        </View>
+
+        <View style={styles.listContainer}>
+          {GAME_MODES.map((mode) => {
+            const ui = MODE_UI[mode.value as ModoJogo];
+            return (
+              <ModeCard
+                key={mode.value}
+                title={loadingMode === mode.value ? `${mode.label}...` : mode.label}
+                icon={ui?.icon}
+                subtitle={ui?.subtitle}
+                tag={ui?.tag}
+                onPress={() => void handleSelectMode(mode.value as ModoJogo)}
+              />
+            );
+          })}
+        </View>
+
+        <Pressable
+          onPress={() => router.push('/suggest' as never)}
+          style={({ pressed }) => [styles.suggestButton, pressed && styles.suggestButtonPressed]}
+        >
+          <Text style={styles.suggestButtonText}>Sugerir novo dilema</Text>
+        </Pressable>
+      </ScrollView>
 
       <Modal visible={showAdminModal} transparent animationType="fade" onRequestClose={() => setShowAdminModal(false)}>
         <View style={styles.modalBackdrop}>
@@ -185,7 +238,7 @@ export function ModeSelectionScreen() {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
             <Text style={styles.modalTitle}>Como podemos te chamar?</Text>
-            <Text style={styles.profileHelperText}>Esse nome sera usado nos seus comentarios.</Text>
+            <Text style={styles.profileHelperText}>Esse nome será usado nos seus comentários.</Text>
             <TextInput
               value={firstName}
               onChangeText={setFirstName}
@@ -225,27 +278,42 @@ export function ModeSelectionScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 12,
+  },
   headerContainer: {
-    marginTop: 48,
+    marginTop: 32,
     marginBottom: 24,
     alignItems: 'center',
   },
-  title: {
-    color: '#f8fafc',
-    fontSize: 34,
-    lineHeight: 38,
+  logoWrap: {
+    alignItems: 'center',
+  },
+  logoTopLine: {
+    color: '#e2e8f0',
+    fontSize: 26,
+    letterSpacing: 3,
     fontWeight: '500',
+    lineHeight: 30,
     textAlign: 'center',
   },
-  subtitle: {
-    marginTop: 8,
-    color: '#94a3b8',
-    fontSize: 18,
+  logoBottomLine: {
+    color: '#67e8f9',
+    fontSize: 46,
+    lineHeight: 48,
+    fontStyle: 'italic',
+    fontWeight: '700',
     textAlign: 'center',
+    textShadowColor: 'rgba(34, 211, 238, 0.35)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 12,
   },
   listContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
   },
   suggestButton: {
     backgroundColor: '#1f2937',

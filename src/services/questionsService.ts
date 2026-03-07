@@ -68,15 +68,15 @@ function getFavoriteDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
 
 function normalizeSuggestionInput(input: SugestaoInput | SugestaoAtualizacaoInput) {
   const tituloRaw = input.titulo?.trim();
-  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : 'O que voce prefere?';
+  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : 'O que você prefere?';
   const opcaoA = input.opcaoA.trim();
   const opcaoB = input.opcaoB.trim();
 
   if (titulo.length < 6) {
-    throw new Error('Titulo muito curto.');
+    throw new Error('Título muito curto.');
   }
   if (opcaoA.length < 3 || opcaoB.length < 3) {
-    throw new Error('As opcoes precisam ter pelo menos 3 caracteres.');
+    throw new Error('As opções precisam ter pelo menos 3 caracteres.');
   }
 
   return { titulo, opcaoA, opcaoB };
@@ -98,12 +98,12 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
   return {
     id: docId,
-    titulo: typeof raw.titulo === 'string' ? raw.titulo : 'O que voce prefere?',
+    titulo: typeof raw.titulo === 'string' ? raw.titulo : 'O que você prefere?',
     opcaoA: typeof raw.opcaoA === 'string' ? raw.opcaoA : '',
     opcaoB: typeof raw.opcaoB === 'string' ? raw.opcaoB : '',
     modoSugerido: modoSugerido as ModoJogoConteudo,
     autorId: typeof raw.autorId === 'string' ? raw.autorId : '',
-    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : 'Anonimo',
+    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : 'Anônimo',
     status,
     createdAtMs: createdAt?.toMillis?.() ?? 0,
     updatedAtMs: updatedAt?.toMillis?.() ?? 0,
@@ -232,7 +232,7 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
 export async function removerPergunta(modo: ModoJogo, id: string): Promise<void> {
   try {
     if (!isModoJogoConteudo(modo)) {
-      throw new Error('Modo invalido para remocao de pergunta.');
+      throw new Error('Modo inválido para remoção de pergunta.');
     }
     const db = getFirebaseFirestore();
     await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
@@ -406,13 +406,13 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
     const suggestionSnapshot = await getDoc(suggestionRef);
 
     if (!suggestionSnapshot.exists()) {
-      throw new Error('Sugestao nao encontrada.');
+      throw new Error('Sugestão não encontrada.');
     }
 
     const raw = suggestionSnapshot.data() as Record<string, unknown>;
     const mapped = mapSugestaoDoc(id, raw);
     if (!mapped) {
-      throw new Error('Sugestao invalida.');
+      throw new Error('Sugestão inválida.');
     }
 
     const mergedInput: SugestaoAtualizacaoInput = input ?? {

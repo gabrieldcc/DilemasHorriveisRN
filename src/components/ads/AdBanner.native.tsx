@@ -9,7 +9,7 @@ function getAdUnitId() {
 
   if (!configured) {
     if (__DEV__) {
-      console.warn('[Ads] Banner ID nao configurado.');
+      console.warn('[Ads] Banner ID não configurado.');
     }
     return null;
   }
@@ -34,7 +34,7 @@ export function AdBanner() {
     TestIds = adsModule.TestIds;
   } catch {
     if (__DEV__) {
-      console.warn('[Ads] Modulo nativo de ads nao encontrado no build atual.');
+      console.warn('[Ads] Módulo nativo de ads não encontrado no build atual.');
     }
     return null;
   }

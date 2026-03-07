@@ -95,7 +95,7 @@ export function useGame(modo: ModoJogo) {
       setIsFavorite(nextValue);
 
       if (modo === ModoJogo.favoritas && !nextValue) {
-        await loadQuestions(modo);
+        await loadQuestions(modo, { force: true });
       }
     } catch (error) {
       setIsFavorite(previousValue);
@@ -120,6 +120,6 @@ export function useGame(modo: ModoJogo) {
     isFavorite,
     isFavoriteLoading,
     toggleFavorite,
-    reload: () => loadQuestions(modo),
+    reload: () => loadQuestions(modo, { force: true }),
   };
 }

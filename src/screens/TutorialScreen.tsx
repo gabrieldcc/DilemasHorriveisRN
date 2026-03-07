@@ -23,15 +23,15 @@ export function TutorialScreen() {
 
     if (mode === ModoJogo.favoritas) {
       return [
-        'Modo Favoritas: aqui ficam as perguntas que voce marcou com estrela.',
-        'Use este modo para revisitar dilemas que renderam mais discussao no seu grupo.',
+        'Modo Favoritas: aqui ficam as perguntas que você marcou com estrela.',
+        'Use este modo para revisitar dilemas que renderam mais discussão no seu grupo.',
       ];
     }
 
     if (mode === ModoJogo.comunidade) {
       return [
         'Modo Comunidade: mostra perguntas mais favoritadas pelos jogadores.',
-        'Quanto mais pessoas favoritarem uma pergunta, mais ela sobe no ranking.',
+        'Quanto mais pessoas favoritam uma pergunta, mais ela sobe no ranking.',
       ];
     }
 
@@ -70,12 +70,12 @@ export function TutorialScreen() {
         <View style={styles.wrapper}>
           <Text style={styles.title}>Como jogar</Text>
           <Text style={styles.text}>Esse jogo pode ser jogado individualmente ou em grupo.</Text>
-          <Text style={styles.text}>A ideia e gerar um debate sobre as respostas antes de escolher.</Text>
+          <Text style={styles.text}>A ideia é gerar um debate sobre as respostas antes de escolher.</Text>
           <Text style={styles.text}>1. Leia o dilema exibido na tela.</Text>
-          <Text style={styles.text}>2. Escolha entre a opcao A ou B.</Text>
+          <Text style={styles.text}>2. Escolha entre a opção A ou B.</Text>
           <Text style={styles.text}>3. Se estiver em grupo, escolham a resposta mais votada.</Text>
-          <Text style={styles.text}>4. A proxima pergunta aparece automaticamente.</Text>
-          <Text style={styles.text}>5. Continue ate acabar a lista do modo.</Text>
+          <Text style={styles.text}>4. A próxima pergunta aparece automaticamente.</Text>
+          <Text style={styles.text}>5. Continue até acabar a lista do modo.</Text>
           {modeSpecificTips ? <Text style={styles.modeTipsTitle}>Sobre este modo</Text> : null}
           {modeSpecificTips?.map((tip) => (
             <Text key={tip} style={styles.text}>
@@ -94,7 +94,7 @@ export function TutorialScreen() {
                 : hasValidMode
                   ? loading
                     ? 'Entrando...'
-                    : 'Entendi, comecar'
+                    : 'Entendi, começar'
                   : 'Voltar aos modos'}
             </Text>
           </Pressable>

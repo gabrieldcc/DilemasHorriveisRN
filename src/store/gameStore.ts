@@ -12,7 +12,8 @@ interface GameState {
   selectedOption: OpcaoEscolha | null;
   isLoading: boolean;
   error: string | null;
-  loadQuestions: (modo: ModoJogo) => Promise<void>;
+  sessions: Partial<Record<ModoJogo, { questions: Pergunta[]; currentIndex: number }>>;
+  loadQuestions: (modo: ModoJogo, options?: { force?: boolean }) => Promise<void>;
   nextQuestion: () => void;
   previousQuestion: () => void;
   setSelectedOption: (option: OpcaoEscolha | null) => void;
@@ -26,7 +27,25 @@ export const useGameStore = create<GameState>((set, get) => ({
   selectedOption: null,
   isLoading: false,
   error: null,
-  loadQuestions: async (modo) => {
+  sessions: {},
+  loadQuestions: async (modo, options) => {
+    const { sessions } = get();
+    const cachedSession = sessions[modo];
+    const shouldForceReload = options?.force ?? false;
+
+    if (!shouldForceReload && cachedSession) {
+      const restoredIndex = Math.min(cachedSession.currentIndex, Math.max(cachedSession.questions.length - 1, 0));
+      set({
+        mode: modo,
+        questions: cachedSession.questions,
+        currentIndex: restoredIndex,
+        selectedOption: null,
+        isLoading: false,
+        error: null,
+      });
+      return;
+    }
+
     set({
       isLoading: true,
       error: null,
@@ -40,19 +59,30 @@ export const useGameStore = create<GameState>((set, get) => ({
       const perguntas = await buscarPerguntasPorModo(modo);
       const shouldShuffle = isModoJogoConteudo(modo);
       const preparedQuestions = shouldShuffle ? shuffleArray(perguntas) : perguntas;
-      set({ questions: preparedQuestions, isLoading: false, currentIndex: 0 });
+      set((state) => ({
+        questions: preparedQuestions,
+        isLoading: false,
+        currentIndex: 0,
+        sessions: {
+          ...state.sessions,
+          [modo]: {
+            questions: preparedQuestions,
+            currentIndex: 0,
+          },
+        },
+      }));
     } catch (error) {
       const rawMessage = error instanceof Error ? error.message : 'Falha ao carregar perguntas.';
       const message =
         modo === ModoJogo.comunidade && rawMessage.toLowerCase().includes('firebase')
-          ? 'Modo Comunidade indisponivel no momento. Ajuste o indice do Firestore e tente novamente.'
+          ? 'Modo Comunidade indisponível no momento. Ajuste o índice do Firestore e tente novamente.'
           : rawMessage;
       console.error(`[GameStore] Erro ao carregar perguntas do modo "${modo}":`, error);
       set({ error: message, isLoading: false, questions: [], currentIndex: 0 });
     }
   },
   nextQuestion: () => {
-    const { currentIndex, questions } = get();
+    const { currentIndex, questions, mode } = get();
     const nextIndex = currentIndex + 1;
 
     if (nextIndex >= questions.length) {
@@ -60,17 +90,44 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
 
-    set({ currentIndex: nextIndex, selectedOption: null });
+    set((state) => ({
+      currentIndex: nextIndex,
+      selectedOption: null,
+      sessions:
+        mode === null
+          ? state.sessions
+          : {
+              ...state.sessions,
+              [mode]: {
+                questions: state.questions,
+                currentIndex: nextIndex,
+              },
+            },
+    }));
   },
   previousQuestion: () => {
-    const { currentIndex, questions } = get();
+    const { currentIndex, questions, mode } = get();
 
     if (questions.length === 0) {
       return;
     }
 
     if (currentIndex >= questions.length) {
-      set({ currentIndex: questions.length - 1, selectedOption: null });
+      const lastIndex = questions.length - 1;
+      set((state) => ({
+        currentIndex: lastIndex,
+        selectedOption: null,
+        sessions:
+          mode === null
+            ? state.sessions
+            : {
+                ...state.sessions,
+                [mode]: {
+                  questions: state.questions,
+                  currentIndex: lastIndex,
+                },
+              },
+      }));
       return;
     }
 
@@ -78,12 +135,34 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
 
-    set({ currentIndex: currentIndex - 1, selectedOption: null });
+    const previousIndex = currentIndex - 1;
+    set((state) => ({
+      currentIndex: previousIndex,
+      selectedOption: null,
+      sessions:
+        mode === null
+          ? state.sessions
+          : {
+              ...state.sessions,
+              [mode]: {
+                questions: state.questions,
+                currentIndex: previousIndex,
+              },
+            },
+    }));
   },
   setSelectedOption: (option) => {
     set({ selectedOption: option });
   },
   reset: () => {
-    set({ currentIndex: 0, selectedOption: null, questions: [], isLoading: false, error: null, mode: null });
+    set({
+      currentIndex: 0,
+      selectedOption: null,
+      questions: [],
+      isLoading: false,
+      error: null,
+      mode: null,
+      sessions: {},
+    });
   },
 }));

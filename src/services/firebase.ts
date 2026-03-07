@@ -20,7 +20,7 @@ function ensureConfig() {
     .map(([key]) => key);
 
   if (missing.length > 0) {
-    throw new Error(`Firebase nao configurado. Campos faltando: ${missing.join(', ')}`);
+    throw new Error(`Firebase não configurado. Campos faltando: ${missing.join(', ')}`);
   }
 }
 
@@ -29,14 +29,14 @@ export function getFirebaseFirestore() {
     ensureConfig();
     const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
     if (__DEV__ && !hasLoggedFirebaseReady) {
-      console.info(`[Firebase] Integracao ativa. Projeto: ${firebaseConfig.projectId} | Firestore pronto.`);
+      console.info(`[Firebase] Integração ativa. Projeto: ${firebaseConfig.projectId} | Firestore pronto.`);
       hasLoggedFirebaseReady = true;
     }
     return getFirestore(app);
   } catch (error) {
     if (__DEV__ && !hasLoggedFirebaseError) {
       const message = error instanceof Error ? error.message : 'Erro desconhecido ao inicializar Firebase.';
-      console.error(`[Firebase] Falha na inicializacao: ${message}`);
+      console.error(`[Firebase] Falha na inicialização: ${message}`);
       hasLoggedFirebaseError = true;
     }
     throw error;

@@ -1,9 +1,9 @@
 const COMMON_ERRORS: Record<string, string> = {
-  'permission-denied': 'Sem permissao para acessar o banco de dados.',
-  'network-request-failed': 'Falha de rede. Verifique sua conexao e tente novamente.',
-  unavailable: 'Servico temporariamente indisponivel. Tente novamente.',
-  'configuration-not-found': 'Autenticacao anonima nao habilitada no Firebase.',
-  'failed-precondition': 'Configuracao pendente no Firebase para concluir esta operacao.',
+  'permission-denied': 'Sem permissão para acessar o banco de dados.',
+  'network-request-failed': 'Falha de rede. Verifique sua conexão e tente novamente.',
+  unavailable: 'Serviço temporariamente indisponível. Tente novamente.',
+  'configuration-not-found': 'Autenticação anônima não habilitada no Firebase.',
+  'failed-precondition': 'Configuração pendente no Firebase para concluir esta operação.',
 };
 
 export function parseFirebaseError(error: unknown): string {
@@ -22,7 +22,7 @@ export function parseFirebaseError(error: unknown): string {
     normalizedMessage.includes('single field index') ||
     normalizedMessage.includes('firestore.googleapis.com')
   ) {
-    return 'Modo Comunidade indisponivel no momento. Falta ajustar o indice do Firestore para ranking por favoritos.';
+    return 'Modo Comunidade indisponível no momento. Falta ajustar o índice do Firestore para ranking por favoritos.';
   }
 
   if (

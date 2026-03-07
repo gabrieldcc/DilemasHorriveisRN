@@ -15,7 +15,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { Directions, Gesture, GestureDetector, ScrollView as GestureHandlerScrollView } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeOut, SlideInLeft, runOnJS, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
@@ -63,7 +63,7 @@ export function GameScreen() {
     return (
       <ScreenContainer>
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Modo de jogo invalido.</Text>
+          <Text style={styles.errorText}>Modo de jogo inválido.</Text>
           <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
             <Text style={styles.secondaryButtonText}>Voltar</Text>
           </Pressable>
@@ -148,13 +148,11 @@ export function GameScreen() {
     previousQuestion();
   };
 
-  const swipeGesture = Gesture.Pan()
-    .activeOffsetX([30, 9999])
-    .failOffsetY([-20, 20])
-    .onEnd((event: { translationX: number; translationY: number }) => {
-      if (event.translationX > 70 && Math.abs(event.translationY) < 40) {
-        runOnJS(handleSwipeBack)();
-      }
+  const swipeGesture = Gesture.Fling()
+    .direction(Directions.RIGHT)
+    .numberOfPointers(1)
+    .onEnd(() => {
+      runOnJS(handleSwipeBack)();
     });
 
   const handleFavoritePress = () => {
@@ -191,7 +189,7 @@ export function GameScreen() {
     try {
       const available = await Sharing.isAvailableAsync();
       if (!available) {
-        Alert.alert('Compartilhamento indisponivel', 'Seu dispositivo nao suporta compartilhamento nesta plataforma.');
+        Alert.alert('Compartilhamento indisponível', 'Seu dispositivo não suporta compartilhamento nesta plataforma.');
         return;
       }
 
@@ -207,7 +205,7 @@ export function GameScreen() {
         dialogTitle: 'Compartilhar dilema',
       });
     } catch (error) {
-      Alert.alert('Erro ao compartilhar', 'Nao foi possivel gerar a imagem da pergunta.');
+      Alert.alert('Erro ao compartilhar', 'Não foi possível gerar a imagem da pergunta.');
       if (__DEV__) {
         console.error('[Share] Falha ao compartilhar pergunta:', error);
       }
@@ -229,7 +227,7 @@ export function GameScreen() {
       setComments(loaded);
       setCommentsCount(loaded.length);
     } catch (error) {
-      Alert.alert('Erro ao carregar comentarios', error instanceof Error ? error.message : 'Tente novamente.');
+      Alert.alert('Erro ao carregar comentários', error instanceof Error ? error.message : 'Tente novamente.');
     } finally {
       setIsCommentsLoading(false);
     }
@@ -247,7 +245,7 @@ export function GameScreen() {
 
     const normalized = commentInput.trim();
     if (normalized.length < 3) {
-      Alert.alert('Comentario curto', 'Digite pelo menos 3 caracteres.');
+      Alert.alert('Comentário curto', 'Digite pelo menos 3 caracteres.');
       return;
     }
 
@@ -257,7 +255,7 @@ export function GameScreen() {
       setCommentInput('');
       await loadComments();
     } catch (error) {
-      Alert.alert('Erro ao comentar', error instanceof Error ? error.message : 'Nao foi possivel enviar comentario.');
+      Alert.alert('Erro ao comentar', error instanceof Error ? error.message : 'Não foi possível enviar comentário.');
     } finally {
       setIsSendingComment(false);
     }
@@ -308,7 +306,7 @@ export function GameScreen() {
       })
       .catch((error) => {
         setComments(previousComments);
-        Alert.alert('Erro ao curtir', error instanceof Error ? error.message : 'Nao foi possivel atualizar o like.');
+        Alert.alert('Erro ao curtir', error instanceof Error ? error.message : 'Não foi possível atualizar o like.');
       })
       .finally(() => {
         delete likingInFlightRef.current[commentId];
@@ -325,7 +323,7 @@ export function GameScreen() {
       return;
     }
 
-    Alert.alert('Excluir comentario', 'Deseja excluir este comentario?', [
+    Alert.alert('Excluir comentário', 'Deseja excluir este comentário?', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Excluir',
@@ -338,7 +336,7 @@ export function GameScreen() {
           void removerComentarioPergunta(currentQuestion, commentId).catch((error) => {
             setComments(previousComments);
             setCommentsCount(previousComments.length);
-            Alert.alert('Erro ao excluir', error instanceof Error ? error.message : 'Nao foi possivel excluir o comentario.');
+            Alert.alert('Erro ao excluir', error instanceof Error ? error.message : 'Não foi possível excluir o comentário.');
           });
         },
       },
@@ -414,7 +412,7 @@ export function GameScreen() {
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
             <View style={styles.favoriteHintBubble}>
-              <Text style={styles.favoriteHintTitle}>Dica rapida</Text>
+              <Text style={styles.favoriteHintTitle}>Dica rápida</Text>
               <Text style={styles.favoriteHintText}>
                 Toque na estrela para favoritar este dilema e acessar depois no modo Favoritas.
               </Text>
@@ -436,7 +434,7 @@ export function GameScreen() {
 
         {!isLoading && !error && total === 0 ? (
           <View style={styles.centered}>
-            <Text style={styles.helperText}>Nao encontramos perguntas nesse modo ainda.</Text>
+            <Text style={styles.helperText}>Não encontramos perguntas nesse modo ainda.</Text>
             <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
               <Text style={styles.secondaryButtonText}>Escolher outro modo</Text>
             </Pressable>
@@ -446,7 +444,7 @@ export function GameScreen() {
         {!isLoading && !error && isFinished ? (
           <View style={styles.centered}>
             <Text style={styles.doneTitle}>Fim da lista</Text>
-            <Text style={styles.helperText}>Voce passou por todos os dilemas desse modo.</Text>
+            <Text style={styles.helperText}>Você passou por todos os dilemas desse modo.</Text>
             <Pressable style={styles.secondaryButton} onPress={reload}>
               <Text style={styles.secondaryButtonText}>Jogar novamente</Text>
             </Pressable>
@@ -463,31 +461,40 @@ export function GameScreen() {
             exiting={FadeOut.duration(140)}
             style={styles.questionContainer}
           >
-            <ScrollView
+            <GestureHandlerScrollView
               style={styles.scrollArea}
               contentContainerStyle={styles.scrollContent}
+              nestedScrollEnabled
               showsVerticalScrollIndicator={false}
             >
               <View>
-                <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
-                <View style={styles.optionsContainer}>
-                  <OptionButton
-                    label="Opcao A"
-                    value={currentQuestion.opcaoA}
-                    isSelected={selectedOption === 'A'}
-                    onPress={handleSelectOptionA}
-                    disabled={selectedOption !== null || isShareOverlayVisible}
-                  />
-                  <OptionButton
-                    label="Opcao B"
-                    value={currentQuestion.opcaoB}
-                    isSelected={selectedOption === 'B'}
-                    onPress={handleSelectOptionB}
-                    disabled={selectedOption !== null || isShareOverlayVisible}
-                  />
+                <View style={styles.arenaPanel}>
+                  <Text style={styles.arenaBadge}>ARENA DE DILEMAS</Text>
+                  <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
+                  <View style={styles.arenaDivider}>
+                    <View style={styles.arenaDividerLine} />
+                    <Text style={styles.arenaDividerText}>A x B</Text>
+                    <View style={styles.arenaDividerLine} />
+                  </View>
+                  <View style={styles.optionsContainer}>
+                    <OptionButton
+                      label="Opção A"
+                      value={currentQuestion.opcaoA}
+                      isSelected={selectedOption === 'A'}
+                      onPress={handleSelectOptionA}
+                      disabled={selectedOption !== null || isShareOverlayVisible}
+                    />
+                    <OptionButton
+                      label="Opção B"
+                      value={currentQuestion.opcaoB}
+                      isSelected={selectedOption === 'B'}
+                      onPress={handleSelectOptionB}
+                      disabled={selectedOption !== null || isShareOverlayVisible}
+                    />
+                  </View>
                 </View>
               </View>
-            </ScrollView>
+            </GestureHandlerScrollView>
           </Animated.View>
           ) : null}
           {isLoading && shouldShowLoadingOverlay ? (
@@ -503,14 +510,14 @@ export function GameScreen() {
               <View style={styles.shareExportCard}>
                 <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
                 <View style={styles.shareExportOption}>
-                  <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
+                  <Text style={styles.shareExportOptionLabel}>Opção A</Text>
                   <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
                 </View>
                 <View style={styles.shareExportVsWrap}>
                   <Text style={styles.shareExportVsText}>VS</Text>
                 </View>
                 <View style={styles.shareExportOption}>
-                  <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
+                  <Text style={styles.shareExportOptionLabel}>Opção B</Text>
                   <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
                 </View>
               </View>
@@ -540,7 +547,7 @@ export function GameScreen() {
           >
             <Pressable style={styles.commentsCard} onPress={() => {}}>
             <View style={styles.commentsHeader}>
-              <Text style={styles.commentsTitle}>Comentarios</Text>
+              <Text style={styles.commentsTitle}>Comentários</Text>
               <Pressable
                 onPress={() => {
                   Keyboard.dismiss();
@@ -558,7 +565,7 @@ export function GameScreen() {
             >
               {isCommentsLoading ? <ActivityIndicator color="#22d3ee" /> : null}
               {!isCommentsLoading && comments.length === 0 ? (
-                <Text style={styles.commentsEmptyText}>Seja o primeiro a comentar essa pergunta.</Text>
+                <Text style={styles.commentsEmptyText}>Seja o primeiro a comentar esta pergunta.</Text>
               ) : null}
               {comments.map((comment) => (
                 <View key={comment.id} style={styles.commentItem}>
@@ -593,7 +600,7 @@ export function GameScreen() {
             <TextInput
               value={commentInput}
               onChangeText={setCommentInput}
-              placeholder="Conte sua historia..."
+              placeholder="Conte sua história..."
               placeholderTextColor="#64748b"
               multiline
               maxLength={220}
@@ -604,7 +611,7 @@ export function GameScreen() {
               disabled={isSendingComment}
               style={({ pressed }) => [styles.commentSendButton, pressed && styles.commentSendButtonPressed, isSendingComment && styles.commentSendButtonDisabled]}
             >
-              <Text style={styles.commentSendButtonText}>{isSendingComment ? 'Enviando...' : 'Enviar comentario'}</Text>
+              <Text style={styles.commentSendButtonText}>{isSendingComment ? 'Enviando...' : 'Enviar comentário'}</Text>
             </Pressable>
             </Pressable>
           </KeyboardAvoidingView>
@@ -626,6 +633,7 @@ export function GameScreen() {
 const styles = StyleSheet.create({
   gestureLayer: {
     flex: 1,
+    minHeight: 0,
   },
   topBar: {
     marginTop: 8,
@@ -747,6 +755,7 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flex: 1,
+    minHeight: 0,
   },
   favoriteHintOverlay: {
     position: 'absolute',
@@ -797,6 +806,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    flexGrow: 1,
     paddingBottom: 24,
   },
   hiddenShareCanvas: {
@@ -881,13 +891,49 @@ const styles = StyleSheet.create({
   },
   questionTitle: {
     color: '#f8fafc',
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 32,
+    lineHeight: 38,
     fontWeight: '500',
-    marginBottom: 20,
+    marginBottom: 14,
+    textAlign: 'center',
+  },
+  arenaPanel: {
+    borderWidth: 1,
+    borderColor: '#1f3b54',
+    borderRadius: 18,
+    backgroundColor: '#0f172a',
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 8,
+  },
+  arenaBadge: {
+    alignSelf: 'center',
+    color: '#7dd3fc',
+    fontSize: 11,
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  arenaDivider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  arenaDividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#1f3b54',
+  },
+  arenaDividerText: {
+    color: '#38bdf8',
+    fontSize: 12,
+    letterSpacing: 1,
+    fontWeight: '500',
   },
   optionsContainer: {
-    marginTop: 10,
+    marginTop: 2,
   },
   centered: {
     flex: 1,

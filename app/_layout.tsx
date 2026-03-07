@@ -14,9 +14,9 @@ export default function RootLayout() {
       try {
         const db = getFirebaseFirestore();
         await getDoc(doc(db, 'perguntas', 'leve'));
-        logCrashlyticsMessage('Firebase startup check concluido com sucesso.');
+        logCrashlyticsMessage('Firebase startup check concluído com sucesso.');
         if (__DEV__) {
-          console.info('[Firebase] Startup check concluido com sucesso.');
+          console.info('[Firebase] Startup check concluído com sucesso.');
         }
       } catch (error) {
         recordCrashlyticsError(error, 'Falha no Firebase startup check');
