@@ -1,8 +1,11 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import * as Sharing from 'expo-sharing';
+import { captureRef } from 'react-native-view-shot';
 
+import { AdBanner } from '../components/ads/AdBanner';
 import { OptionButton } from '../components/OptionButton';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo } from '../models/game';
@@ -13,6 +16,7 @@ export function GameScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string }>();
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -48,7 +52,7 @@ export function GameScreen() {
     reload,
   } = useGame(modo);
   const favoriteScale = useSharedValue(1);
-
+  const shareTemplateRef = useRef<View | null>(null);
   const favoriteIconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: favoriteScale.value }],
   }));
@@ -56,6 +60,40 @@ export function GameScreen() {
   const handleFavoritePress = () => {
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
     void toggleFavorite();
+  };
+
+  const handleShareQuestion = async () => {
+    if (!currentQuestion || !shareTemplateRef.current || isSharing) {
+      return;
+    }
+
+    setIsSharing(true);
+    try {
+      const available = await Sharing.isAvailableAsync();
+      if (!available) {
+        Alert.alert('Compartilhamento indisponivel', 'Seu dispositivo nao suporta compartilhamento nesta plataforma.');
+        return;
+      }
+
+      const imageUri = await captureRef(shareTemplateRef, {
+        format: 'png',
+        quality: 1,
+        result: 'tmpfile',
+      });
+
+      await Sharing.shareAsync(imageUri, {
+        mimeType: 'image/png',
+        UTI: 'public.png',
+        dialogTitle: 'Compartilhar dilema',
+      });
+    } catch (error) {
+      Alert.alert('Erro ao compartilhar', 'Nao foi possivel gerar a imagem da pergunta.');
+      if (__DEV__) {
+        console.error('[Share] Falha ao compartilhar pergunta:', error);
+      }
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
@@ -91,6 +129,21 @@ export function GameScreen() {
                 <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
               )}
             </Animated.View>
+          </Pressable>
+          <Pressable
+            onPress={() => void handleShareQuestion()}
+            disabled={!currentQuestion || isSharing}
+            style={({ pressed }) => [
+              styles.shareIconButton,
+              pressed && styles.shareIconButtonPressed,
+              (!currentQuestion || isSharing) && styles.shareIconButtonDisabled,
+            ]}
+          >
+            {isSharing ? (
+              <ActivityIndicator size="small" color="#bae6fd" />
+            ) : (
+              <Text style={styles.shareIconText}>↗</Text>
+            )}
           </Pressable>
         </View>
       </View>
@@ -159,26 +212,45 @@ export function GameScreen() {
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
-            <View style={styles.optionsContainer}>
-              <OptionButton
-                label="Opcao A"
-                value={currentQuestion.opcaoA}
-                isSelected={selectedOption === 'A'}
-                onPress={() => selectOption('A')}
-                disabled={selectedOption !== null}
-              />
-              <OptionButton
-                label="Opcao B"
-                value={currentQuestion.opcaoB}
-                isSelected={selectedOption === 'B'}
-                onPress={() => selectOption('B')}
-                disabled={selectedOption !== null}
-              />
+            <View>
+              <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
+              <View style={styles.optionsContainer}>
+                <OptionButton
+                  label="Opcao A"
+                  value={currentQuestion.opcaoA}
+                  isSelected={selectedOption === 'A'}
+                  onPress={() => selectOption('A')}
+                  disabled={selectedOption !== null}
+                />
+                <OptionButton
+                  label="Opcao B"
+                  value={currentQuestion.opcaoB}
+                  isSelected={selectedOption === 'B'}
+                  onPress={() => selectOption('B')}
+                  disabled={selectedOption !== null}
+                />
+              </View>
             </View>
           </ScrollView>
         </Animated.View>
       ) : null}
+      {currentQuestion ? (
+        <View style={styles.hiddenShareCanvas} pointerEvents="none">
+          <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
+            <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
+            <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
+            <View style={styles.shareExportOption}>
+              <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
+              <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
+            </View>
+            <View style={styles.shareExportOption}>
+              <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
+              <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
+            </View>
+          </View>
+        </View>
+      ) : null}
+      <AdBanner />
     </ScreenContainer>
   );
 }
@@ -254,6 +326,28 @@ const styles = StyleSheet.create({
     fontSize: 19,
     lineHeight: 19,
   },
+  shareIconButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+  },
+  shareIconButtonPressed: {
+    opacity: 0.85,
+  },
+  shareIconButtonDisabled: {
+    opacity: 0.5,
+  },
+  shareIconText: {
+    color: '#bae6fd',
+    fontSize: 16,
+    lineHeight: 16,
+    fontWeight: '700',
+  },
   questionContainer: {
     flex: 1,
   },
@@ -307,6 +401,52 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 24,
+  },
+  hiddenShareCanvas: {
+    position: 'absolute',
+    left: -10000,
+    top: 0,
+  },
+  shareExportContainer: {
+    width: 340,
+    padding: 16,
+    backgroundColor: 'transparent',
+  },
+  shareExportAppName: {
+    color: '#ffffff',
+    fontSize: 24,
+    fontWeight: '900',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  shareExportQuestion: {
+    color: '#ffffff',
+    fontSize: 28,
+    lineHeight: 34,
+    fontWeight: '800',
+    marginBottom: 14,
+  },
+  shareExportOption: {
+    borderWidth: 2,
+    borderColor: '#67e8f9',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginBottom: 10,
+    backgroundColor: '#0b122033',
+  },
+  shareExportOptionLabel: {
+    color: '#a5f3fc',
+    textTransform: 'uppercase',
+    fontWeight: '800',
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  shareExportOptionText: {
+    color: '#f8fafc',
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '700',
   },
   questionTitle: {
     color: '#f8fafc',
