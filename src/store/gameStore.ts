@@ -14,6 +14,7 @@ interface GameState {
   error: string | null;
   loadQuestions: (modo: ModoJogo) => Promise<void>;
   nextQuestion: () => void;
+  previousQuestion: () => void;
   setSelectedOption: (option: OpcaoEscolha | null) => void;
   reset: () => void;
 }
@@ -53,6 +54,24 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     set({ currentIndex: nextIndex, selectedOption: null });
+  },
+  previousQuestion: () => {
+    const { currentIndex, questions } = get();
+
+    if (questions.length === 0) {
+      return;
+    }
+
+    if (currentIndex >= questions.length) {
+      set({ currentIndex: questions.length - 1, selectedOption: null });
+      return;
+    }
+
+    if (currentIndex <= 0) {
+      return;
+    }
+
+    set({ currentIndex: currentIndex - 1, selectedOption: null });
   },
   setSelectedOption: (option) => {
     set({ selectedOption: option });

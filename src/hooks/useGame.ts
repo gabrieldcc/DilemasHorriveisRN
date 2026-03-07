@@ -15,6 +15,7 @@ export function useGame(modo: ModoJogo) {
     error,
     loadQuestions,
     nextQuestion,
+    previousQuestion,
     setSelectedOption,
   } = useGameStore();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -114,6 +115,7 @@ export function useGame(modo: ModoJogo) {
     error,
     selectedOption,
     nextQuestion,
+    previousQuestion,
     selectOption,
     isFavorite,
     isFavoriteLoading,

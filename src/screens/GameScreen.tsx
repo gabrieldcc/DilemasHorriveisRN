@@ -1,7 +1,7 @@
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import { ActivityIndicator, Alert, PanResponder, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeOut, SlideInLeft, useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import * as Sharing from 'expo-sharing';
 import { captureRef } from 'react-native-view-shot';
 
@@ -17,6 +17,7 @@ export function GameScreen() {
   const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string }>();
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [transitionType, setTransitionType] = useState<'default' | 'back'>('default');
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -46,6 +47,7 @@ export function GameScreen() {
     error,
     selectedOption,
     selectOption,
+    previousQuestion,
     isFavorite,
     isFavoriteLoading,
     toggleFavorite,
@@ -53,6 +55,22 @@ export function GameScreen() {
   } = useGame(modo);
   const favoriteScale = useSharedValue(1);
   const shareTemplateRef = useRef<View | null>(null);
+  const swipePanResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) =>
+        Math.abs(gestureState.dx) > 18 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy) * 1.2,
+      onPanResponderRelease: (_, gestureState) => {
+        if (selectedOption !== null) {
+          return;
+        }
+
+        if (gestureState.dx > 70 && Math.abs(gestureState.dy) < 40) {
+          setTransitionType('back');
+          previousQuestion();
+        }
+      },
+    })
+  ).current;
   const favoriteIconAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: favoriteScale.value }],
   }));
@@ -60,6 +78,16 @@ export function GameScreen() {
   const handleFavoritePress = () => {
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
     void toggleFavorite();
+  };
+
+  const handleSelectOptionA = () => {
+    setTransitionType('default');
+    selectOption('A');
+  };
+
+  const handleSelectOptionB = () => {
+    setTransitionType('default');
+    selectOption('B');
   };
 
   const handleShareQuestion = async () => {
@@ -100,162 +128,166 @@ export function GameScreen() {
 
   return (
     <ScreenContainer>
-      <View style={styles.topBar}>
-        <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
-        <View style={styles.topBarRight}>
-          <Text style={styles.progress}>
-            {Math.min(currentIndex + 1, total)}/{total || 0}
-          </Text>
-          <Pressable
-            onPress={() => router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game' } })}
-            style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
-          >
-            <Text style={styles.tutorialIconText}>?</Text>
-          </Pressable>
-          <Pressable
-            onPress={handleFavoritePress}
-            disabled={!currentQuestion || isFavoriteLoading}
-            style={({ pressed }) => [
-              styles.favoriteIconButton,
-              isFavorite && styles.favoriteIconButtonActive,
-              pressed && styles.favoriteIconButtonPressed,
-              (!currentQuestion || isFavoriteLoading) && styles.favoriteIconButtonDisabled,
-            ]}
-          >
-            <Animated.View style={favoriteIconAnimatedStyle}>
-              {isFavoriteLoading ? (
-                <ActivityIndicator size="small" color="#fde68a" />
-              ) : (
-                <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
-              )}
-            </Animated.View>
-          </Pressable>
-          <Pressable
-            onPress={() => void handleShareQuestion()}
-            disabled={!currentQuestion || isSharing}
-            style={({ pressed }) => [
-              styles.shareIconButton,
-              pressed && styles.shareIconButtonPressed,
-              (!currentQuestion || isSharing) && styles.shareIconButtonDisabled,
-            ]}
-          >
-            {isSharing ? (
-              <ActivityIndicator size="small" color="#bae6fd" />
-            ) : (
-              <Text style={styles.shareIconText}>↗</Text>
-            )}
-          </Pressable>
-        </View>
-      </View>
-      {showFavoriteHint ? (
-        <View style={styles.favoriteHintOverlay}>
-          <View style={styles.favoriteHintBubble}>
-            <Text style={styles.favoriteHintTitle}>Dica rapida</Text>
-            <Text style={styles.favoriteHintText}>
-              Toque na estrela para favoritar este dilema e acessar depois no modo Favoritas.
+      <View style={styles.gestureLayer} {...swipePanResponder.panHandlers}>
+        <View style={styles.topBar}>
+          <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
+          <View style={styles.topBarRight}>
+            <Text style={styles.progress}>
+              {Math.min(currentIndex + 1, total)}/{total || 0}
             </Text>
-            <Pressable onPress={() => setShowFavoriteHint(false)} style={styles.favoriteHintButton}>
-              <Text style={styles.favoriteHintButtonText}>Entendi</Text>
+            <Pressable
+              onPress={() => router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game' } })}
+              style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
+            >
+              <Text style={styles.tutorialIconText}>?</Text>
+            </Pressable>
+            <Pressable
+              onPress={handleFavoritePress}
+              disabled={!currentQuestion || isFavoriteLoading}
+              style={({ pressed }) => [
+                styles.favoriteIconButton,
+                isFavorite && styles.favoriteIconButtonActive,
+                pressed && styles.favoriteIconButtonPressed,
+                (!currentQuestion || isFavoriteLoading) && styles.favoriteIconButtonDisabled,
+              ]}
+            >
+              <Animated.View style={favoriteIconAnimatedStyle}>
+                {isFavoriteLoading ? (
+                  <ActivityIndicator size="small" color="#fde68a" />
+                ) : (
+                  <Text style={styles.favoriteIconText}>{isFavorite ? '★' : '☆'}</Text>
+                )}
+              </Animated.View>
+            </Pressable>
+            <Pressable
+              onPress={() => void handleShareQuestion()}
+              disabled={!currentQuestion || isSharing}
+              style={({ pressed }) => [
+                styles.shareIconButton,
+                pressed && styles.shareIconButtonPressed,
+                (!currentQuestion || isSharing) && styles.shareIconButtonDisabled,
+              ]}
+            >
+              {isSharing ? (
+                <ActivityIndicator size="small" color="#bae6fd" />
+              ) : (
+                <Text style={styles.shareIconText}>↗</Text>
+              )}
             </Pressable>
           </View>
-          <Text style={styles.favoriteHintArrow}>↗</Text>
         </View>
-      ) : null}
+        {showFavoriteHint ? (
+          <View style={styles.favoriteHintOverlay}>
+            <View style={styles.favoriteHintBubble}>
+              <Text style={styles.favoriteHintTitle}>Dica rapida</Text>
+              <Text style={styles.favoriteHintText}>
+                Toque na estrela para favoritar este dilema e acessar depois no modo Favoritas.
+              </Text>
+              <Pressable onPress={() => setShowFavoriteHint(false)} style={styles.favoriteHintButton}>
+                <Text style={styles.favoriteHintButtonText}>Entendi</Text>
+              </Pressable>
+            </View>
+            <Text style={styles.favoriteHintArrow}>↗</Text>
+          </View>
+        ) : null}
+        {isLoading ? (
+          <View style={styles.centered}>
+            <ActivityIndicator size="large" color="#22d3ee" />
+            <Text style={styles.helperText}>Carregando perguntas...</Text>
+          </View>
+        ) : null}
 
-      {isLoading ? (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#22d3ee" />
-          <Text style={styles.helperText}>Carregando perguntas...</Text>
-        </View>
-      ) : null}
+        {!isLoading && error ? (
+          <View style={styles.centered}>
+            <Text style={styles.errorText}>{error}</Text>
+            <Pressable style={styles.secondaryButton} onPress={reload}>
+              <Text style={styles.secondaryButtonText}>Tentar novamente</Text>
+            </Pressable>
+          </View>
+        ) : null}
 
-      {!isLoading && error ? (
-        <View style={styles.centered}>
-          <Text style={styles.errorText}>{error}</Text>
-          <Pressable style={styles.secondaryButton} onPress={reload}>
-            <Text style={styles.secondaryButtonText}>Tentar novamente</Text>
-          </Pressable>
-        </View>
-      ) : null}
+        {!isLoading && !error && total === 0 ? (
+          <View style={styles.centered}>
+            <Text style={styles.helperText}>Nao encontramos perguntas nesse modo ainda.</Text>
+            <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
+              <Text style={styles.secondaryButtonText}>Escolher outro modo</Text>
+            </Pressable>
+          </View>
+        ) : null}
 
-      {!isLoading && !error && total === 0 ? (
-        <View style={styles.centered}>
-          <Text style={styles.helperText}>Nao encontramos perguntas nesse modo ainda.</Text>
-          <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
-            <Text style={styles.secondaryButtonText}>Escolher outro modo</Text>
-          </Pressable>
-        </View>
-      ) : null}
+        {!isLoading && !error && isFinished ? (
+          <View style={styles.centered}>
+            <Text style={styles.doneTitle}>Fim da lista</Text>
+            <Text style={styles.helperText}>Voce passou por todos os dilemas desse modo.</Text>
+            <Pressable style={styles.secondaryButton} onPress={reload}>
+              <Text style={styles.secondaryButtonText}>Jogar novamente</Text>
+            </Pressable>
+            <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
+              <Text style={styles.secondaryButtonText}>Voltar para modos</Text>
+            </Pressable>
+          </View>
+        ) : null}
 
-      {!isLoading && !error && isFinished ? (
-        <View style={styles.centered}>
-          <Text style={styles.doneTitle}>Fim da lista</Text>
-          <Text style={styles.helperText}>Voce passou por todos os dilemas desse modo.</Text>
-          <Pressable style={styles.secondaryButton} onPress={reload}>
-            <Text style={styles.secondaryButtonText}>Jogar novamente</Text>
-          </Pressable>
-          <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
-            <Text style={styles.secondaryButtonText}>Voltar para modos</Text>
-          </Pressable>
-        </View>
-      ) : null}
-
-      {currentQuestion ? (
-        <Animated.View
-          key={currentQuestion.id}
-          entering={FadeIn.duration(220)}
-          exiting={FadeOut.duration(140)}
-          style={styles.questionContainer}
-        >
-          <ScrollView
-            style={styles.scrollArea}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
+        {currentQuestion ? (
+          <Animated.View
+            key={currentQuestion.id}
+            entering={transitionType === 'back' ? SlideInLeft.duration(190) : FadeIn.duration(220)}
+            exiting={FadeOut.duration(140)}
+            style={styles.questionContainer}
           >
-            <View>
-              <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
-              <View style={styles.optionsContainer}>
-                <OptionButton
-                  label="Opcao A"
-                  value={currentQuestion.opcaoA}
-                  isSelected={selectedOption === 'A'}
-                  onPress={() => selectOption('A')}
-                  disabled={selectedOption !== null}
-                />
-                <OptionButton
-                  label="Opcao B"
-                  value={currentQuestion.opcaoB}
-                  isSelected={selectedOption === 'B'}
-                  onPress={() => selectOption('B')}
-                  disabled={selectedOption !== null}
-                />
+            <ScrollView
+              style={styles.scrollArea}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+            >
+              <View>
+                <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
+                <View style={styles.optionsContainer}>
+                  <OptionButton
+                    label="Opcao A"
+                    value={currentQuestion.opcaoA}
+                    isSelected={selectedOption === 'A'}
+                    onPress={handleSelectOptionA}
+                    disabled={selectedOption !== null}
+                  />
+                  <OptionButton
+                    label="Opcao B"
+                    value={currentQuestion.opcaoB}
+                    isSelected={selectedOption === 'B'}
+                    onPress={handleSelectOptionB}
+                    disabled={selectedOption !== null}
+                  />
+                </View>
+              </View>
+            </ScrollView>
+          </Animated.View>
+        ) : null}
+        {currentQuestion ? (
+          <View style={styles.hiddenShareCanvas} pointerEvents="none">
+            <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
+              <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
+              <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
+              <View style={styles.shareExportOption}>
+                <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
+                <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
+              </View>
+              <View style={styles.shareExportOption}>
+                <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
+                <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
               </View>
             </View>
-          </ScrollView>
-        </Animated.View>
-      ) : null}
-      {currentQuestion ? (
-        <View style={styles.hiddenShareCanvas} pointerEvents="none">
-          <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
-            <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
-            <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
-            <View style={styles.shareExportOption}>
-              <Text style={styles.shareExportOptionLabel}>Opcao A</Text>
-              <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
-            </View>
-            <View style={styles.shareExportOption}>
-              <Text style={styles.shareExportOptionLabel}>Opcao B</Text>
-              <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
-            </View>
           </View>
-        </View>
-      ) : null}
-      <AdBanner />
+        ) : null}
+        <AdBanner />
+      </View>
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  gestureLayer: {
+    flex: 1,
+  },
   topBar: {
     marginTop: 8,
     marginBottom: 18,
