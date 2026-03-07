@@ -13,8 +13,25 @@ export function ModeSelectionScreen() {
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
   const [adminError, setAdminError] = useState<string | null>(null);
+  const [logoTapCount, setLogoTapCount] = useState(0);
+  const [adminGestureArmed, setAdminGestureArmed] = useState(false);
+
+  const handleLogoTap = () => {
+    const nextCount = logoTapCount + 1;
+    if (nextCount >= 3) {
+      setLogoTapCount(0);
+      setAdminGestureArmed(true);
+      setTimeout(() => setAdminGestureArmed(false), 6000);
+      return;
+    }
+    setLogoTapCount(nextCount);
+  };
 
   const openAdminGate = () => {
+    if (!adminGestureArmed) {
+      return;
+    }
+    setAdminGestureArmed(false);
     if (!isAdminPinConfigured()) {
       setAdminError('PIN admin nao configurado no ambiente.');
       setShowAdminModal(true);
@@ -40,7 +57,7 @@ export function ModeSelectionScreen() {
   return (
     <ScreenContainer>
       <View style={styles.headerContainer}>
-        <Pressable onLongPress={openAdminGate} delayLongPress={900}>
+        <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
           <Text style={styles.title}>Dilemas Horriveis</Text>
         </Pressable>
         <Text style={styles.subtitle}>Escolha um modo para comecar</Text>
