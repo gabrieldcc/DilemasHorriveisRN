@@ -9,10 +9,11 @@ import { isModoJogo } from '../utils/gameModes';
 
 export function TutorialScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ mode?: string; from?: string }>();
+  const params = useLocalSearchParams<{ mode?: string; from?: string; gameType?: string }>();
   const [loading, setLoading] = useState(false);
 
   const mode = params.mode;
+  const gameType = params.gameType === 'infiltrado' ? 'infiltrado' : 'classic';
   const openedFromGame = params.from === 'game';
   const hasValidMode = Boolean(mode && isModoJogo(mode));
 
@@ -59,6 +60,7 @@ export function TutorialScreen() {
       pathname: '/game',
       params: {
         mode: mode as string,
+        gameType,
         favoriteHint: firstAppTutorial ? '1' : undefined,
       },
     });

@@ -38,7 +38,7 @@ import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 
 export function GameScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string }>();
+  const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string; gameType?: string }>();
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [isShareOverlayVisible, setIsShareOverlayVisible] = useState(false);
@@ -54,12 +54,30 @@ export function GameScreen() {
   const likingInFlightRef = useRef<Record<string, boolean>>({});
   const shareGhostTapUntilRef = useRef(0);
   const commentsEnabled = useFeatureFlagsStore((state) => state.flags.commentsEnabled);
+  const gameType = params.gameType === 'infiltrado' ? 'infiltrado' : 'classic';
+  const isInfiltradoMatch = gameType === 'infiltrado';
+  const [infiltradoPhase, setInfiltradoPhase] = useState<'setup' | 'reveal' | 'ready' | null>(
+    isInfiltradoMatch ? 'setup' : null
+  );
+  const [playerCountInput, setPlayerCountInput] = useState('4');
+  const [playerCount, setPlayerCount] = useState(0);
+  const [infiltradoIndex, setInfiltradoIndex] = useState<number | null>(null);
+  const [revealIndex, setRevealIndex] = useState(0);
+  const [isRoleVisible, setIsRoleVisible] = useState(false);
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
       setShowFavoriteHint(true);
     }
   }, [params.favoriteHint]);
+
+  useEffect(() => {
+    if (isInfiltradoMatch) {
+      setInfiltradoPhase('setup');
+      return;
+    }
+    setInfiltradoPhase(null);
+  }, [isInfiltradoMatch]);
 
   useEffect(() => {
     if (!commentsEnabled && showCommentsModal) {
@@ -206,7 +224,7 @@ export function GameScreen() {
         quality: 1,
         result: 'tmpfile',
         backgroundColor: 'transparent',
-      });
+      } as any);
 
       await Sharing.shareAsync(imageUri, {
         mimeType: 'image/png',
@@ -355,6 +373,31 @@ export function GameScreen() {
     ]);
   };
 
+  const handleStartInfiltradoSetup = () => {
+    const parsed = Number.parseInt(playerCountInput, 10);
+    if (Number.isNaN(parsed) || parsed < 3 || parsed > 20) {
+      Alert.alert('Quantidade inválida', 'Informe entre 3 e 20 jogadores.');
+      return;
+    }
+
+    setPlayerCount(parsed);
+    setInfiltradoIndex(Math.floor(Math.random() * parsed));
+    setRevealIndex(0);
+    setIsRoleVisible(false);
+    setInfiltradoPhase('reveal');
+  };
+
+  const handleNextRevealPlayer = () => {
+    if (revealIndex + 1 >= playerCount) {
+      setInfiltradoPhase('ready');
+      setIsRoleVisible(false);
+      return;
+    }
+
+    setRevealIndex((current) => current + 1);
+    setIsRoleVisible(false);
+  };
+
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
   const shouldBlockGameTouches = showCommentsModal || isShareOverlayVisible;
 
@@ -363,16 +406,47 @@ export function GameScreen() {
       <GestureDetector gesture={swipeGesture}>
         <View style={styles.gestureLayer} pointerEvents={shouldBlockGameTouches ? 'none' : 'auto'}>
           <View style={styles.topBar}>
-          <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
-          <View style={styles.topBarRight}>
-            <Text style={styles.progress}>
-              {Math.min(currentIndex + 1, total)}/{total || 0}
-            </Text>
+            <View style={styles.topInfoRow}>
+              <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
+              <Text style={styles.progress}>
+                {Math.min(currentIndex + 1, total)}/{total || 0}
+              </Text>
+            </View>
+            <View style={styles.topActionsRow}>
             <Pressable
-              onPress={() => router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game' } })}
+              onPress={() =>
+                router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game', gameType } })
+              }
               style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
             >
               <Text style={styles.tutorialIconText}>?</Text>
+            </Pressable>
+            <Pressable
+              onPress={() =>
+                isInfiltradoMatch
+                  ? Alert.alert(
+                      'Trocar formato',
+                      'Deseja mudar esta rodada para o formato Clássico?',
+                      [
+                        { text: 'Cancelar', style: 'cancel' },
+                        {
+                          text: 'Mudar para Clássico',
+                          onPress: () =>
+                            router.replace({
+                              pathname: '/game',
+                              params: { mode: modo, gameType: 'classic' },
+                            }),
+                        },
+                      ]
+                    )
+                  : Alert.alert(
+                      'Formato atual',
+                      'Você está no formato Clássico. Para jogar Infiltrado, escolha esse formato ao entrar no modo.'
+                    )
+              }
+              style={({ pressed }) => [styles.matchTypeChip, pressed && styles.matchTypeChipPressed]}
+            >
+              <Text style={styles.matchTypeChipText}>{isInfiltradoMatch ? 'Infiltrado' : 'Clássico'}</Text>
             </Pressable>
             <Pressable
               onPress={handleFavoritePress}
@@ -421,8 +495,8 @@ export function GameScreen() {
                 {commentsCount > 0 ? <Text style={styles.commentCountText}>{commentsCount}</Text> : null}
               </Pressable>
             ) : null}
+            </View>
           </View>
-        </View>
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
             <View style={styles.favoriteHintBubble}>
@@ -645,6 +719,84 @@ export function GameScreen() {
           <View style={styles.shareOverlayTint} />
         </Pressable>
       ) : null}
+      <Modal
+        visible={isInfiltradoMatch && infiltradoPhase !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {}}
+      >
+        <View style={styles.infiltradoBackdrop}>
+          <View style={styles.infiltradoCard}>
+            {infiltradoPhase === 'setup' ? (
+              <>
+                <Text style={styles.infiltradoTitle}>Configurar rodada infiltrado</Text>
+                <Text style={styles.infiltradoText}>
+                  Informe quantas pessoas estão jogando. Uma delas será infiltrado nesta rodada.
+                </Text>
+                <TextInput
+                  value={playerCountInput}
+                  onChangeText={setPlayerCountInput}
+                  keyboardType="number-pad"
+                  placeholder="Quantidade de jogadores"
+                  placeholderTextColor="#64748b"
+                  style={styles.infiltradoInput}
+                />
+                <Pressable style={styles.infiltradoPrimaryButton} onPress={handleStartInfiltradoSetup}>
+                  <Text style={styles.infiltradoPrimaryButtonText}>Sortear papéis</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.infiltradoSecondaryButton}
+                  onPress={() =>
+                    router.replace({
+                      pathname: '/game',
+                      params: { mode: modo, gameType: 'classic' },
+                    })
+                  }
+                >
+                  <Text style={styles.infiltradoSecondaryButtonText}>Jogar no modo clássico</Text>
+                </Pressable>
+              </>
+            ) : null}
+
+            {infiltradoPhase === 'reveal' ? (
+              <>
+                <Text style={styles.infiltradoTitle}>Passe o celular</Text>
+                <Text style={styles.infiltradoText}>Jogador {revealIndex + 1} de {playerCount}</Text>
+                {!isRoleVisible ? (
+                  <Pressable style={styles.infiltradoPrimaryButton} onPress={() => setIsRoleVisible(true)}>
+                    <Text style={styles.infiltradoPrimaryButtonText}>Ver meu papel</Text>
+                  </Pressable>
+                ) : (
+                  <View style={styles.infiltradoRoleBox}>
+                    <Text style={styles.infiltradoRoleText}>
+                      {revealIndex === infiltradoIndex
+                        ? 'Você é o infiltrado. Defenda o lado contrário do que você acredita.'
+                        : 'Você é LEAL. Defenda o lado que você realmente concorda.'}
+                    </Text>
+                    <Pressable style={styles.infiltradoPrimaryButton} onPress={handleNextRevealPlayer}>
+                      <Text style={styles.infiltradoPrimaryButtonText}>
+                        {revealIndex + 1 >= playerCount ? 'Concluir distribuição' : 'Próximo jogador'}
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
+              </>
+            ) : null}
+
+            {infiltradoPhase === 'ready' ? (
+              <>
+                <Text style={styles.infiltradoTitle}>Rodada pronta</Text>
+                <Text style={styles.infiltradoText}>
+                  Papéis distribuídos. Debatam normalmente e, no fim da rodada, tentem descobrir quem era o infiltrado.
+                </Text>
+                <Pressable style={styles.infiltradoPrimaryButton} onPress={() => setInfiltradoPhase(null)}>
+                  <Text style={styles.infiltradoPrimaryButtonText}>Começar rodada</Text>
+                </Pressable>
+              </>
+            ) : null}
+          </View>
+        </View>
+      </Modal>
     </ScreenContainer>
   );
 }
@@ -657,6 +809,9 @@ const styles = StyleSheet.create({
   topBar: {
     marginTop: 8,
     marginBottom: 18,
+    gap: 10,
+  },
+  topInfoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -675,10 +830,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-  topBarRight: {
+  topActionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  matchTypeChip: {
+    borderWidth: 1,
+    borderColor: '#22d3ee',
+    backgroundColor: '#083344',
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  matchTypeChipPressed: {
+    opacity: 0.86,
+  },
+  matchTypeChipText: {
+    color: '#a5f3fc',
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 0.4,
   },
   tutorialIconButton: {
     width: 32,
@@ -1197,5 +1369,81 @@ const styles = StyleSheet.create({
     color: '#ecfeff',
     textAlign: 'center',
     fontWeight: '500',
+  },
+  infiltradoBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(2,6,23,0.8)',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  infiltradoCard: {
+    backgroundColor: '#0f172a',
+    borderWidth: 1,
+    borderColor: '#1e293b',
+    borderRadius: 16,
+    padding: 16,
+  },
+  infiltradoTitle: {
+    color: '#f8fafc',
+    fontSize: 22,
+    fontWeight: '500',
+    marginBottom: 10,
+  },
+  infiltradoText: {
+    color: '#cbd5e1',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 12,
+  },
+  infiltradoInput: {
+    backgroundColor: '#111827',
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 12,
+    color: '#f8fafc',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  infiltradoPrimaryButton: {
+    backgroundColor: '#0e7490',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  infiltradoPrimaryButtonText: {
+    color: '#ecfeff',
+    fontWeight: '500',
+    fontSize: 15,
+  },
+  infiltradoSecondaryButton: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#334155',
+    borderRadius: 12,
+    paddingVertical: 11,
+    alignItems: 'center',
+    backgroundColor: '#111827',
+  },
+  infiltradoSecondaryButtonText: {
+    color: '#cbd5e1',
+    fontWeight: '500',
+    fontSize: 14,
+  },
+  infiltradoRoleBox: {
+    borderWidth: 1,
+    borderColor: '#1f2937',
+    backgroundColor: '#111827',
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 4,
+  },
+  infiltradoRoleText: {
+    color: '#e2e8f0',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 10,
   },
 });

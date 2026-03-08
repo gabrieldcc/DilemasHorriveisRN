@@ -11,6 +11,8 @@ import { getUserProfile, saveUserProfile } from '../services/profileService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
 
+type TipoPartida = 'classic' | 'infiltrado';
+
 const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }> = {
   [ModoJogo.leve]: {
     icon: '🎲',
@@ -64,6 +66,8 @@ export function ModeSelectionScreen() {
   const [lastName, setLastName] = useState('');
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [showGameTypeModal, setShowGameTypeModal] = useState(false);
+  const [pendingMode, setPendingMode] = useState<ModoJogo | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -120,7 +124,7 @@ export function ModeSelectionScreen() {
     router.push('/admin');
   };
 
-  const handleSelectMode = async (mode: ModoJogo) => {
+  const handleContinueWithMode = async (mode: ModoJogo, gameType: TipoPartida) => {
     if (showProfileModal) {
       return;
     }
@@ -131,7 +135,7 @@ export function ModeSelectionScreen() {
       if (!seenModeTutorial) {
         router.push({
           pathname: '/tutorial' as never,
-          params: { mode },
+          params: { mode, gameType },
         });
         return;
       }
@@ -140,17 +144,36 @@ export function ModeSelectionScreen() {
       if (seenTutorial) {
         router.push({
           pathname: '/game',
-          params: { mode },
+          params: { mode, gameType },
         });
         return;
       }
       router.push({
         pathname: '/tutorial' as never,
-        params: { mode },
+        params: { mode, gameType },
       });
     } finally {
       setLoadingMode(null);
     }
+  };
+
+  const handleSelectMode = (mode: ModoJogo) => {
+    if (showProfileModal) {
+      return;
+    }
+
+    setPendingMode(mode);
+    setShowGameTypeModal(true);
+  };
+
+  const handleSelectGameType = (gameType: TipoPartida) => {
+    if (!pendingMode) {
+      setShowGameTypeModal(false);
+      return;
+    }
+
+    setShowGameTypeModal(false);
+    void handleContinueWithMode(pendingMode, gameType);
   };
 
   const handleSaveProfile = async () => {
@@ -230,6 +253,58 @@ export function ModeSelectionScreen() {
               </Pressable>
               <Pressable style={styles.modalButtonPrimary} onPress={handleUnlockAdmin}>
                 <Text style={styles.modalButtonText}>Entrar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showGameTypeModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowGameTypeModal(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Escolha o formato da rodada</Text>
+            <Text style={styles.gameTypeHelperText}>
+              <Text style={styles.gameTypeHelperStrong}>Clássico:</Text> o grupo debate e escolhe a resposta mais
+              votada.
+            </Text>
+            <Text style={styles.gameTypeHelperText}>
+              <Text style={styles.gameTypeHelperStrong}>Infiltrado:</Text> um jogador recebe um papel secreto e precisa
+              defender o oposto do que acredita.
+            </Text>
+            <Text style={styles.gameTypeHelperText}>
+              No fim do debate, o grupo vota em quem acha que era o infiltrado.
+            </Text>
+
+            <Pressable
+              style={({ pressed }) => [styles.gameTypeButton, pressed && styles.gameTypeButtonPressed]}
+              onPress={() => handleSelectGameType('classic')}
+            >
+              <Text style={styles.gameTypeTitle}>Clássico</Text>
+              <Text style={styles.gameTypeSubtitle}>Debate livre e voto em grupo.</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.gameTypeButton,
+                styles.gameTypeButtonHighlight,
+                pressed && styles.gameTypeButtonPressed,
+              ]}
+              onPress={() => handleSelectGameType('infiltrado')}
+            >
+              <Text style={styles.gameTypeTitle}>Infiltrado</Text>
+              <Text style={styles.gameTypeSubtitle}>
+                Papel secreto, defesa invertida e votação final para descobrir o infiltrado.
+              </Text>
+            </Pressable>
+
+            <View style={styles.modalActions}>
+              <Pressable style={styles.modalButton} onPress={() => setShowGameTypeModal(false)}>
+                <Text style={styles.modalButtonText}>Cancelar</Text>
               </Pressable>
             </View>
           </View>
@@ -384,6 +459,42 @@ const styles = StyleSheet.create({
   },
   profileSaveButtonDisabled: {
     opacity: 0.65,
+  },
+  gameTypeHelperText: {
+    color: '#cbd5e1',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  gameTypeHelperStrong: {
+    color: '#e2e8f0',
+    fontWeight: '700',
+  },
+  gameTypeButton: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#111827',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    marginTop: 8,
+  },
+  gameTypeButtonHighlight: {
+    borderColor: '#0e7490',
+  },
+  gameTypeButtonPressed: {
+    opacity: 0.9,
+  },
+  gameTypeTitle: {
+    color: '#f8fafc',
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  gameTypeSubtitle: {
+    color: '#94a3b8',
+    fontSize: 13,
+    lineHeight: 18,
   },
   modalActions: {
     flexDirection: 'row',
