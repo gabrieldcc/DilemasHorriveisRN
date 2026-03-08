@@ -205,6 +205,7 @@ export function GameScreen() {
         format: 'png',
         quality: 1,
         result: 'tmpfile',
+        backgroundColor: 'transparent',
       });
 
       await Sharing.shareAsync(imageUri, {
@@ -519,7 +520,10 @@ export function GameScreen() {
           {currentQuestion ? (
           <View style={styles.hiddenShareCanvas} pointerEvents="none">
             <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
-              <Text style={styles.shareExportAppName}>Dilemas Horríveis</Text>
+              <View style={styles.shareExportLogoWrap}>
+                <Text style={styles.shareExportLogoTop}>DILEMAS</Text>
+                <Text style={styles.shareExportLogoBottom}>Horríveis</Text>
+              </View>
               <View style={styles.shareExportCard}>
                 <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
                 <View style={styles.shareExportOption}>
@@ -535,9 +539,11 @@ export function GameScreen() {
                 </View>
               </View>
               <View style={styles.shareExportCtaRow}>
-                <Text style={styles.shareExportCtaText}>Baixe o app</Text>
-                <Text style={styles.shareExportStoreText}> App Store</Text>
-                <Text style={styles.shareExportStoreText}>▶ Google Play</Text>
+                <Text style={styles.shareExportCtaText}>Baixe o app Dilemas Horríveis</Text>
+                <View style={styles.shareExportStoresRow}>
+                  <Text style={styles.shareExportStoreText}> App Store</Text>
+                  <Text style={styles.shareExportStoreText}>▶ Google Play</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -828,78 +834,103 @@ const styles = StyleSheet.create({
     top: 0,
   },
   shareExportContainer: {
-    width: 360,
-    padding: 18,
+    width: 1080,
+    height: 1920,
+    paddingHorizontal: 84,
+    paddingTop: 150,
+    paddingBottom: 120,
     backgroundColor: 'transparent',
+    justifyContent: 'space-between',
   },
-  shareExportAppName: {
-    color: '#ffffff',
-    fontSize: 27,
+  shareExportLogoWrap: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  shareExportLogoTop: {
+    color: '#e2e8f0',
+    fontSize: 54,
+    letterSpacing: 6,
     fontWeight: '500',
-    marginBottom: 12,
-    textAlign: 'left',
+    lineHeight: 60,
+    textAlign: 'center',
+  },
+  shareExportLogoBottom: {
+    color: '#67e8f9',
+    fontSize: 88,
+    lineHeight: 92,
+    fontStyle: 'italic',
+    fontWeight: '700',
+    textAlign: 'center',
+    textShadowColor: 'rgba(34, 211, 238, 0.35)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 12,
   },
   shareExportCard: {
     borderWidth: 2,
-    borderColor: '#67e8f9',
-    borderRadius: 18,
-    padding: 14,
-    backgroundColor: '#0b1220cc',
+    borderColor: '#1f3b54',
+    borderRadius: 40,
+    paddingHorizontal: 42,
+    paddingVertical: 40,
+    backgroundColor: 'rgba(15, 23, 42, 0.24)',
   },
   shareExportQuestion: {
     color: '#ffffff',
-    fontSize: 27,
-    lineHeight: 33,
+    fontSize: 72,
+    lineHeight: 92,
     fontWeight: '500',
-    marginBottom: 14,
+    marginBottom: 34,
   },
   shareExportOption: {
     borderWidth: 1,
     borderColor: '#22d3ee',
-    borderRadius: 14,
-    paddingVertical: 11,
-    paddingHorizontal: 12,
-    marginBottom: 8,
-    backgroundColor: '#0f172acc',
+    borderRadius: 28,
+    paddingVertical: 24,
+    paddingHorizontal: 24,
+    marginBottom: 16,
+    backgroundColor: 'transparent',
   },
   shareExportOptionLabel: {
     color: '#a5f3fc',
     textTransform: 'uppercase',
     fontWeight: '500',
-    fontSize: 11,
-    marginBottom: 4,
+    fontSize: 22,
+    marginBottom: 6,
   },
   shareExportOptionText: {
     color: '#f8fafc',
-    fontSize: 17,
-    lineHeight: 23,
+    fontSize: 52,
+    lineHeight: 66,
     fontWeight: '500',
   },
   shareExportVsWrap: {
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   shareExportVsText: {
     color: '#a5f3fc',
-    fontSize: 11,
+    fontSize: 18,
     fontWeight: '500',
-    letterSpacing: 1,
+    letterSpacing: 1.6,
   },
   shareExportCtaRow: {
-    marginTop: 12,
-    flexDirection: 'row',
     alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 10,
+    paddingBottom: 170,
   },
   shareExportCtaText: {
     color: '#bae6fd',
-    fontSize: 12,
+    fontSize: 40,
     fontWeight: '500',
+    textAlign: 'center',
+  },
+  shareExportStoresRow: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18,
   },
   shareExportStoreText: {
     color: '#cbd5e1',
-    fontSize: 11,
+    fontSize: 28,
     fontWeight: '500',
   },
   questionTitle: {
