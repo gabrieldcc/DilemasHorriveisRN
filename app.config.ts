@@ -6,40 +6,44 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   plugins.push('@react-native-firebase/app');
   plugins.push('@react-native-firebase/crashlytics');
 
-  const androidAdmobAppId = process.env.EXPO_PUBLIC_ADMOB_ANDROID_APP_ID?.trim();
-  const iosAdmobAppId = process.env.EXPO_PUBLIC_ADMOB_IOS_APP_ID?.trim();
+  const androidAdmobAppIdEnv = process.env.EXPO_PUBLIC_ADMOB_ANDROID_APP_ID?.trim();
+  const iosAdmobAppIdEnv = process.env.EXPO_PUBLIC_ADMOB_IOS_APP_ID?.trim();
   const admobAppIdPattern = /^ca-app-pub-\d{16}~\d{10}$/;
-  const shouldEnableAdsNative = buildProfile === 'production';
+  const isProductionBuild = buildProfile === 'production';
 
-  if (shouldEnableAdsNative && !androidAdmobAppId) {
+  // Test App IDs from Google docs.
+  const testAndroidAppId = 'ca-app-pub-3940256099942544~3347511713';
+  const testIosAppId = 'ca-app-pub-3940256099942544~1458002511';
+  const androidAdmobAppId = isProductionBuild ? androidAdmobAppIdEnv : androidAdmobAppIdEnv || testAndroidAppId;
+  const iosAdmobAppId = isProductionBuild ? iosAdmobAppIdEnv : iosAdmobAppIdEnv || testIosAppId;
+
+  if (isProductionBuild && !androidAdmobAppId) {
     throw new Error('EXPO_PUBLIC_ADMOB_ANDROID_APP_ID é obrigatório para build production.');
   }
 
-  if (shouldEnableAdsNative && !iosAdmobAppId) {
+  if (isProductionBuild && !iosAdmobAppId) {
     throw new Error('EXPO_PUBLIC_ADMOB_IOS_APP_ID é obrigatório para build production.');
   }
 
-  if (shouldEnableAdsNative && androidAdmobAppId && !admobAppIdPattern.test(androidAdmobAppId)) {
+  if (androidAdmobAppId && !admobAppIdPattern.test(androidAdmobAppId)) {
     throw new Error(
       'EXPO_PUBLIC_ADMOB_ANDROID_APP_ID inválido. Use formato de App ID: ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY (não use Banner Unit ID com "/").'
     );
   }
 
-  if (shouldEnableAdsNative && iosAdmobAppId && !admobAppIdPattern.test(iosAdmobAppId)) {
+  if (iosAdmobAppId && !admobAppIdPattern.test(iosAdmobAppId)) {
     throw new Error(
       'EXPO_PUBLIC_ADMOB_IOS_APP_ID inválido. Use formato de App ID: ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY (não use Banner Unit ID com "/").'
     );
   }
 
-  if (shouldEnableAdsNative) {
-    plugins.push([
-      'react-native-google-mobile-ads',
-      {
-        androidAppId: androidAdmobAppId,
-        iosAppId: iosAdmobAppId,
-      },
-    ]);
-  }
+  plugins.push([
+    'react-native-google-mobile-ads',
+    {
+      androidAppId: androidAdmobAppId,
+      iosAppId: iosAdmobAppId,
+    },
+  ]);
 
   return {
     ...config,

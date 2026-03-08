@@ -8,7 +8,7 @@ const BUILD_PROFILE =
     .toString()
     .toLowerCase();
 
-const ADS_ENABLED = BUILD_PROFILE === 'production';
+const ADS_ENABLED = BUILD_PROFILE === 'production' || BUILD_PROFILE === 'preview';
 
 function getAdUnitId() {
   const configured = Platform.select({
@@ -56,7 +56,7 @@ export function AdBanner() {
     return null;
   }
 
-  const adUnitId = __DEV__ ? TestIds.BANNER : getAdUnitId();
+  const adUnitId = BUILD_PROFILE === 'production' ? getAdUnitId() : TestIds.BANNER;
 
   if (!adUnitId) {
     return null;
