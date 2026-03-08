@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
@@ -15,7 +15,9 @@ import {
   SugestaoPergunta,
   SugestaoStatus,
 } from '../services/questionsService';
+import { atualizarFeatureFlags } from '../services/featureFlagsService';
 import { useAdminStore } from '../store/adminStore';
+import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
 
 const SUGGESTION_FILTERS: Array<{ key: SugestaoStatus | 'todas'; label: string }> = [
@@ -55,7 +57,10 @@ export function AdminScreen() {
   const [editOpcaoB, setEditOpcaoB] = useState('');
   const [editModo, setEditModo] = useState<ModoJogoConteudo>(ModoJogo.leve);
   const [moderationBusyId, setModerationBusyId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'perguntas' | 'sugestoes'>('sugestoes');
+  const [activeTab, setActiveTab] = useState<'perguntas' | 'sugestoes' | 'features'>('sugestoes');
+  const featureFlags = useFeatureFlagsStore((state) => state.flags);
+  const setFeatureFlagsLocal = useFeatureFlagsStore((state) => state.setFlagsLocal);
+  const [featureToggleBusyKey, setFeatureToggleBusyKey] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAdminUnlocked) {
@@ -256,6 +261,16 @@ export function AdminScreen() {
             ]}
           >
             <Text style={[styles.topTabText, activeTab === 'perguntas' && styles.topTabTextActive]}>Perguntas</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setActiveTab('features')}
+            style={({ pressed }) => [
+              styles.topTabButton,
+              activeTab === 'features' && styles.topTabButtonActive,
+              pressed && styles.modeButtonPressed,
+            ]}
+          >
+            <Text style={[styles.topTabText, activeTab === 'features' && styles.topTabTextActive]}>Flags</Text>
           </Pressable>
         </View>
         <Pressable
@@ -473,6 +488,45 @@ export function AdminScreen() {
           );
             })
           : null}
+
+        {activeTab === 'features' ? (
+          <>
+            <Text style={styles.sectionTitle}>Feature Flags</Text>
+            <View style={styles.featureFlagCard}>
+              <View style={styles.featureFlagHeader}>
+                <View style={styles.featureFlagCopy}>
+                  <Text style={styles.featureFlagTitle}>Comentários no jogo</Text>
+                  <Text style={styles.featureFlagSubtitle}>Oculta ou exibe o botão de comentários no card.</Text>
+                </View>
+                <Switch
+                  value={featureFlags.commentsEnabled}
+                  onValueChange={(value) => {
+                    if (featureToggleBusyKey) {
+                      return;
+                    }
+
+                    const previous = featureFlags.commentsEnabled;
+                    setFeatureFlagsLocal({ commentsEnabled: value });
+                    setFeatureToggleBusyKey('commentsEnabled');
+
+                    void atualizarFeatureFlags({ commentsEnabled: value })
+                      .catch((error) => {
+                        setFeatureFlagsLocal({ commentsEnabled: previous });
+                        Alert.alert('Erro ao salvar flag', error instanceof Error ? error.message : 'Tente novamente.');
+                      })
+                      .finally(() => setFeatureToggleBusyKey(null));
+                  }}
+                  disabled={featureToggleBusyKey === 'commentsEnabled'}
+                  trackColor={{ false: '#334155', true: '#0891b2' }}
+                  thumbColor={featureFlags.commentsEnabled ? '#ecfeff' : '#cbd5e1'}
+                />
+              </View>
+              <Text style={styles.featureFlagMeta}>
+                Estado atual: {featureFlags.commentsEnabled ? 'Ativado' : 'Desativado'}
+              </Text>
+            </View>
+          </>
+        ) : null}
       </ScrollView>
     </ScreenContainer>
   );
@@ -758,6 +812,40 @@ const styles = StyleSheet.create({
   },
   actionText: {
     color: '#f8fafc',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  featureFlagCard: {
+    marginTop: 10,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#1f2937',
+    backgroundColor: '#0f172a',
+    padding: 12,
+  },
+  featureFlagHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  featureFlagCopy: {
+    flex: 1,
+  },
+  featureFlagTitle: {
+    color: '#e2e8f0',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  featureFlagSubtitle: {
+    color: '#94a3b8',
+    fontSize: 12,
+    marginTop: 4,
+    lineHeight: 17,
+  },
+  featureFlagMeta: {
+    color: '#67e8f9',
+    marginTop: 10,
     fontSize: 12,
     fontWeight: '500',
   },

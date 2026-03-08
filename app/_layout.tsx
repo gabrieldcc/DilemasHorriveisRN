@@ -6,10 +6,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
+import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
 
 export default function RootLayout() {
+  const startListeningFeatureFlags = useFeatureFlagsStore((state) => state.startListening);
+  const stopListeningFeatureFlags = useFeatureFlagsStore((state) => state.stopListening);
+
   useEffect(() => {
     void initializeCrashlytics();
+    startListeningFeatureFlags();
+
     const runFirebaseStartupCheck = async () => {
       try {
         const db = getFirebaseFirestore();
@@ -28,7 +34,11 @@ export default function RootLayout() {
     };
 
     void runFirebaseStartupCheck();
-  }, []);
+
+    return () => {
+      stopListeningFeatureFlags();
+    };
+  }, [startListeningFeatureFlags, stopListeningFeatureFlags]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

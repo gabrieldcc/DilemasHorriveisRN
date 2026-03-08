@@ -34,6 +34,7 @@ import {
 } from '../services/commentsService';
 import { useGame } from '../hooks/useGame';
 import { getModoLabel, isModoJogo } from '../utils/gameModes';
+import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 
 export function GameScreen() {
   const router = useRouter();
@@ -52,12 +53,19 @@ export function GameScreen() {
   const [likingCommentIds, setLikingCommentIds] = useState<Record<string, boolean>>({});
   const likingInFlightRef = useRef<Record<string, boolean>>({});
   const shareGhostTapUntilRef = useRef(0);
+  const commentsEnabled = useFeatureFlagsStore((state) => state.flags.commentsEnabled);
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
       setShowFavoriteHint(true);
     }
   }, [params.favoriteHint]);
+
+  useEffect(() => {
+    if (!commentsEnabled && showCommentsModal) {
+      setShowCommentsModal(false);
+    }
+  }, [commentsEnabled, showCommentsModal]);
 
   if (!params.mode || !isModoJogo(params.mode)) {
     return (
@@ -234,6 +242,9 @@ export function GameScreen() {
   };
 
   const handleOpenComments = () => {
+    if (!commentsEnabled) {
+      return;
+    }
     setShowCommentsModal(true);
     void loadComments();
   };
@@ -395,18 +406,20 @@ export function GameScreen() {
                 <Text style={styles.shareIconText}>↗</Text>
               )}
             </Pressable>
-            <Pressable
-              onPress={handleOpenComments}
-              disabled={!currentQuestion}
-              style={({ pressed }) => [
-                styles.commentIconButton,
-                pressed && styles.commentIconButtonPressed,
-                !currentQuestion && styles.commentIconButtonDisabled,
-              ]}
-            >
-              <Text style={styles.commentIconText}>💬</Text>
-              {commentsCount > 0 ? <Text style={styles.commentCountText}>{commentsCount}</Text> : null}
-            </Pressable>
+            {commentsEnabled ? (
+              <Pressable
+                onPress={handleOpenComments}
+                disabled={!currentQuestion}
+                style={({ pressed }) => [
+                  styles.commentIconButton,
+                  pressed && styles.commentIconButtonPressed,
+                  !currentQuestion && styles.commentIconButtonDisabled,
+                ]}
+              >
+                <Text style={styles.commentIconText}>💬</Text>
+                {commentsCount > 0 ? <Text style={styles.commentCountText}>{commentsCount}</Text> : null}
+              </Pressable>
+            ) : null}
           </View>
         </View>
         {showFavoriteHint ? (

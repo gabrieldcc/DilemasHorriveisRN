@@ -1,6 +1,15 @@
 import { Platform, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 
+const BUILD_PROFILE =
+  ((Constants.expoConfig?.extra as { buildProfile?: string } | undefined)?.buildProfile ??
+    process.env.EXPO_PUBLIC_BUILD_PROFILE ??
+    'local')
+    .toString()
+    .toLowerCase();
+
+const ADS_ENABLED = BUILD_PROFILE === 'production';
+
 function getAdUnitId() {
   const configured = Platform.select({
     android: process.env.EXPO_PUBLIC_ADMOB_ANDROID_BANNER_ID,
@@ -18,6 +27,10 @@ function getAdUnitId() {
 }
 
 export function AdBanner() {
+  if (!ADS_ENABLED) {
+    return null;
+  }
+
   // Expo Go does not include native AdMob modules.
   if (Constants.appOwnership === 'expo') {
     return null;
