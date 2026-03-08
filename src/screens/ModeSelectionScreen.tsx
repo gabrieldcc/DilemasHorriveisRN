@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -50,6 +51,7 @@ const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }>
 
 export function ModeSelectionScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const unlockAdmin = useAdminStore((state) => state.unlock);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
@@ -172,7 +174,7 @@ export function ModeSelectionScreen() {
     <ScreenContainer>
       <ScrollView
         style={styles.scrollArea}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 32 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -203,7 +205,7 @@ export function ModeSelectionScreen() {
 
         <Pressable
           onPress={() => router.push('/suggest' as never)}
-          style={({ pressed }) => [styles.suggestButton, pressed && styles.suggestButtonPressed]}
+          style={({ pressed }) => [styles.suggestButton, { marginBottom: insets.bottom + 16 }, pressed && styles.suggestButtonPressed]}
         >
           <Text style={styles.suggestButtonText}>Sugerir novo dilema</Text>
         </Pressable>
@@ -283,7 +285,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 12,
+    paddingBottom: 24,
   },
   headerContainer: {
     marginTop: 32,
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 18,
   },
   suggestButtonPressed: {
     opacity: 0.9,
