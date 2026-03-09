@@ -1,4 +1,4 @@
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { BlurView } from 'expo-blur';
 import {
@@ -38,6 +38,7 @@ import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 
 export function GameScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const params = useLocalSearchParams<{ mode?: string; favoriteHint?: string; gameType?: string }>();
   const [showFavoriteHint, setShowFavoriteHint] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
@@ -113,6 +114,17 @@ export function GameScreen() {
     toggleFavorite,
     reload,
   } = useGame(modo);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: getModoLabel(modo),
+      headerRight: () => (
+        <Text style={styles.navHeaderProgress}>
+          {total > 0 ? `${Math.min(currentIndex + 1, total)}/${total}` : ''}
+        </Text>
+      ),
+    });
+  }, [navigation, currentIndex, total, modo]);
 
   useEffect(() => {
     let isMounted = true;
@@ -405,22 +417,7 @@ export function GameScreen() {
     <ScreenContainer>
       <GestureDetector gesture={swipeGesture}>
         <View style={styles.gestureLayer} pointerEvents={shouldBlockGameTouches ? 'none' : 'auto'}>
-          <View style={styles.topBar}>
-            <View style={styles.topInfoRow}>
-              <Text style={styles.modeChip}>{getModoLabel(modo)}</Text>
-              <Text style={styles.progress}>
-                {Math.min(currentIndex + 1, total)}/{total || 0}
-              </Text>
-            </View>
-            <View style={styles.topActionsRow}>
-            <Pressable
-              onPress={() =>
-                router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game', gameType } })
-              }
-              style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
-            >
-              <Text style={styles.tutorialIconText}>?</Text>
-            </Pressable>
+          <View style={styles.actionsToolbar}>
             <Pressable
               onPress={() =>
                 isInfiltradoMatch
@@ -495,7 +492,14 @@ export function GameScreen() {
                 {commentsCount > 0 ? <Text style={styles.commentCountText}>{commentsCount}</Text> : null}
               </Pressable>
             ) : null}
-            </View>
+            <Pressable
+              onPress={() =>
+                router.push({ pathname: '/tutorial' as never, params: { mode: modo, from: 'game', gameType } })
+              }
+              style={({ pressed }) => [styles.tutorialIconButton, pressed && styles.tutorialIconButtonPressed]}
+            >
+              <Text style={styles.tutorialIconText}>?</Text>
+            </Pressable>
           </View>
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
@@ -802,55 +806,40 @@ export function GameScreen() {
 }
 
 const styles = StyleSheet.create({
+  navHeaderProgress: {
+    color: '#94a3b8',
+    fontSize: 15,
+    fontWeight: '500',
+  },
   gestureLayer: {
     flex: 1,
     minHeight: 0,
   },
-  topBar: {
+  actionsToolbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
     marginTop: 8,
     marginBottom: 18,
-    gap: 10,
-  },
-  topInfoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  modeChip: {
-    color: '#a5f3fc',
-    backgroundColor: '#0e7490',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    fontWeight: '500',
-    fontSize: 14,
-  },
-  progress: {
-    color: '#94a3b8',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  topActionsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
+    paddingHorizontal: 4,
   },
   matchTypeChip: {
+    width: 70,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#22d3ee',
     backgroundColor: '#083344',
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
   },
   matchTypeChipPressed: {
     opacity: 0.86,
   },
   matchTypeChipText: {
     color: '#a5f3fc',
-    fontSize: 11,
-    fontWeight: '500',
-    letterSpacing: 0.4,
+    fontSize: 14,
+    fontWeight: '600',
   },
   tutorialIconButton: {
     width: 32,
