@@ -1,16 +1,28 @@
 import { useEffect } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface OptionButtonProps {
   label: string;
   value: string;
   isSelected: boolean;
+  showResult?: boolean;
+  percentage?: number | null;
+  isUserChoice?: boolean;
   disabled?: boolean;
   onPress: () => void;
 }
 
-export function OptionButton({ label, value, isSelected, disabled, onPress }: OptionButtonProps) {
+export function OptionButton({
+  label,
+  value,
+  isSelected,
+  showResult = false,
+  percentage = null,
+  isUserChoice = false,
+  disabled,
+  onPress,
+}: OptionButtonProps) {
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -35,6 +47,14 @@ export function OptionButton({ label, value, isSelected, disabled, onPress }: Op
       >
         <Text style={styles.optionLabel}>{label}</Text>
         <Text style={styles.optionText}>{value}</Text>
+        {showResult && percentage !== null ? (
+          <View style={styles.resultRow}>
+            <View style={[styles.resultBar, isUserChoice ? styles.resultBarActive : styles.resultBarInactive]}>
+              <View style={[styles.resultFill, { width: `${Math.min(Math.max(percentage, 0), 100)}%` }]} />
+            </View>
+            <Text style={[styles.resultText, isUserChoice && styles.resultTextActive]}>{percentage}%</Text>
+          </View>
+        ) : null}
       </Pressable>
     </Animated.View>
   );
@@ -65,7 +85,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   disabled: {
-    opacity: 0.75,
+    opacity: 0.8,
   },
   optionLabel: {
     color: '#7dd3fc',
@@ -80,5 +100,37 @@ const styles = StyleSheet.create({
     fontSize: 23,
     lineHeight: 29,
     fontWeight: '500',
+  },
+  resultRow: {
+    marginTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  resultBar: {
+    flex: 1,
+    height: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#0b2133',
+    borderWidth: 1,
+    borderColor: '#1f4f75',
+  },
+  resultBarActive: {
+    borderColor: '#22d3ee',
+  },
+  resultBarInactive: {
+    borderColor: '#1e293b',
+  },
+  resultFill: {
+    height: '100%',
+    backgroundColor: '#22d3ee',
+  },
+  resultText: {
+    color: '#cbd5e1',
+    fontWeight: '600',
+  },
+  resultTextActive: {
+    color: '#22d3ee',
   },
 });

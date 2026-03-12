@@ -6,6 +6,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
+import { initRemoteConfig } from '../src/services/RemoteConfigService';
+import { AnalyticsService } from '../src/services/AnalyticsService';
+import { resetSession } from '../src/utils/sessionManager';
+import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
 
 export default function RootLayout() {
@@ -14,6 +18,11 @@ export default function RootLayout() {
 
   useEffect(() => {
     void initializeCrashlytics();
+    void initRemoteConfig();
+    resetSession();
+    void AnalyticsService.trackAppOpen();
+    void AnalyticsService.trackSessionStart();
+    void isFirstLaunch();
     startListeningFeatureFlags();
 
     const runFirebaseStartupCheck = async () => {
@@ -54,7 +63,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="tutorial" options={{ title: 'Tutorial' }} />
-        <Stack.Screen name="game" options={{ title: 'Dilemas Horríveis' }} />
+        <Stack.Screen name="game" options={{ title: 'BadPick' }} />
         <Stack.Screen name="suggest" options={{ title: 'Sugerir dilema' }} />
         <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
       </Stack>
