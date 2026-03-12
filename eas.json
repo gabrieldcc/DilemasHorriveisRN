@@ -1,32 +1,16 @@
 {
   "cli": {
-    "version": ">= 10.0.0"
+    "version": ">= 9.0.0"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_BUILD_PROFILE": "development"
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_BUILD_PROFILE": "preview"
-      },
-      "android": {
-        "buildType": "apk"
-      }
+      "distribution": "internal"
     },
-    "production": {
-      "env": {
-        "EXPO_PUBLIC_BUILD_PROFILE": "production"
-      },
-      "android": {
-        "buildType": "app-bundle"
-      }
-    }
+    "production": {}
   },
   "submit": {
     "production": {}
