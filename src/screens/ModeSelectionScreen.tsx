@@ -8,6 +8,7 @@ import { ScreenContainer } from '../components/ScreenContainer';
 import { hasSeenModeTutorial, hasSeenTutorial } from '../hooks/useTutorialGate';
 import { ModoJogo } from '../models/game';
 import { getUserProfile, saveUserProfile } from '../services/profileService';
+import { trackSelectGameType, trackSelectMode, trackSetName } from '../services/analyticsService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
 import { GAME_MODES } from '../utils/gameModes';
 
@@ -162,6 +163,7 @@ export function ModeSelectionScreen() {
       return;
     }
 
+    void trackSelectMode(mode);
     setPendingMode(mode);
     setShowGameTypeModal(true);
   };
@@ -173,6 +175,7 @@ export function ModeSelectionScreen() {
     }
 
     setShowGameTypeModal(false);
+    void trackSelectGameType(gameType, pendingMode);
     void handleContinueWithMode(pendingMode, gameType);
   };
 
@@ -185,6 +188,7 @@ export function ModeSelectionScreen() {
     setIsSavingProfile(true);
     try {
       await saveUserProfile(firstName, lastName);
+      void trackSetName();
       setShowProfileModal(false);
     } catch (error) {
       setProfileError(error instanceof Error ? error.message : 'Não foi possível salvar seu nome.');
