@@ -637,7 +637,7 @@ export function GameScreen() {
               <View>
                 <View style={styles.arenaPanel}>
                   <Text style={styles.arenaBadge}>ARENA DE DILEMAS</Text>
-                  <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text>
+                  {/* <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text> */}
                   <View style={styles.arenaDivider}>
                     <View style={styles.arenaDividerLine} />
                     <Text style={styles.arenaDividerText}>A x B</Text>
