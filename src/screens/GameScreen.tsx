@@ -24,6 +24,8 @@ import { AdBanner } from '../components/ads/AdBanner';
 import { OptionButton } from '../components/OptionButton';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo } from '../models/game';
+import { useAnalytics } from '../hooks/useAnalytics';
+import { useInterstitialAds } from '../hooks/useInterstitialAds';
 import {
   adicionarComentarioPergunta,
   alternarLikeComentario,
@@ -35,6 +37,27 @@ import {
 import { useGame } from '../hooks/useGame';
 import { getModoLabel, isModoJogo } from '../utils/gameModes';
 import { useFeatureFlagsStore } from '../store/featureFlagsStore';
+import { areAdsEnabled, isFirstSessionAdsEnabled } from '../services/RemoteConfigService';
+import { getQuestionCount } from '../utils/sessionManager';
+
+function buildResultPercentages(questionId: string, selected: 'A' | 'B') {
+  let hash = 0;
+  for (let i = 0; i < questionId.length; i += 1) {
+    hash = (hash * 31 + questionId.charCodeAt(i)) % 1000;
+  }
+
+  const base = 36 + (hash % 18); // 36-53
+  const swing = 20 + ((hash >> 2) % 12); // 20-31
+
+  const favorSelected = base + swing; // 56-84
+  const optionAPercentage = selected === 'A' ? favorSelected : 100 - favorSelected;
+  const clampedA = Math.min(Math.max(Math.round(optionAPercentage), 8), 92);
+
+  return {
+    A: clampedA,
+    B: 100 - clampedA,
+  };
+}
 
 export function GameScreen() {
   const router = useRouter();
@@ -65,6 +88,11 @@ export function GameScreen() {
   const [infiltradoIndex, setInfiltradoIndex] = useState<number | null>(null);
   const [revealIndex, setRevealIndex] = useState(0);
   const [isRoleVisible, setIsRoleVisible] = useState(false);
+  const { trackQuestionViewed, trackQuestionAnswered, trackNextQuestion, trackShare } = useAnalytics();
+  const { registerAnswerAndMaybeShowAd, ensurePreload, isFirstSession } = useInterstitialAds();
+  const [resultPercents, setResultPercents] = useState<{ A: number; B: number } | null>(null);
+  const questionStartRef = useRef<number>(Date.now());
+  const allowAdsThisSession = areAdsEnabled() && (!isFirstSession || isFirstSessionAdsEnabled());
 
   useEffect(() => {
     if (params.favoriteHint === '1') {
@@ -107,6 +135,7 @@ export function GameScreen() {
     isLoading,
     error,
     selectedOption,
+    nextQuestion,
     selectOption,
     previousQuestion,
     isFavorite,
@@ -156,6 +185,16 @@ export function GameScreen() {
   }, [currentQuestion?.id, currentQuestion?.modo]);
 
   useEffect(() => {
+    if (!currentQuestion) {
+      return;
+    }
+    questionStartRef.current = Date.now();
+    setResultPercents(null);
+    trackQuestionViewed({ question_id: currentQuestion.id, mode: modo });
+    ensurePreload();
+  }, [currentQuestion?.id, modo, trackQuestionViewed, ensurePreload]);
+
+  useEffect(() => {
     if (!isLoading) {
       setShouldShowLoadingOverlay(false);
       return;
@@ -202,19 +241,53 @@ export function GameScreen() {
   };
 
   const handleSelectOptionA = () => {
-    if (isShareOverlayVisible || isShareGhostTapActive()) {
+    if (isShareOverlayVisible || isShareGhostTapActive() || !currentQuestion) {
       return;
     }
-    setTransitionType('default');
-    selectOption('A');
+    // Primeiro toque seleciona; segundo toque avança.
+    if (selectedOption === null) {
+      setTransitionType('default');
+      const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      setResultPercents(buildResultPercentages(currentQuestion.id, 'A'));
+      trackQuestionAnswered({
+        question_id: currentQuestion.id,
+        mode: modo,
+        answer_selected: 'A',
+        response_time_ms: responseTime,
+      });
+      selectOption('A');
+      return;
+    }
+    void handleContinueAfterResult();
   };
 
   const handleSelectOptionB = () => {
-    if (isShareOverlayVisible || isShareGhostTapActive()) {
+    if (isShareOverlayVisible || isShareGhostTapActive() || !currentQuestion) {
       return;
     }
-    setTransitionType('default');
-    selectOption('B');
+    if (selectedOption === null) {
+      setTransitionType('default');
+      const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      setResultPercents(buildResultPercentages(currentQuestion.id, 'B'));
+      trackQuestionAnswered({
+        question_id: currentQuestion.id,
+        mode: modo,
+        answer_selected: 'B',
+        response_time_ms: responseTime,
+      });
+      selectOption('B');
+      return;
+    }
+    void handleContinueAfterResult();
+  };
+
+  const handleContinueAfterResult = async () => {
+    if (selectedOption === null) {
+      return;
+    }
+    await registerAnswerAndMaybeShowAd();
+    trackNextQuestion({ mode: modo, session_questions_answered: getQuestionCount() });
+    nextQuestion();
   };
 
   const handleShareQuestion = async () => {
@@ -243,6 +316,7 @@ export function GameScreen() {
         UTI: 'public.png',
         dialogTitle: 'Compartilhar dilema',
       });
+      trackShare({ question_id: currentQuestion.id });
     } catch (error) {
       Alert.alert('Erro ao compartilhar', 'Não foi possível gerar a imagem da pergunta.');
       if (__DEV__) {
@@ -501,6 +575,7 @@ export function GameScreen() {
               <Text style={styles.tutorialIconText}>?</Text>
             </Pressable>
           </View>
+          {allowAdsThisSession ? <AdBanner /> : null}
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
             <View style={styles.favoriteHintBubble}>
@@ -573,15 +648,21 @@ export function GameScreen() {
                       label="Opção A"
                       value={currentQuestion.opcaoA}
                       isSelected={selectedOption === 'A'}
+                      showResult={selectedOption !== null}
+                      percentage={resultPercents?.A ?? null}
+                      isUserChoice={selectedOption === 'A'}
                       onPress={handleSelectOptionA}
-                      disabled={selectedOption !== null || isShareOverlayVisible}
+                      disabled={isShareOverlayVisible}
                     />
                     <OptionButton
                       label="Opção B"
                       value={currentQuestion.opcaoB}
                       isSelected={selectedOption === 'B'}
+                      showResult={selectedOption !== null}
+                      percentage={resultPercents?.B ?? null}
+                      isUserChoice={selectedOption === 'B'}
                       onPress={handleSelectOptionB}
-                      disabled={selectedOption !== null || isShareOverlayVisible}
+                      disabled={isShareOverlayVisible}
                     />
                   </View>
                 </View>
@@ -626,7 +707,6 @@ export function GameScreen() {
             </View>
           </View>
           ) : null}
-          <AdBanner />
         </View>
       </GestureDetector>
       <Modal visible={showCommentsModal} animationType="slide" transparent onRequestClose={() => setShowCommentsModal(false)}>

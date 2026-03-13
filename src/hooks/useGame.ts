@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ModoJogo, OpcaoEscolha } from '../models/game';
 import { alternarPerguntaFavorita, isPerguntaFavorita } from '../services/questionsService';
 import { useGameStore } from '../store/gameStore';
-
-const NEXT_QUESTION_DELAY_MS = 280;
 
 export function useGame(modo: ModoJogo) {
   const {
@@ -18,21 +16,12 @@ export function useGame(modo: ModoJogo) {
     previousQuestion,
     setSelectedOption,
   } = useGameStore();
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
   useEffect(() => {
     loadQuestions(modo);
   }, [modo, loadQuestions]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   const currentQuestion = questions[currentIndex] ?? null;
 
@@ -73,12 +62,8 @@ export function useGame(modo: ModoJogo) {
       }
 
       setSelectedOption(option);
-
-      timeoutRef.current = setTimeout(() => {
-        nextQuestion();
-      }, NEXT_QUESTION_DELAY_MS);
     },
-    [nextQuestion, selectedOption, setSelectedOption]
+    [selectedOption, setSelectedOption]
   );
 
   const toggleFavorite = useCallback(async () => {

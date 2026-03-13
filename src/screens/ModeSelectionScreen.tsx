@@ -17,27 +17,27 @@ const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }>
   [ModoJogo.leve]: {
     icon: '🎲',
     subtitle: 'Dilemas descontraídos para aquecer o jogo.',
-    tag: 'ARENA 1',
+    tag: '',
   },
   [ModoJogo.pesado]: {
     icon: '🔥',
     subtitle: 'Escolhas tensas para grupos sem medo de debate.',
-    tag: 'ARENA 3',
+    tag: '',
   },
   [ModoJogo.nerd]: {
     icon: '🧠',
     subtitle: 'Conflitos de cultura pop, filmes, séries e tecnologia.',
-    tag: 'ARENA 2',
+    tag: '',
   },
   [ModoJogo.culturaBR]: {
     icon: '🇧🇷',
     subtitle: 'Referências brasileiras para debate em grupo.',
-    tag: 'ARENA BR',
+    tag: '',
   },
   [ModoJogo.adultos]: {
     icon: '🔞',
     subtitle: 'Dilemas para grupos adultos e debates sem filtro.',
-    tag: 'ARENA X',
+    tag: '',
   },
   [ModoJogo.favoritas]: {
     icon: '⭐',
