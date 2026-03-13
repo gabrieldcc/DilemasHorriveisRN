@@ -204,8 +204,8 @@ export function ModeSelectionScreen() {
         <View style={styles.headerContainer}>
           <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
             <View style={styles.logoWrap}>
-              <Text style={styles.logoTopLine}>DILEMAS</Text>
-              <Text style={styles.logoBottomLine}>Horríveis</Text>
+              <Text style={styles.logoTopLine}>Bad</Text>
+              <Text style={styles.logoBottomLine}>Pick</Text>
             </View>
           </Pressable>
         </View>
@@ -369,18 +369,22 @@ const styles = StyleSheet.create({
   },
   logoWrap: {
     alignItems: 'center',
+    flexDirection: 'row',
   },
   logoTopLine: {
     color: '#e2e8f0',
-    fontSize: 26,
-    letterSpacing: 3,
-    fontWeight: '500',
-    lineHeight: 30,
+      fontSize: 42,
+    lineHeight: 48,
+    fontStyle: 'italic',
+    fontWeight: '700',
     textAlign: 'center',
+    textShadowColor: 'rgba(34, 211, 238, 0.35)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 12,
   },
   logoBottomLine: {
     color: '#67e8f9',
-    fontSize: 46,
+    fontSize: 42,
     lineHeight: 48,
     fontStyle: 'italic',
     fontWeight: '700',
