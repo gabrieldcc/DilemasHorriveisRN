@@ -16,7 +16,9 @@ const BUILD_PROFILE =
     .toString()
     .toLowerCase();
 
-const ADS_ENABLED = BUILD_PROFILE === 'production' || BUILD_PROFILE === 'preview';
+// Habilita anúncios também em Dev Client; produção continua usando IDs reais se configurados.
+const ADS_ENABLED = true;
+const USE_TEST_IDS = BUILD_PROFILE !== 'production';
 
 let InterstitialAd: any;
 let AdEventType: any;
@@ -42,19 +44,19 @@ function loadNativeModules() {
     return true;
   } catch (error) {
     if (__DEV__) {
-      console.warn('[Ads] Módulo de ads indisponível.', error);
+      console.warn('[Ads] Módulo nativo de ads indisponível. Reconstrua Dev Client com react-native-google-mobile-ads.', error);
     }
     return false;
   }
 }
 
 function getAdUnitId() {
-  if (!ADS_ENABLED) {
-    return null;
-  }
-
-  if (BUILD_PROFILE !== 'production') {
-    return TestIds?.INTERSTITIAL ?? null;
+  if (USE_TEST_IDS) {
+    const id = TestIds?.INTERSTITIAL ?? null;
+    if (__DEV__) {
+      console.info('[Ads] Usando TestIds.INTERSTITIAL (dev/preproduction).');
+    }
+    return id;
   }
 
   return Platform.select({
@@ -65,6 +67,9 @@ function getAdUnitId() {
 
 export async function initializeAds() {
   if (!ADS_ENABLED) {
+    if (__DEV__) {
+      console.info('[Ads] Ads desativados para build não-production.');
+    }
     return false;
   }
 
@@ -74,6 +79,9 @@ export async function initializeAds() {
 
   try {
     await mobileAds().initialize();
+    if (__DEV__) {
+      console.info('[Ads] SDK inicializado.');
+    }
     return true;
   } catch (error) {
     if (__DEV__) {
@@ -136,10 +144,16 @@ export function preloadInterstitial(events?: AdEvents) {
   }
 
   if (interstitial && isReady) {
+    if (__DEV__) {
+      console.info('[Ads] Interstitial já pronto, skip preload.');
+    }
     return;
   }
 
   if (isLoading) {
+    if (__DEV__) {
+      console.info('[Ads] Preload em andamento, skip.');
+    }
     return;
   }
 
@@ -148,12 +162,18 @@ export function preloadInterstitial(events?: AdEvents) {
   });
 
   isLoading = true;
+  if (__DEV__) {
+    console.info('[Ads] Iniciando preload interstitial.', { adUnitId, useTestIds: USE_TEST_IDS });
+  }
   attachListeners(interstitial, events);
   interstitial.load();
 }
 
 export async function showInterstitial() {
   if (!interstitial || !isReady) {
+    if (__DEV__) {
+      console.info('[Ads] Interstitial não pronto no show().');
+    }
     return false;
   }
 

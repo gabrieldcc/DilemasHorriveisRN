@@ -19,7 +19,7 @@ function getRemoteConfigInstance() {
     remoteConfigModule = require('@react-native-firebase/remote-config').default();
   } catch (error) {
     if (__DEV__) {
-      console.warn('[RemoteConfig] Módulo não encontrado, usando defaults.', error);
+      console.warn('[RemoteConfig] Módulo nativo ausente. Reconstrua o Dev Client com @react-native-firebase/remote-config instalado.', error);
     }
     remoteConfigModule = null;
   }
@@ -42,6 +42,13 @@ export async function initRemoteConfig() {
     await rc.setConfigSettings({ minimumFetchIntervalMillis: 30 * 60 * 1000 });
     await rc.setDefaults(DEFAULTS);
     await rc.fetchAndActivate();
+    if (__DEV__) {
+      console.info('[RemoteConfig] fetch+activate OK', {
+        interstitial_frequency: getInterstitialFrequency(),
+        enable_ads: areAdsEnabled(),
+        ads_first_session_enabled: isFirstSessionAdsEnabled(),
+      });
+    }
   } catch (error) {
     if (__DEV__) {
       console.warn('[RemoteConfig] Falha ao buscar/ativar, usando defaults.', error);

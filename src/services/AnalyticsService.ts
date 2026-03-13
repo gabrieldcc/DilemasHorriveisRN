@@ -40,7 +40,7 @@ async function logEvent(name: string, payload?: EventPayload) {
 
 export const AnalyticsService = {
   trackAppOpen: () => logEvent('app_open'),
-  trackSessionStart: () => logEvent('session_start'),
+  trackSessionStart: () => logEvent('session_started'),
   trackQuestionViewed: (params: { question_id: string; mode: string }) =>
     logEvent('question_viewed', params),
   trackQuestionAnswered: (params: {

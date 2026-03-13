@@ -241,35 +241,44 @@ export function GameScreen() {
   };
 
   const handleSelectOptionA = () => {
-    if (isShareOverlayVisible || isShareGhostTapActive() || selectedOption !== null || !currentQuestion) {
+    if (isShareOverlayVisible || isShareGhostTapActive() || !currentQuestion) {
       return;
     }
-    setTransitionType('default');
-    const responseTime = Math.max(0, Date.now() - questionStartRef.current);
-    setResultPercents(buildResultPercentages(currentQuestion.id, 'A'));
-    trackQuestionAnswered({
-      question_id: currentQuestion.id,
-      mode: modo,
-      answer_selected: 'A',
-      response_time_ms: responseTime,
-    });
-    selectOption('A');
+    // Primeiro toque seleciona; segundo toque avança.
+    if (selectedOption === null) {
+      setTransitionType('default');
+      const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      setResultPercents(buildResultPercentages(currentQuestion.id, 'A'));
+      trackQuestionAnswered({
+        question_id: currentQuestion.id,
+        mode: modo,
+        answer_selected: 'A',
+        response_time_ms: responseTime,
+      });
+      selectOption('A');
+      return;
+    }
+    void handleContinueAfterResult();
   };
 
   const handleSelectOptionB = () => {
-    if (isShareOverlayVisible || isShareGhostTapActive() || selectedOption !== null || !currentQuestion) {
+    if (isShareOverlayVisible || isShareGhostTapActive() || !currentQuestion) {
       return;
     }
-    setTransitionType('default');
-    const responseTime = Math.max(0, Date.now() - questionStartRef.current);
-    setResultPercents(buildResultPercentages(currentQuestion.id, 'B'));
-    trackQuestionAnswered({
-      question_id: currentQuestion.id,
-      mode: modo,
-      answer_selected: 'B',
-      response_time_ms: responseTime,
-    });
-    selectOption('B');
+    if (selectedOption === null) {
+      setTransitionType('default');
+      const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      setResultPercents(buildResultPercentages(currentQuestion.id, 'B'));
+      trackQuestionAnswered({
+        question_id: currentQuestion.id,
+        mode: modo,
+        answer_selected: 'B',
+        response_time_ms: responseTime,
+      });
+      selectOption('B');
+      return;
+    }
+    void handleContinueAfterResult();
   };
 
   const handleContinueAfterResult = async () => {
@@ -566,6 +575,7 @@ export function GameScreen() {
               <Text style={styles.tutorialIconText}>?</Text>
             </Pressable>
           </View>
+          {allowAdsThisSession ? <AdBanner /> : null}
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
             <View style={styles.favoriteHintBubble}>
@@ -642,7 +652,7 @@ export function GameScreen() {
                       percentage={resultPercents?.A ?? null}
                       isUserChoice={selectedOption === 'A'}
                       onPress={handleSelectOptionA}
-                      disabled={selectedOption !== null || isShareOverlayVisible}
+                      disabled={isShareOverlayVisible}
                     />
                     <OptionButton
                       label="Opção B"
@@ -652,14 +662,9 @@ export function GameScreen() {
                       percentage={resultPercents?.B ?? null}
                       isUserChoice={selectedOption === 'B'}
                       onPress={handleSelectOptionB}
-                      disabled={selectedOption !== null || isShareOverlayVisible}
+                      disabled={isShareOverlayVisible}
                     />
                   </View>
-                  {selectedOption !== null ? (
-                    <Pressable style={styles.nextButton} onPress={() => void handleContinueAfterResult()}>
-                      <Text style={styles.nextButtonText}>Próxima pergunta</Text>
-                    </Pressable>
-                  ) : null}
                 </View>
               </View>
             </GestureHandlerScrollView>
@@ -702,7 +707,6 @@ export function GameScreen() {
             </View>
           </View>
           ) : null}
-          {allowAdsThisSession ? <AdBanner /> : null}
         </View>
       </GestureDetector>
       <Modal visible={showCommentsModal} animationType="slide" transparent onRequestClose={() => setShowCommentsModal(false)}>
@@ -1215,24 +1219,6 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     marginTop: 2,
-  },
-  nextButton: {
-    marginTop: 14,
-    backgroundColor: '#22d3ee',
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    shadowColor: '#22d3ee',
-    shadowOpacity: 0.28,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  nextButtonText: {
-    color: '#0b1220',
-    fontWeight: '700',
-    fontSize: 16,
-    letterSpacing: 0.4,
   },
   centered: {
     flex: 1,
