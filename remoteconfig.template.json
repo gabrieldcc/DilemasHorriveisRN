@@ -1,0 +1,29 @@
+{
+  "parameters": {
+    "game_modes_json": {
+      "defaultValue": {
+        "value": "{\"game_modes\":[{\"id\":\"leve\",\"enabled\":true,\"title\":{\"en\":\"Light\",\"pt\":\"Leve\",\"es\":\"Ligero\"},\"description\":{\"en\":\"Relaxed dilemmas to warm up the group.\",\"pt\":\"Dilemas descontraídos para aquecer o jogo.\",\"es\":\"Dilemas relajados para calentar el grupo.\"},\"questionsPerSession\":10,\"showTimer\":false,\"timerSeconds\":20,\"allowSkip\":false,\"questionCategory\":\"leve\",\"icon\":\"🎲\",\"supportsInfiltrado\":true},{\"id\":\"pesado\",\"enabled\":true,\"title\":{\"en\":\"Intense\",\"pt\":\"Pesado\",\"es\":\"Pesado\"},\"description\":{\"en\":\"High-pressure debates for fearless groups.\",\"pt\":\"Escolhas tensas para grupos sem medo de debate.\",\"es\":\"Elecciones tensas para grupos sin miedo al debate.\"},\"questionsPerSession\":10,\"showTimer\":false,\"timerSeconds\":20,\"allowSkip\":false,\"questionCategory\":\"pesado\",\"icon\":\"🔥\",\"supportsInfiltrado\":true},{\"id\":\"nerd\",\"enabled\":true,\"title\":{\"en\":\"Geek\",\"pt\":\"Nerd\",\"es\":\"Geek\"},\"description\":{\"en\":\"Pop culture, movies, shows and tech conflicts.\",\"pt\":\"Conflitos de cultura pop, filmes, séries e tecnologia.\",\"es\":\"Conflictos de cultura pop, cine, series y tecnología.\"},\"questionsPerSession\":10,\"showTimer\":false,\"timerSeconds\":20,\"allowSkip\":false,\"questionCategory\":\"nerd\",\"icon\":\"🧠\",\"supportsInfiltrado\":true},{\"id\":\"favoritas\",\"enabled\":true,\"title\":{\"en\":\"Favorites\",\"pt\":\"Favoritas\",\"es\":\"Favoritas\"},\"description\":{\"en\":\"Your saved dilemmas for replay anytime.\",\"pt\":\"Seus dilemas salvos para repetir quando quiser.\",\"es\":\"Tus dilemas guardados para repetir cuando quieras.\"},\"questionsPerSession\":25,\"showTimer\":false,\"timerSeconds\":20,\"allowSkip\":true,\"questionCategory\":\"favoritas\",\"icon\":\"⭐\",\"tag\":{\"en\":\"YOUR PICKS\",\"pt\":\"SEUS PICKS\",\"es\":\"TUS PICKS\"},\"supportsInfiltrado\":false,\"tutorial\":{\"enabled\":true,\"pages\":[{\"title\":{\"en\":\"Favorites mode\",\"pt\":\"Modo Favoritas\",\"es\":\"Modo Favoritas\"},\"body\":{\"en\":\"Saved questions stay here so you can replay the best debates.\",\"pt\":\"As perguntas salvas ficam aqui para você revisitar os melhores debates.\",\"es\":\"Las preguntas guardadas quedan aquí para revivir los mejores debates.\"}}]}},{\"id\":\"comunidade\",\"enabled\":true,\"title\":{\"en\":\"Community\",\"pt\":\"Comunidade\",\"es\":\"Comunidad\"},\"description\":{\"en\":\"Most favorited questions from everyone.\",\"pt\":\"As perguntas mais favoritadas pela galera.\",\"es\":\"Las preguntas más guardadas por la comunidad.\"},\"questionsPerSession\":25,\"showTimer\":false,\"timerSeconds\":20,\"allowSkip\":true,\"questionCategory\":\"comunidade\",\"icon\":\"🌍\",\"tag\":{\"en\":\"GLOBAL TOP\",\"pt\":\"TOP GLOBAL\",\"es\":\"TOP GLOBAL\"},\"supportsInfiltrado\":false,\"tutorial\":{\"enabled\":true,\"pages\":[{\"title\":{\"en\":\"Community mode\",\"pt\":\"Modo Comunidade\",\"es\":\"Modo Comunidad\"},\"body\":{\"en\":\"Questions rise here as more players favorite them.\",\"pt\":\"As perguntas sobem aqui conforme mais pessoas favoritam.\",\"es\":\"Las preguntas suben aquí a medida que más personas las guardan.\"}}]}}]}"
+      }
+    },
+    "feature_flags_json": {
+      "defaultValue": {
+        "value": "{\"show_favorite_tip_popup\":true,\"enable_new_modes\":true,\"enable_special_events\":false}"
+      }
+    },
+    "interstitial_frequency": {
+      "defaultValue": {
+        "value": "5"
+      }
+    },
+    "enable_ads": {
+      "defaultValue": {
+        "value": "true"
+      }
+    },
+    "ads_first_session_enabled": {
+      "defaultValue": {
+        "value": "false"
+      }
+    }
+  }
+}

@@ -3,12 +3,16 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
+import { getGameModeById } from '../config/remoteConfig';
 import { hasSeenTutorial, markModeTutorialAsSeen, markTutorialAsSeen } from '../hooks/useTutorialGate';
-import { ModoJogo } from '../models/game';
+import { BUILTIN_MODE_IDS, ModoJogo } from '../models/game';
+import { useAppTranslation } from '../i18n';
+import { getLocalizedTextSync } from '../i18n';
 import { isModoJogo } from '../utils/gameModes';
 
 export function TutorialScreen() {
   const router = useRouter();
+  const { t } = useAppTranslation();
   const params = useLocalSearchParams<{ mode?: string; from?: string; gameType?: string }>();
   const [loading, setLoading] = useState(false);
 
@@ -16,30 +20,28 @@ export function TutorialScreen() {
   const gameType = params.gameType === 'infiltrado' ? 'infiltrado' : 'classic';
   const openedFromGame = params.from === 'game';
   const hasValidMode = Boolean(mode && isModoJogo(mode));
-
-  const getModeSpecificTips = () => {
-    if (!hasValidMode || !mode) {
-      return null;
-    }
-
-    if (mode === ModoJogo.favoritas) {
-      return [
-        'Modo Favoritas: aqui ficam as perguntas que você marcou com estrela.',
-        'Use este modo para revisitar dilemas que renderam mais discussão no seu grupo.',
-      ];
-    }
-
-    if (mode === ModoJogo.comunidade) {
-      return [
-        'Modo Comunidade: mostra perguntas mais favoritadas pelos jogadores.',
-        'Quanto mais pessoas favoritam uma pergunta, mais ela sobe no ranking.',
-      ];
-    }
-
-    return null;
-  };
-
-  const modeSpecificTips = getModeSpecificTips();
+  const modeConfig = mode ? getGameModeById(mode) : undefined;
+  const fallbackPages = [
+    {
+      title: t('tutorial.defaultPages.page1Title'),
+      body: t('tutorial.defaultPages.page1Body'),
+    },
+    {
+      title: t('tutorial.defaultPages.page2Title'),
+      body: t('tutorial.defaultPages.page2Body'),
+    },
+    {
+      title: t('tutorial.defaultPages.page3Title'),
+      body: t('tutorial.defaultPages.page3Body'),
+    },
+  ];
+  const tutorialPages =
+    modeConfig?.tutorial?.enabled && (modeConfig.tutorial.pages.length ?? 0) > 0
+      ? modeConfig.tutorial.pages.map((page) => ({
+          title: getLocalizedTextSync(page.title),
+          body: getLocalizedTextSync(page.body),
+        }))
+      : fallbackPages;
 
   const startGame = async () => {
     if (openedFromGame) {
@@ -70,19 +72,12 @@ export function TutorialScreen() {
     <ScreenContainer>
       <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.wrapper}>
-          <Text style={styles.title}>Como jogar</Text>
-          <Text style={styles.text}>Esse jogo pode ser jogado individualmente ou em grupo.</Text>
-          <Text style={styles.text}>A ideia é gerar um debate sobre as respostas antes de escolher.</Text>
-          <Text style={styles.text}>1. Leia o dilema exibido na tela.</Text>
-          <Text style={styles.text}>2. Escolha entre a opção A ou B.</Text>
-          <Text style={styles.text}>3. Se estiver em grupo, escolham a resposta mais votada.</Text>
-          <Text style={styles.text}>4. A próxima pergunta aparece automaticamente.</Text>
-          <Text style={styles.text}>5. Continue até acabar a lista do modo.</Text>
-          {modeSpecificTips ? <Text style={styles.modeTipsTitle}>Sobre este modo</Text> : null}
-          {modeSpecificTips?.map((tip) => (
-            <Text key={tip} style={styles.text}>
-              • {tip}
-            </Text>
+          <Text style={styles.title}>{modeConfig ? getLocalizedTextSync(modeConfig.title, t('tutorial.fallbackTitle')) : t('tutorial.title')}</Text>
+          {tutorialPages.map((page) => (
+            <View key={`${page.title}-${page.body}`} style={styles.pageBlock}>
+              <Text style={styles.modeTipsTitle}>{page.title}</Text>
+              <Text style={styles.text}>{page.body}</Text>
+            </View>
           ))}
 
           <Pressable
@@ -92,12 +87,12 @@ export function TutorialScreen() {
           >
             <Text style={styles.buttonText}>
               {openedFromGame
-                ? 'Voltar ao jogo'
+                ? t('tutorial.backToGame')
                 : hasValidMode
                   ? loading
-                    ? 'Entrando...'
-                    : 'Entendi, começar'
-                  : 'Voltar aos modos'}
+                    ? t('tutorial.entering')
+                    : t('tutorial.start')
+                  : t('tutorial.backToModes')}
             </Text>
           </Pressable>
         </View>
@@ -134,8 +129,10 @@ const styles = StyleSheet.create({
     color: '#e2e8f0',
     fontSize: 22,
     fontWeight: '500',
-    marginTop: 10,
     marginBottom: 8,
+  },
+  pageBlock: {
+    marginBottom: 12,
   },
   button: {
     marginTop: 24,

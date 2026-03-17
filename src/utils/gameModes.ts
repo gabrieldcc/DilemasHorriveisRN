@@ -1,27 +1,38 @@
-import { ModoJogo, ModoJogoConteudo } from '../models/game';
+import { BUILTIN_MODE_IDS, ModoJogo, ModoJogoConteudo } from '../models/game';
+import { getEnabledGameModes, getGameModeById, isSpecialGameMode } from '../config/remoteConfig';
+import { getLocalizedTextSync } from '../i18n';
 
-export const CONTENT_GAME_MODES: Array<{ value: ModoJogoConteudo; label: string }> = [
-  { value: ModoJogo.leve, label: 'Leve' },
-  { value: ModoJogo.pesado, label: 'Pesado' },
-  { value: ModoJogo.nerd, label: 'Nerd' },
-];
+const SPECIAL_MODE_IDS = new Set<ModoJogo>([BUILTIN_MODE_IDS.favoritas, BUILTIN_MODE_IDS.comunidade]);
 
-export const EXTRA_GAME_MODES = [
-  { value: ModoJogo.favoritas, label: 'Favoritas' },
-  { value: ModoJogo.comunidade, label: 'Comunidade' },
-] as const;
+export function getAllModeIds(): ModoJogo[] {
+  return getEnabledGameModes().map((mode) => mode.id);
+}
 
-export const GAME_MODES = [...CONTENT_GAME_MODES, ...EXTRA_GAME_MODES];
+export function getContentModeIds(): ModoJogoConteudo[] {
+  return getEnabledGameModes()
+    .filter((mode) => !isSpecialGameMode(mode.id))
+    .map((mode) => mode.id);
+}
 
 export function isModoJogo(value: string): value is ModoJogo {
-  return GAME_MODES.some((mode) => mode.value === value);
+  return getAllModeIds().includes(value);
 }
 
 export function isModoJogoConteudo(value: ModoJogo): value is ModoJogoConteudo {
-  return CONTENT_GAME_MODES.some((mode) => mode.value === value);
+  return !SPECIAL_MODE_IDS.has(value);
 }
 
 export function getModoLabel(modo: ModoJogo): string {
-  const found = GAME_MODES.find((item) => item.value === modo);
-  return found?.label ?? modo;
+  const mode = getGameModeById(modo);
+  return getLocalizedTextSync(mode?.title, modo);
+}
+
+export function getModoQuestionSource(modo: ModoJogo): string {
+  const mode = getGameModeById(modo);
+  return mode?.questionCategory ?? modo;
+}
+
+export function getQuestionsPerSession(modo: ModoJogo): number {
+  const mode = getGameModeById(modo);
+  return mode?.questionsPerSession ?? 10;
 }

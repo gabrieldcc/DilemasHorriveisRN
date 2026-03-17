@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
-import { ModoJogo, OpcaoEscolha, Pergunta } from '../models/game';
+import { BUILTIN_MODE_IDS, ModoJogo, OpcaoEscolha, Pergunta } from '../models/game';
+import { i18n } from '../i18n';
 import { buscarPerguntasPorModo } from '../services/questionsService';
-import { isModoJogoConteudo } from '../utils/gameModes';
+import { getQuestionsPerSession, isModoJogoConteudo } from '../utils/gameModes';
 import { shuffleArray } from '../utils/shuffle';
 
 interface GameState {
@@ -59,23 +60,24 @@ export const useGameStore = create<GameState>((set, get) => ({
       const perguntas = await buscarPerguntasPorModo(modo);
       const shouldShuffle = isModoJogoConteudo(modo);
       const preparedQuestions = shouldShuffle ? shuffleArray(perguntas) : perguntas;
+      const limitedQuestions = preparedQuestions.slice(0, getQuestionsPerSession(modo));
       set((state) => ({
-        questions: preparedQuestions,
+        questions: limitedQuestions,
         isLoading: false,
         currentIndex: 0,
         sessions: {
           ...state.sessions,
           [modo]: {
-            questions: preparedQuestions,
+            questions: limitedQuestions,
             currentIndex: 0,
           },
         },
       }));
     } catch (error) {
-      const rawMessage = error instanceof Error ? error.message : 'Falha ao carregar perguntas.';
+      const rawMessage = error instanceof Error ? error.message : i18n.t('errors.loadQuestions');
       const message =
-        modo === ModoJogo.comunidade && rawMessage.toLowerCase().includes('firebase')
-          ? 'Modo Comunidade indisponível no momento. Ajuste o índice do Firestore e tente novamente.'
+        modo === BUILTIN_MODE_IDS.comunidade && rawMessage.toLowerCase().includes('firebase')
+          ? i18n.t('errors.communityUnavailable')
           : rawMessage;
       console.error(`[GameStore] Erro ao carregar perguntas do modo "${modo}":`, error);
       set({ error: message, isLoading: false, questions: [], currentIndex: 0 });

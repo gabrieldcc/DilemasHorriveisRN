@@ -3,16 +3,20 @@ import { useRouter } from 'expo-router';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
-import { ModoJogo, ModoJogoConteudo } from '../models/game';
+import { getEnabledGameModes } from '../config/remoteConfig';
+import { ModoJogoConteudo } from '../models/game';
+import { useAppTranslation } from '../i18n';
 import { enviarSugestaoPergunta } from '../services/questionsService';
-import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
+import { getContentModeIds, getModoLabel } from '../utils/gameModes';
 
 export function SuggestionScreen() {
   const router = useRouter();
-  const [titulo, setTitulo] = useState('O que você prefere?');
+  const { t } = useAppTranslation();
+  const contentModes = getEnabledGameModes().filter((mode) => getContentModeIds().includes(mode.id));
+  const [titulo, setTitulo] = useState(t('suggestion.questionPlaceholder'));
   const [opcaoA, setOpcaoA] = useState('');
   const [opcaoB, setOpcaoB] = useState('');
-  const [modoSugerido, setModoSugerido] = useState<ModoJogoConteudo>(ModoJogo.leve);
+  const [modoSugerido, setModoSugerido] = useState<ModoJogoConteudo>(contentModes[0]?.id ?? 'leve');
   const [sending, setSending] = useState(false);
 
   const handleSend = async () => {
@@ -29,12 +33,12 @@ export function SuggestionScreen() {
         modoSugerido,
       });
 
-      setTitulo('O que você prefere?');
+      setTitulo(t('suggestion.questionPlaceholder'));
       setOpcaoA('');
       setOpcaoB('');
-      Alert.alert('Sugestão enviada', 'Recebemos seu dilema. Obrigado por contribuir.');
+      Alert.alert(t('suggestion.successTitle'), t('suggestion.successBody'));
     } catch (error) {
-      Alert.alert('Erro ao enviar', error instanceof Error ? error.message : 'Não foi possível enviar.');
+      Alert.alert(t('suggestion.errorTitle'), error instanceof Error ? error.message : t('suggestion.errorBody'));
     } finally {
       setSending(false);
     }
@@ -43,53 +47,53 @@ export function SuggestionScreen() {
   return (
     <ScreenContainer>
       <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Sugerir Dilema</Text>
-        <Text style={styles.subtitle}>Envie suas ideias e analisaremos para entrar no app.</Text>
+        <Text style={styles.title}>{t('suggestion.title')}</Text>
+        <Text style={styles.subtitle}>{t('suggestion.subtitle')}</Text>
 
-        <Text style={styles.label}>Modo sugerido</Text>
+        <Text style={styles.label}>{t('suggestion.modeLabel')}</Text>
         <View style={styles.modeWrap}>
-          {CONTENT_GAME_MODES.map((item) => (
+          {contentModes.map((item) => (
             <Pressable
-              key={item.value}
-              onPress={() => setModoSugerido(item.value)}
+              key={item.id}
+              onPress={() => setModoSugerido(item.id)}
               style={({ pressed }) => [
                 styles.modeButton,
-                modoSugerido === item.value && styles.modeButtonSelected,
+                modoSugerido === item.id && styles.modeButtonSelected,
                 pressed && styles.modeButtonPressed,
               ]}
             >
-              <Text style={[styles.modeText, modoSugerido === item.value && styles.modeTextSelected]}>
-                {getModoLabel(item.value)}
+              <Text style={[styles.modeText, modoSugerido === item.id && styles.modeTextSelected]}>
+                {getModoLabel(item.id)}
               </Text>
             </Pressable>
           ))}
         </View>
 
-        <Text style={styles.label}>Título</Text>
+        <Text style={styles.label}>{t('suggestion.questionLabel')}</Text>
         <TextInput
           style={styles.input}
           value={titulo}
           onChangeText={setTitulo}
-          placeholder="Título"
+          placeholder={t('suggestion.questionPlaceholder')}
           placeholderTextColor="#64748b"
         />
 
-        <Text style={styles.label}>Opção A</Text>
+        <Text style={styles.label}>{t('suggestion.optionALabel')}</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoA}
           onChangeText={setOpcaoA}
-          placeholder="Descreva a primeira opção"
+          placeholder={t('suggestion.optionAPlaceholder')}
           placeholderTextColor="#64748b"
           multiline
         />
 
-        <Text style={styles.label}>Opção B</Text>
+        <Text style={styles.label}>{t('suggestion.optionBLabel')}</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoB}
           onChangeText={setOpcaoB}
-          placeholder="Descreva a segunda opção"
+          placeholder={t('suggestion.optionBPlaceholder')}
           placeholderTextColor="#64748b"
           multiline
         />
@@ -99,11 +103,11 @@ export function SuggestionScreen() {
           disabled={sending}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed, sending && styles.disabled]}
         >
-          <Text style={styles.primaryButtonText}>{sending ? 'Enviando...' : 'Enviar sugestão'}</Text>
+          <Text style={styles.primaryButtonText}>{sending ? t('suggestion.sending') : t('suggestion.send')}</Text>
         </Pressable>
 
         <Pressable onPress={() => router.back()} style={styles.secondaryButton}>
-          <Text style={styles.secondaryButtonText}>Voltar</Text>
+          <Text style={styles.secondaryButtonText}>{t('common.back')}</Text>
         </Pressable>
       </ScrollView>
     </ScreenContainer>

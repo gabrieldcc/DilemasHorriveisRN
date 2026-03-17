@@ -5,55 +5,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
+import { getEnabledGameModes, useRemoteAppConfig } from '../config/remoteConfig';
 import { hasSeenModeTutorial, hasSeenTutorial } from '../hooks/useTutorialGate';
 import { ModoJogo } from '../models/game';
+import { useAppTranslation } from '../i18n';
 import { getUserProfile, saveUserProfile } from '../services/profileService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
-import { GAME_MODES } from '../utils/gameModes';
+import { getLocalizedTextSync } from '../i18n';
 
 type TipoPartida = 'classic' | 'infiltrado';
-
-const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }> = {
-  [ModoJogo.leve]: {
-    icon: '🎲',
-    subtitle: 'Dilemas descontraídos para aquecer o jogo.',
-    tag: '',
-  },
-  [ModoJogo.pesado]: {
-    icon: '🔥',
-    subtitle: 'Escolhas tensas para grupos sem medo de debate.',
-    tag: '',
-  },
-  [ModoJogo.nerd]: {
-    icon: '🧠',
-    subtitle: 'Conflitos de cultura pop, filmes, séries e tecnologia.',
-    tag: '',
-  },
-  [ModoJogo.culturaBR]: {
-    icon: '🇧🇷',
-    subtitle: 'Referências brasileiras para debate em grupo.',
-    tag: '',
-  },
-  [ModoJogo.adultos]: {
-    icon: '🔞',
-    subtitle: 'Dilemas para grupos adultos e debates sem filtro.',
-    tag: '',
-  },
-  [ModoJogo.favoritas]: {
-    icon: '⭐',
-    subtitle: 'Seus dilemas salvos para repetir quando quiser.',
-    tag: 'SEUS PICKS',
-  },
-  [ModoJogo.comunidade]: {
-    icon: '🌍',
-    subtitle: 'As perguntas mais favoritadas pela galera.',
-    tag: 'TOP GLOBAL',
-  },
-};
 
 export function ModeSelectionScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { t } = useAppTranslation();
+  useRemoteAppConfig();
   const unlockAdmin = useAdminStore((state) => state.unlock);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
@@ -68,6 +34,7 @@ export function ModeSelectionScreen() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [showGameTypeModal, setShowGameTypeModal] = useState(false);
   const [pendingMode, setPendingMode] = useState<ModoJogo | null>(null);
+  const modes = getEnabledGameModes();
 
   useEffect(() => {
     let isMounted = true;
@@ -103,7 +70,7 @@ export function ModeSelectionScreen() {
     }
     setAdminGestureArmed(false);
     if (!isAdminPinConfigured()) {
-      setAdminError('PIN admin não configurado no ambiente.');
+      setAdminError(t('modeSelection.pinMissing'));
       setShowAdminModal(true);
       return;
     }
@@ -115,7 +82,7 @@ export function ModeSelectionScreen() {
   const handleUnlockAdmin = () => {
     const isValid = unlockAdmin(adminPin.trim());
     if (!isValid) {
-      setAdminError('PIN inválido.');
+      setAdminError(t('modeSelection.pinInvalid'));
       return;
     }
     setAdminError(null);
@@ -162,6 +129,12 @@ export function ModeSelectionScreen() {
       return;
     }
 
+    const modeConfig = modes.find((item) => item.id === mode);
+    if (modeConfig?.supportsInfiltrado === false) {
+      void handleContinueWithMode(mode, 'classic');
+      return;
+    }
+
     setPendingMode(mode);
     setShowGameTypeModal(true);
   };
@@ -187,7 +160,7 @@ export function ModeSelectionScreen() {
       await saveUserProfile(firstName, lastName);
       setShowProfileModal(false);
     } catch (error) {
-      setProfileError(error instanceof Error ? error.message : 'Não foi possível salvar seu nome.');
+      setProfileError(error instanceof Error ? error.message : t('modeSelection.profileError'));
     } finally {
       setIsSavingProfile(false);
     }
@@ -211,16 +184,15 @@ export function ModeSelectionScreen() {
         </View>
 
         <View style={styles.listContainer}>
-          {GAME_MODES.map((mode) => {
-            const ui = MODE_UI[mode.value as ModoJogo];
+          {modes.map((mode) => {
             return (
               <ModeCard
-                key={mode.value}
-                title={loadingMode === mode.value ? `${mode.label}...` : mode.label}
-                icon={ui?.icon}
-                subtitle={ui?.subtitle}
-                tag={ui?.tag}
-                onPress={() => void handleSelectMode(mode.value as ModoJogo)}
+                key={mode.id}
+                title={loadingMode === mode.id ? `${getLocalizedTextSync(mode.title, mode.id)}...` : getLocalizedTextSync(mode.title, mode.id)}
+                icon={mode.icon}
+                subtitle={getLocalizedTextSync(mode.description)}
+                tag={getLocalizedTextSync(mode.tag)}
+                onPress={() => void handleSelectMode(mode.id)}
               />
             );
           })}
@@ -230,18 +202,18 @@ export function ModeSelectionScreen() {
           onPress={() => router.push('/suggest' as never)}
           style={({ pressed }) => [styles.suggestButton, { marginBottom: insets.bottom + 16 }, pressed && styles.suggestButtonPressed]}
         >
-          <Text style={styles.suggestButtonText}>Sugerir novo dilema</Text>
+          <Text style={styles.suggestButtonText}>{t('modeSelection.suggest')}</Text>
         </Pressable>
       </ScrollView>
 
       <Modal visible={showAdminModal} transparent animationType="fade" onRequestClose={() => setShowAdminModal(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Acesso admin</Text>
+            <Text style={styles.modalTitle}>{t('modeSelection.adminAccess')}</Text>
             <TextInput
               value={adminPin}
               onChangeText={setAdminPin}
-              placeholder="Digite o PIN"
+              placeholder={t('modeSelection.pinPlaceholder')}
               placeholderTextColor="#64748b"
               secureTextEntry
               style={styles.modalInput}
@@ -249,10 +221,10 @@ export function ModeSelectionScreen() {
             {adminError ? <Text style={styles.modalError}>{adminError}</Text> : null}
             <View style={styles.modalActions}>
               <Pressable style={styles.modalButton} onPress={() => setShowAdminModal(false)}>
-                <Text style={styles.modalButtonText}>Cancelar</Text>
+                <Text style={styles.modalButtonText}>{t('common.cancel')}</Text>
               </Pressable>
               <Pressable style={styles.modalButtonPrimary} onPress={handleUnlockAdmin}>
-                <Text style={styles.modalButtonText}>Entrar</Text>
+                <Text style={styles.modalButtonText}>{t('common.enter')}</Text>
               </Pressable>
             </View>
           </View>
@@ -267,25 +239,14 @@ export function ModeSelectionScreen() {
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Escolha o formato da rodada</Text>
-            <Text style={styles.gameTypeHelperText}>
-              <Text style={styles.gameTypeHelperStrong}>Clássico:</Text> o grupo debate e escolhe a resposta mais
-              votada.
-            </Text>
-            <Text style={styles.gameTypeHelperText}>
-              <Text style={styles.gameTypeHelperStrong}>Infiltrado:</Text> um jogador recebe um papel secreto e precisa
-              defender o oposto do que acredita.
-            </Text>
-            <Text style={styles.gameTypeHelperText}>
-              No fim do debate, o grupo vota em quem acha que era o infiltrado.
-            </Text>
+            <Text style={styles.modalTitle}>{t('modeSelection.gameTypeTitle')}</Text>
 
             <Pressable
               style={({ pressed }) => [styles.gameTypeButton, pressed && styles.gameTypeButtonPressed]}
               onPress={() => handleSelectGameType('classic')}
             >
-              <Text style={styles.gameTypeTitle}>Clássico</Text>
-              <Text style={styles.gameTypeSubtitle}>Debate livre e voto em grupo.</Text>
+              <Text style={styles.gameTypeTitle}>{t('modeSelection.gameTypeClassic')}</Text>
+              <Text style={styles.gameTypeSubtitle}>{t('modeSelection.gameTypeClassicDescription')}</Text>
             </Pressable>
 
             <Pressable
@@ -296,15 +257,13 @@ export function ModeSelectionScreen() {
               ]}
               onPress={() => handleSelectGameType('infiltrado')}
             >
-              <Text style={styles.gameTypeTitle}>Infiltrado</Text>
-              <Text style={styles.gameTypeSubtitle}>
-                Papel secreto, defesa invertida e votação final para descobrir o infiltrado.
-              </Text>
+              <Text style={styles.gameTypeTitle}>{t('modeSelection.gameTypeInfiltrado')}</Text>
+              <Text style={styles.gameTypeSubtitle}>{t('modeSelection.gameTypeInfiltradoDescription')}</Text>
             </Pressable>
 
             <View style={styles.modalActions}>
               <Pressable style={styles.modalButton} onPress={() => setShowGameTypeModal(false)}>
-                <Text style={styles.modalButtonText}>Cancelar</Text>
+                <Text style={styles.modalButtonText}>{t('common.cancel')}</Text>
               </Pressable>
             </View>
           </View>
@@ -314,12 +273,12 @@ export function ModeSelectionScreen() {
       <Modal visible={showProfileModal} transparent animationType="fade" onRequestClose={() => {}}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Como podemos te chamar?</Text>
-            <Text style={styles.profileHelperText}>Esse nome será usado nos seus comentários.</Text>
+            <Text style={styles.modalTitle}>{t('modeSelection.saveProfileTitle')}</Text>
+            <Text style={styles.profileHelperText}>{t('modeSelection.saveProfileBody')}</Text>
             <TextInput
               value={firstName}
               onChangeText={setFirstName}
-              placeholder="Nome"
+              placeholder={t('modeSelection.firstName')}
               placeholderTextColor="#64748b"
               autoCapitalize="words"
               returnKeyType="next"
@@ -328,7 +287,7 @@ export function ModeSelectionScreen() {
             <TextInput
               value={lastName}
               onChangeText={setLastName}
-              placeholder="Sobrenome"
+              placeholder={t('modeSelection.lastName')}
               placeholderTextColor="#64748b"
               autoCapitalize="words"
               returnKeyType="done"
@@ -345,7 +304,7 @@ export function ModeSelectionScreen() {
               disabled={isSavingProfile}
               onPress={() => void handleSaveProfile()}
             >
-              <Text style={styles.modalButtonText}>{isSavingProfile ? 'Salvando...' : 'Continuar'}</Text>
+              <Text style={styles.modalButtonText}>{isSavingProfile ? t('common.loading') : t('modeSelection.continue')}</Text>
             </Pressable>
           </View>
         </View>

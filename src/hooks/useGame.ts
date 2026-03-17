@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ModoJogo, OpcaoEscolha } from '../models/game';
+import { BUILTIN_MODE_IDS, ModoJogo, OpcaoEscolha } from '../models/game';
 import { alternarPerguntaFavorita, isPerguntaFavorita } from '../services/questionsService';
 import { useGameStore } from '../store/gameStore';
 
@@ -79,7 +79,7 @@ export function useGame(modo: ModoJogo) {
       const nextValue = await alternarPerguntaFavorita(currentQuestion);
       setIsFavorite(nextValue);
 
-      if (modo === ModoJogo.favoritas && !nextValue) {
+      if (modo === BUILTIN_MODE_IDS.favoritas && !nextValue) {
         await loadQuestions(modo, { force: true });
       }
     } catch (error) {
