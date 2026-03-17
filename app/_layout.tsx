@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { doc, getDoc } from 'firebase/firestore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { useAppTranslation, initI18n } from '../src/i18n';
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
 import { initRemoteConfig } from '../src/services/RemoteConfigService';
@@ -13,10 +14,12 @@ import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
 
 export default function RootLayout() {
+  const { t } = useAppTranslation();
   const startListeningFeatureFlags = useFeatureFlagsStore((state) => state.startListening);
   const stopListeningFeatureFlags = useFeatureFlagsStore((state) => state.stopListening);
 
   useEffect(() => {
+    void initI18n();
     void initializeCrashlytics();
     void initRemoteConfig();
     resetSession();
@@ -62,10 +65,10 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="tutorial" options={{ title: 'Tutorial' }} />
-        <Stack.Screen name="game" options={{ title: 'BadPick' }} />
-        <Stack.Screen name="suggest" options={{ title: 'Sugerir dilema' }} />
-        <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
+        <Stack.Screen name="tutorial" options={{ title: t('navigation.tutorial') }} />
+        <Stack.Screen name="game" options={{ title: t('navigation.game') }} />
+        <Stack.Screen name="suggest" options={{ title: t('navigation.suggest') }} />
+        <Stack.Screen name="admin" options={{ title: t('navigation.admin') }} />
       </Stack>
     </GestureHandlerRootView>
   );

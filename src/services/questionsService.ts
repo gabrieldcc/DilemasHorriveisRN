@@ -14,8 +14,9 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 
-import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
-import { isModoJogoConteudo } from '../utils/gameModes';
+import { BUILTIN_MODE_IDS, LocalizedText, ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
+import { getLocalizedText } from '../i18n';
+import { getModoQuestionSource, isModoJogoConteudo } from '../utils/gameModes';
 import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
@@ -82,6 +83,59 @@ function normalizeSuggestionInput(input: SugestaoInput | SugestaoAtualizacaoInpu
   return { titulo, opcaoA, opcaoB };
 }
 
+function buildLocalizedField(value: string): LocalizedText {
+  const normalized = value.trim();
+  return { en: normalized, pt: normalized, es: normalized };
+}
+
+function resolveLocalizedField(raw: unknown, fallbackValue?: string): LocalizedText | undefined {
+  if (!raw || typeof raw !== 'object') {
+    if (!fallbackValue) {
+      return undefined;
+    }
+    return buildLocalizedField(fallbackValue);
+  }
+
+  const data = raw as Record<string, unknown>;
+  const localized: LocalizedText = {};
+  if (typeof data.en === 'string' && data.en.trim()) {
+    localized.en = data.en.trim();
+  }
+  if (typeof data.pt === 'string' && data.pt.trim()) {
+    localized.pt = data.pt.trim();
+  }
+  if (typeof data.es === 'string' && data.es.trim()) {
+    localized.es = data.es.trim();
+  }
+
+  if (localized.en || localized.pt || localized.es) {
+    return localized;
+  }
+
+  return fallbackValue ? buildLocalizedField(fallbackValue) : undefined;
+}
+
+function mapQuestionDoc(docId: string, modo: ModoJogo, raw: Record<string, unknown>): Pergunta {
+  const question = resolveLocalizedField(raw.question, typeof raw.titulo === 'string' ? raw.titulo : undefined);
+  const optionA = resolveLocalizedField(raw.optionA, typeof raw.opcaoA === 'string' ? raw.opcaoA : undefined);
+  const optionB = resolveLocalizedField(raw.optionB, typeof raw.opcaoB === 'string' ? raw.opcaoB : undefined);
+
+  const tituloFallback = typeof raw.titulo === 'string' ? raw.titulo : question?.en ?? 'Would you rather?';
+  const optionAFallback = typeof raw.opcaoA === 'string' ? raw.opcaoA : optionA?.en ?? '';
+  const optionBFallback = typeof raw.opcaoB === 'string' ? raw.opcaoB : optionB?.en ?? '';
+
+  return {
+    id: docId,
+    modo,
+    titulo: getLocalizedText(question, tituloFallback),
+    opcaoA: getLocalizedText(optionA, optionAFallback),
+    opcaoB: getLocalizedText(optionB, optionBFallback),
+    question,
+    optionA,
+    optionB,
+  };
+}
+
 function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPergunta | null {
   const modoSugerido = raw.modoSugerido;
   if (!modoSugerido || typeof modoSugerido !== 'string' || !isModoJogoConteudo(modoSugerido as ModoJogo)) {
@@ -113,28 +167,20 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
 export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]> {
   try {
-    if (modo === ModoJogo.favoritas) {
+    if (modo === BUILTIN_MODE_IDS.favoritas) {
       return buscarPerguntasFavoritas();
     }
 
-    if (modo === ModoJogo.comunidade) {
+    if (modo === BUILTIN_MODE_IDS.comunidade) {
       return buscarPerguntasComunidade();
     }
 
     const db = getFirebaseFirestore();
-    const questionsRef = collection(db, 'perguntas', modo, 'itens');
+    const questionSource = getModoQuestionSource(modo);
+    const questionsRef = collection(db, 'perguntas', questionSource, 'itens');
     const snapshot = await getDocs(questionsRef);
 
-    return snapshot.docs.map((questionDoc) => {
-      const data = questionDoc.data() as Omit<Pergunta, 'id' | 'modo'>;
-      return {
-        id: questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo,
-      };
-    });
+    return snapshot.docs.map((questionDoc) => mapQuestionDoc(questionDoc.id, modo, questionDoc.data() as Record<string, unknown>));
   } catch (error) {
     if (__DEV__) {
       console.error(`[Firestore] Falha ao buscar perguntas do modo "${modo}".`, error);
@@ -164,10 +210,13 @@ async function buscarPerguntasFavoritas(): Promise<Pergunta[]> {
 
       return {
         id: data.questionId,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
+        titulo: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).question, data.titulo), data.titulo),
+        opcaoA: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).optionA, data.opcaoA), data.opcaoA),
+        opcaoB: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).optionB, data.opcaoB), data.opcaoB),
         modo: data.modo,
+        question: resolveLocalizedField((data as Record<string, unknown>).question, data.titulo),
+        optionA: resolveLocalizedField((data as Record<string, unknown>).optionA, data.opcaoA),
+        optionB: resolveLocalizedField((data as Record<string, unknown>).optionB, data.opcaoB),
       };
     });
 
@@ -205,10 +254,13 @@ async function buscarPerguntasComunidade(): Promise<Pergunta[]> {
 
       return {
         id: data.questionId ?? questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
+        titulo: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).question, data.titulo), data.titulo),
+        opcaoA: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).optionA, data.opcaoA), data.opcaoA),
+        opcaoB: getLocalizedText(resolveLocalizedField((data as Record<string, unknown>).optionB, data.opcaoB), data.opcaoB),
         modo: modeFromDoc,
+        question: resolveLocalizedField((data as Record<string, unknown>).question, data.titulo),
+        optionA: resolveLocalizedField((data as Record<string, unknown>).optionA, data.opcaoA),
+        optionB: resolveLocalizedField((data as Record<string, unknown>).optionB, data.opcaoB),
       };
     });
 
@@ -223,6 +275,9 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
       titulo: input.titulo,
       opcaoA: input.opcaoA,
       opcaoB: input.opcaoB,
+      question: buildLocalizedField(input.titulo),
+      optionA: buildLocalizedField(input.opcaoA),
+      optionB: buildLocalizedField(input.opcaoB),
     });
   } catch (error) {
     throw new Error(parseFirebaseError(error));
@@ -292,6 +347,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
       titulo: pergunta.titulo,
       opcaoA: pergunta.opcaoA,
       opcaoB: pergunta.opcaoB,
+      question: pergunta.question ?? buildLocalizedField(pergunta.titulo),
+      optionA: pergunta.optionA ?? buildLocalizedField(pergunta.opcaoA),
+      optionB: pergunta.optionB ?? buildLocalizedField(pergunta.opcaoB),
       createdAt: serverTimestamp(),
     });
     await runTransaction(db, async (transaction) => {
@@ -305,6 +363,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
           titulo: pergunta.titulo,
           opcaoA: pergunta.opcaoA,
           opcaoB: pergunta.opcaoB,
+          question: pergunta.question ?? buildLocalizedField(pergunta.titulo),
+          optionA: pergunta.optionA ?? buildLocalizedField(pergunta.opcaoA),
+          optionB: pergunta.optionB ?? buildLocalizedField(pergunta.opcaoB),
           favoriteCount: currentCount + 1,
           updatedAt: serverTimestamp(),
         },
@@ -328,6 +389,9 @@ export async function enviarSugestaoPergunta(input: SugestaoInput): Promise<void
       titulo: normalized.titulo,
       opcaoA: normalized.opcaoA,
       opcaoB: normalized.opcaoB,
+      question: buildLocalizedField(normalized.titulo),
+      optionA: buildLocalizedField(normalized.opcaoA),
+      optionB: buildLocalizedField(normalized.opcaoB),
       modoSugerido: input.modoSugerido,
       autorId: uid,
       autorNome: profile?.displayName ?? `Anon-${uid.slice(-4)}`,
@@ -372,6 +436,9 @@ export async function atualizarSugestaoPergunta(id: string, input: SugestaoAtual
       titulo: normalized.titulo,
       opcaoA: normalized.opcaoA,
       opcaoB: normalized.opcaoB,
+      question: buildLocalizedField(normalized.titulo),
+      optionA: buildLocalizedField(normalized.opcaoA),
+      optionB: buildLocalizedField(normalized.opcaoB),
       modoSugerido: input.modoSugerido,
       updatedAt: serverTimestamp(),
     });
@@ -427,6 +494,9 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
       titulo: normalized.titulo,
       opcaoA: normalized.opcaoA,
       opcaoB: normalized.opcaoB,
+      question: buildLocalizedField(normalized.titulo),
+      optionA: buildLocalizedField(normalized.opcaoA),
+      optionB: buildLocalizedField(normalized.opcaoB),
       createdAt: serverTimestamp(),
       source: 'sugestao',
       suggestionId: id,
@@ -436,6 +506,9 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
       titulo: normalized.titulo,
       opcaoA: normalized.opcaoA,
       opcaoB: normalized.opcaoB,
+      question: buildLocalizedField(normalized.titulo),
+      optionA: buildLocalizedField(normalized.opcaoA),
+      optionB: buildLocalizedField(normalized.opcaoB),
       modoSugerido: mergedInput.modoSugerido,
       status: 'aprovada',
       approvedQuestionId: createdQuestion.id,
