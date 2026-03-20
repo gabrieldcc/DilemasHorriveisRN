@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
@@ -11,6 +11,13 @@ import { AnalyticsService } from '../src/services/AnalyticsService';
 import { resetSession } from '../src/utils/sessionManager';
 import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
+
+function getFirebaseErrorCode(error: unknown): string | null {
+  if (typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string') {
+    return error.code;
+  }
+  return null;
+}
 
 export default function RootLayout() {
   const startListeningFeatureFlags = useFeatureFlagsStore((state) => state.startListening);
@@ -28,12 +35,22 @@ export default function RootLayout() {
     const runFirebaseStartupCheck = async () => {
       try {
         const db = getFirebaseFirestore();
-        await getDoc(doc(db, 'perguntas', 'leve'));
+        const checkRef = query(collection(db, 'perguntas', 'nerd', 'itens'), limit(1));
+        await getDocs(checkRef);
         logCrashlyticsMessage('Firebase startup check concluído com sucesso.');
         if (__DEV__) {
           console.info('[Firebase] Startup check concluído com sucesso.');
         }
       } catch (error) {
+        const code = getFirebaseErrorCode(error);
+        if (code?.includes('permission-denied')) {
+          logCrashlyticsMessage('Firebase startup check sem permissão (ignorado).');
+          if (__DEV__) {
+            console.warn('[Firebase] Startup check sem permissão. Verifique as regras do Firestore se isso não for esperado.');
+          }
+          return;
+        }
+
         recordCrashlyticsError(error, 'Falha no Firebase startup check');
         if (__DEV__) {
           const message = error instanceof Error ? error.message : 'Erro desconhecido no startup check.';

@@ -15,7 +15,9 @@ import {
 } from 'firebase/firestore';
 
 import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
+import { getAppLanguage } from './languageService';
 import { isModoJogoConteudo } from '../utils/gameModes';
+import { resolveLocalizedField } from '../utils/localizedText';
 import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
@@ -56,6 +58,25 @@ export interface SugestaoAtualizacaoInput {
   opcaoA: string;
   opcaoB: string;
   modoSugerido: ModoJogoConteudo;
+}
+
+function mapPerguntaDoc(
+  raw: Record<string, unknown>,
+  language: ReturnType<typeof getAppLanguage>,
+  fallbackId: string,
+  modo: ModoJogo
+): Pergunta {
+  const titulo = resolveLocalizedField(raw, 'titulo', language) ?? 'Question unavailable.';
+  const opcaoA = resolveLocalizedField(raw, 'opcaoA', language) ?? 'Option A unavailable.';
+  const opcaoB = resolveLocalizedField(raw, 'opcaoB', language) ?? 'Option B unavailable.';
+
+  return {
+    id: typeof raw.id === 'string' ? raw.id : fallbackId,
+    titulo,
+    opcaoA,
+    opcaoB,
+    modo,
+  };
 }
 
 function getCommunityDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
@@ -113,28 +134,23 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
 export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]> {
   try {
+    const language = getAppLanguage();
+
     if (modo === ModoJogo.favoritas) {
-      return buscarPerguntasFavoritas();
+      return buscarPerguntasFavoritas(language);
     }
 
     if (modo === ModoJogo.comunidade) {
-      return buscarPerguntasComunidade();
+      return buscarPerguntasComunidade(language);
     }
 
     const db = getFirebaseFirestore();
     const questionsRef = collection(db, 'perguntas', modo, 'itens');
     const snapshot = await getDocs(questionsRef);
 
-    return snapshot.docs.map((questionDoc) => {
-      const data = questionDoc.data() as Omit<Pergunta, 'id' | 'modo'>;
-      return {
-        id: questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo,
-      };
-    });
+    return snapshot.docs.map((questionDoc) =>
+      mapPerguntaDoc(questionDoc.data() as Record<string, unknown>, language, questionDoc.id, modo)
+    );
   } catch (error) {
     if (__DEV__) {
       console.error(`[Firestore] Falha ao buscar perguntas do modo "${modo}".`, error);
@@ -143,73 +159,52 @@ export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]
   }
 }
 
-async function buscarPerguntasFavoritas(): Promise<Pergunta[]> {
+async function buscarPerguntasFavoritas(language: ReturnType<typeof getAppLanguage>): Promise<Pergunta[]> {
   const db = getFirebaseFirestore();
   const uid = await getCurrentUid();
   const favoritesRef = collection(db, 'users', uid, 'favoritos');
   const snapshot = await getDocs(query(favoritesRef, orderBy('createdAt', 'desc')));
 
   const mapped: Array<Pergunta | null> = snapshot.docs.map((favoriteDoc) => {
-      const data = favoriteDoc.data() as {
-        questionId: string;
-        modo: ModoJogo;
-        titulo: string;
-        opcaoA: string;
-        opcaoB: string;
-      };
+      const data = favoriteDoc.data() as Record<string, unknown>;
+      const modo = data.modo;
+      const questionId = typeof data.questionId === 'string' ? data.questionId : favoriteDoc.id;
 
-      if (!isModoJogoConteudo(data.modo)) {
+      if (!modo || typeof modo !== 'string' || !isModoJogoConteudo(modo as ModoJogo)) {
         return null;
       }
 
-      return {
-        id: data.questionId,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo: data.modo,
-      };
+      return mapPerguntaDoc(data, language, questionId, modo as ModoJogoConteudo);
     });
 
   return mapped.filter((item): item is Pergunta => item !== null);
 }
 
-async function buscarPerguntasComunidade(): Promise<Pergunta[]> {
+async function buscarPerguntasComunidade(language: ReturnType<typeof getAppLanguage>): Promise<Pergunta[]> {
   const db = getFirebaseFirestore();
   const communityRef = collection(db, 'comunidade_favoritas');
   const snapshot = await getDocs(query(communityRef, orderBy('favoriteCount', 'desc'), limit(80)));
 
   const mapped: Array<Pergunta | null> = snapshot.docs.map((questionDoc) => {
-      const data = questionDoc.data() as {
-        titulo?: string;
-        opcaoA?: string;
-        opcaoB?: string;
-        favoriteCount?: number;
-        modo?: ModoJogo;
-        questionId?: string;
-      };
-
+      const data = questionDoc.data() as Record<string, unknown>;
+      const favoriteCount = typeof data.favoriteCount === 'number' ? data.favoriteCount : 0;
       const modeFromDoc = data.modo;
+      const questionId = typeof data.questionId === 'string' ? data.questionId : questionDoc.id;
 
-      if (!modeFromDoc || !isModoJogoConteudo(modeFromDoc)) {
+      if (!modeFromDoc || typeof modeFromDoc !== 'string' || !isModoJogoConteudo(modeFromDoc as ModoJogo)) {
         return null;
       }
 
-      if ((data.favoriteCount ?? 0) <= 0) {
+      if (favoriteCount <= 0) {
         return null;
       }
 
-      if (!data.titulo || !data.opcaoA || !data.opcaoB) {
+      const mappedQuestion = mapPerguntaDoc(data, language, questionId, modeFromDoc as ModoJogoConteudo);
+      if (!mappedQuestion.titulo || !mappedQuestion.opcaoA || !mappedQuestion.opcaoB) {
         return null;
       }
 
-      return {
-        id: data.questionId ?? questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo: modeFromDoc,
-      };
+      return mappedQuestion;
     });
 
   return mapped.filter((item): item is Pergunta => item !== null);
