@@ -1,0 +1,600 @@
+{
+  "generatedAt": "2026-03-26T00:30:46.373Z",
+  "count": 33,
+  "docs": [
+    {
+      "id": "0VHcMwJpUMI6nPXagsSK",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Mandar um áudio falando mal de alguém diretamente para a pessoa",
+        "en": "Send an audio saying bad things about someone directly to them",
+        "es": "Enviarle un audio diciendo cosas malas de alguien directamente"
+      },
+      "opcaoB": {
+        "pt": "Mandar o áudio para um grupo que a pessoas não está, mas tem amigos dela",
+        "en": "Send the audio to a group that the person is not in, but has friends of theirs",
+        "es": "Enviar el audio a un grupo en el que la persona no está, pero tiene amigos"
+      }
+    },
+    {
+      "id": "2CYMHVjPIZQDU9QoXNV8",
+      "titulo": {
+        "pt": "Você protegeria um amigo que ainda não se assumiu?",
+        "en": "Would you protect a friend who hasn't come out yet?",
+        "es": "¿Protegerías a un amigo que aún no ha salido del armario?"
+      },
+      "opcaoA": {
+        "pt": "Durante uma discussão em grupo, alguém começa a fazer piadas sobre a possível orientação sexual de um amigo que te contou em segredo que é gay, e você intervém defendendo ele de forma direta, mesmo correndo o risco de levantar suspeitas",
+        "en": "During a group discussion, someone starts making jokes about the possible sexual orientation of a friend who told you in secret that he is gay, and you intervene directly defending him, even at the risk of arousing suspicion.",
+        "es": "Durante una discusión en grupo, alguien empieza a hacer bromas sobre la posible orientación sexual de un amigo que te ha dicho en secreto que es gay, y tú intervienes directamente defendiéndolo, incluso a riesgo de despertar sospechas."
+      },
+      "opcaoB": {
+        "pt": "Ficar em silêncio para proteger o segredo dele, mesmo sabendo que ele está sendo alvo de comentários desconfortáveis",
+        "en": "Staying silent to protect his secret, even though you know he is being subjected to uncomfortable comments",
+        "es": "Permanecer en silencio para proteger su secreto, aunque sepa que está siendo objeto de comentarios incómodos."
+      }
+    },
+    {
+      "id": "3lG0HcZjR3ijLqFhiIgU",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ser preso por 3 anos por algo que você não fez",
+        "en": "Being jailed for 3 years for something you didn't do",
+        "es": "Ser encarcelado por 3 años por algo que no hiciste"
+      },
+      "opcaoB": {
+        "pt": "Viver o resto da vida convivendo com a culpa de algo terrível que fez",
+        "en": "Living the rest of your life living with the guilt of something terrible you did",
+        "es": "Vivir el resto de tu vida con la culpa de algo terrible que hiciste."
+      }
+    },
+    {
+      "id": "5odjKtlQ2w80ZbZOQYBI",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Passar 5 anos na prisão e sair milionário(a)",
+        "en": "Spend 5 years in prison and come out a millionaire",
+        "es": "Pasa 5 años en prisión y sal de millonario"
+      },
+      "opcaoB": {
+        "pt": "Nunca ser preso e viver a vida inteira como classe média",
+        "en": "Never get arrested and live your whole life as a middle class",
+        "es": "Nunca te arresten y vive toda tu vida como una clase media."
+      }
+    },
+    {
+      "id": "5q9TOAhR65b8oAdpEc3o",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter todo seu histórico do WhatsApp lido em rede nacional",
+        "en": "Have your entire WhatsApp history read on national television",
+        "es": "Haz leer todo tu historial de WhatsApp en la televisión nacional"
+      },
+      "opcaoB": {
+        "pt": "Nunca mais poder usar nenhuma rede social",
+        "en": "Never being able to use any social network again",
+        "es": "No poder volver a utilizar ninguna red social nunca más."
+      }
+    },
+    {
+      "id": "6vGCpRdr6bUXAYMdrC6u",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Que leiam suas mensagens",
+        "en": "Let them read your messages",
+        "es": "Deja que lean tus mensajes"
+      },
+      "opcaoB": {
+        "pt": "Que vejam suas fotos no celular",
+        "en": "Let them see your photos on your cell phone",
+        "es": "Deja que vean tus fotos en tu celular"
+      }
+    },
+    {
+      "id": "938nDG3c2L8rEyMi3ack",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Fazer um voto de celibato para o resto da vida",
+        "en": "Take a vow of celibacy for the rest of your life",
+        "es": "Haz voto de celibato por el resto de tu vida."
+      },
+      "opcaoB": {
+        "pt": "Fazer um voto de silêncio para o resto da vida",
+        "en": "Take a vow of silence for the rest of your life",
+        "es": "Haz voto de silencio por el resto de tu vida."
+      }
+    },
+    {
+      "id": "9P0bevDx9xGBHHfXQGuk",
+      "titulo": {
+        "pt": "Você revelaria um segredo para proteger alguém?",
+        "en": "Would you reveal a secret to protect someone?",
+        "es": "¿Revelarías un secreto para proteger a alguien?"
+      },
+      "opcaoA": {
+        "pt": "Descobrir que um amigo está prestes a começar um relacionamento com alguém que, em particular, te contou que ainda está explorando sua orientação sexual e não quer algo sério agora, e avisar seu amigo para evitar que ele se envolva emocionalmente",
+        "en": "Discovering that a friend is about to start a relationship with someone who has privately told you that they are still exploring their sexual orientation and don't want something serious right now, and warning your friend to avoid getting emotionally involved",
+        "es": "Descubrir que un amigo está a punto de iniciar una relación con alguien que le ha dicho en privado que todavía está explorando su orientación sexual y que no quiere algo serio en este momento, y advertirle a su amigo que evite involucrarse emocionalmente."
+      },
+      "opcaoB": {
+        "pt": "Guardar o segredo porque foi algo pessoal que a pessoa compartilhou com você em confiança",
+        "en": "Keep the secret because it was something personal that the person shared with you in confidence",
+        "es": "Guarda el secreto porque fue algo personal que la persona compartió contigo de forma confidencial."
+      }
+    },
+    {
+      "id": "ECx3Su4rVo8oUYm5ZQOe",
+      "titulo": {
+        "pt": "Você contaria algo que pode mudar uma amizade?",
+        "en": "Would you say something that could change a friendship?",
+        "es": "¿Dirías algo que podría cambiar una amistad?"
+      },
+      "opcaoA": {
+        "pt": "Perceber que um amigo muito próximo está claramente interessado em você romanticamente, mas você sabe que sua orientação sexual não é compatível com a dele, e falar isso abertamente para evitar falsas expectativas",
+        "en": "Realizing that a very close friend is clearly interested in you romantically, but you know that your sexual orientation is not compatible with theirs, and saying this openly to avoid false expectations",
+        "es": "Darte cuenta de que un amigo muy cercano está claramente interesado en ti románticamente, pero sabes que tu orientación sexual no es compatible con la de ellos, y decirlo abiertamente para evitar falsas expectativas."
+      },
+      "opcaoB": {
+        "pt": "Evitar tocar no assunto para não criar um momento constrangedor, mesmo sabendo que ele pode continuar alimentando sentimentos que não serão correspondidos",
+        "en": "Avoid bringing up the subject so as not to create an awkward moment, even though you know that it may continue to fuel feelings that will not be reciprocated.",
+        "es": "Evite sacar el tema a colación para no crear un momento incómodo, aunque sepa que puede seguir alimentando sentimientos que no serán correspondidos."
+      }
+    },
+    {
+      "id": "GQDlocT7qQGXBw967ZWD",
+      "titulo": {
+        "pt": "Você manteria uma mentira ridícula?",
+        "en": "Would you keep a ridiculous lie?",
+        "es": "¿Mantendrías una mentira ridícula?"
+      },
+      "opcaoA": {
+        "pt": "Um amigo contou para todo mundo que já teve uma experiência sexual extremamente exagerada e impossível, e todos começam a pedir confirmação para você porque sabem que vocês são muito próximos",
+        "en": "A friend told everyone that he had an extremely exaggerated and impossible sexual experience, and everyone starts asking you for confirmation because they know you are very close.",
+        "es": "Un amigo les contó a todos que tuvo una experiencia sexual extremadamente exagerada e imposible, y todos empiezan a pedirte confirmación porque saben que sois muy cercanos."
+      },
+      "opcaoB": {
+        "pt": "Contar a verdade e dizer que ele inventou a história, mesmo sabendo que isso vai virar uma piada eterna no grupo",
+        "en": "Tell the truth and say that he made up the story, even though he knows it will become an eternal joke in the group",
+        "es": "Decir la verdad y decir que él inventó la historia, aunque sabe que se convertirá en una eterna broma en el grupo."
+      }
+    },
+    {
+      "id": "GfdRSBJHJ3vcib8d0VRo",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Revelar para a pessoa que ele é seu plano B",
+        "en": "Reveal to the person that he is your plan B",
+        "es": "Revelarle a la persona que él es tu plan B"
+      },
+      "opcaoB": {
+        "pt": "Descobrir que você foi o plano B",
+        "en": "Finding out you were plan B",
+        "es": "Descubrir que eras el plan B"
+      }
+    },
+    {
+      "id": "M0pOUbyr3LDKvNX6hFWM",
+      "titulo": {
+        "pt": "Você contaria uma verdade que pode destruir uma família?",
+        "en": "Would you tell a truth that could destroy a family?",
+        "es": "¿Dirías una verdad que podría destruir a una familia?"
+      },
+      "opcaoA": {
+        "pt": "Descobrir por acaso, através de um teste de DNA, que o filho adolescente do seu melhor amigo provavelmente não é biologicamente dele, e contar isso mesmo sabendo que pode destruir um casamento de 20 anos e afetar profundamente o garoto",
+        "en": "Discovering by chance, through a DNA test, that your best friend's teenage son is probably not biologically his, and telling this even though you know it could destroy a 20-year marriage and deeply affect the boy",
+        "es": "Descubrir por casualidad, a través de una prueba de ADN, que el hijo adolescente de tu mejor amigo probablemente no sea biológicamente suyo, y contarlo aunque sabes que podría destruir un matrimonio de 20 años y afectar profundamente al chico."
+      },
+      "opcaoB": {
+        "pt": "Guardar essa informação para sempre porque não foi você quem causou a situação, mesmo sabendo que seu amigo continua vivendo uma vida construída sobre uma mentira",
+        "en": "Keep this information forever because it was not you who caused the situation, even though you know that your friend continues to live a life built on a lie",
+        "es": "Guarda esta información para siempre porque no fuiste tú quien causó la situación, aunque sepas que tu amigo continúa viviendo una vida basada en una mentira."
+      }
+    },
+    {
+      "id": "N7Ga0gAFrBr8147FsDJt",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Namorar com alguém que ri muito quando você tira as roupas",
+        "en": "Dating someone who laughs a lot when you take off your clothes",
+        "es": "Salir con alguien que se ríe mucho cuando te quitas la ropa"
+      },
+      "opcaoB": {
+        "pt": "Namorar com alguém que chora muito na mesma situação?",
+        "en": "Dating someone who cries a lot in the same situation?",
+        "es": "¿Salir con alguien que llora mucho en la misma situación?"
+      }
+    },
+    {
+      "id": "QGVRgj4SB4FjAddNWet2",
+      "titulo": {
+        "pt": "Você diria uma verdade devastadora?",
+        "en": "Would you tell a devastating truth?",
+        "es": "¿Dirías una verdad devastadora?"
+      },
+      "opcaoA": {
+        "pt": "Um amigo está prestes a ter um filho com a parceira e te pergunta sinceramente se você sabe de algo que ele deveria saber, e você sabe que ela teve um caso recente que pode colocar em dúvida a paternidade",
+        "en": "A friend is about to have a child with his partner and asks you sincerely if you know something he should know, and you know that she had a recent affair that could throw paternity into question",
+        "es": "Una amiga está a punto de tener un hijo con su pareja y te pregunta sinceramente si sabes algo que él debería saber, y sabes que ella tuvo una aventura reciente que podría poner en duda la paternidad."
+      },
+      "opcaoB": {
+        "pt": "Dizer que não sabe de nada porque acredita que revelar isso agora pode destruir a família antes mesmo da criança nascer",
+        "en": "Saying you don't know anything because you believe that revealing this now could destroy the family before the child is even born",
+        "es": "Decir que no sabes nada porque crees que revelar esto ahora podría destruir a la familia incluso antes de que nazca el niño."
+      }
+    },
+    {
+      "id": "Rh9Jog14o5OcMuvHG2to",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter diarreia explosiva sempre que encontrar seu chefe",
+        "en": "Having explosive diarrhea whenever you meet your boss",
+        "es": "Tener diarrea explosiva cada vez que te encuentras con tu jefe"
+      },
+      "opcaoB": {
+        "pt": "Ter diarreia explosiva sempre que encontrar a família do seu parceiro",
+        "en": "Having explosive diarrhea whenever you meet your partner's family",
+        "es": "Tener diarrea explosiva cada vez que te encuentras con la familia de tu pareja"
+      }
+    },
+    {
+      "id": "T3DN7V8kFopX1z7kUgxO",
+      "titulo": {
+        "pt": "Você esconderia uma parte importante de quem você é?",
+        "en": "Would you hide an important part of who you are?",
+        "es": "¿Ocultarías una parte importante de quién eres?"
+      },
+      "opcaoA": {
+        "pt": "Começar um relacionamento sério com alguém que tem valores muito conservadores e decidir esconder aspectos da sua vida sexual passada para evitar julgamentos e conflitos",
+        "en": "Starting a serious relationship with someone who has very conservative values ​​and deciding to hide aspects of your past sex life to avoid judgment and conflict",
+        "es": "Iniciar una relación seria con alguien que tiene valores muy conservadores y decidir ocultar aspectos de su vida sexual pasada para evitar juicios y conflictos."
+      },
+      "opcaoB": {
+        "pt": "Ser totalmente honesto sobre seu passado, mesmo sabendo que isso pode fazer a pessoa repensar se quer continuar o relacionamento",
+        "en": "Being completely honest about your past, even knowing that this may make the person rethink whether they want to continue the relationship",
+        "es": "Ser completamente honesto acerca de tu pasado, incluso sabiendo que esto puede hacer que la persona se replantee si quiere continuar la relación."
+      }
+    },
+    {
+      "id": "YoFAO3aQC4EomOaJa942",
+      "titulo": {
+        "pt": "O que é mais humilhante?",
+        "en": "What is more humiliating?",
+        "es": "¿Qué es más humillante?"
+      },
+      "opcaoA": {
+        "pt": "Ser rejeitado depois de tomar coragem",
+        "en": "Being rejected after gaining courage",
+        "es": "Ser rechazado después de ganar coraje"
+      },
+      "opcaoB": {
+        "pt": "Nem ser considerado uma opção",
+        "en": "Not even being considered an option",
+        "es": "Ni siquiera se considera una opción"
+      }
+    },
+    {
+      "id": "ZXKXVw6sc0kLuMuRnFmI",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Receber uma notificação toda vez que seus pais estão tendo relações",
+        "en": "Receive a notification every time your parents are having sex",
+        "es": "Recibe una notificación cada vez que tus padres tengan relaciones sexuales"
+      },
+      "opcaoB": {
+        "pt": "Que todas as pessoas do seu trabalho recebam uma notificação quando você está tendo relações",
+        "en": "Let everyone at your work receive a notification when you are having sex",
+        "es": "Deja que todos en tu trabajo reciban una notificación cuando tengas relaciones sexuales"
+      }
+    },
+    {
+      "id": "ZtzTU7w8KeN0w8XTTqR8",
+      "titulo": {
+        "pt": "Você prefere:",
+        "en": "Would you prefer:",
+        "es": "Preferirías:"
+      },
+      "opcaoA": {
+        "pt": "Que saibam quem você já quis beijar nessa roda",
+        "en": "Let them know who you've wanted to kiss in this circle",
+        "es": "Hazles saber a quién querías besar en este círculo."
+      },
+      "opcaoB": {
+        "pt": "Que saibam quem já quis te beijar e você recusou",
+        "en": "Let them know who ever wanted to kiss you and you refused",
+        "es": "Hazles saber quién alguna vez quiso besarte y te negaste."
+      }
+    },
+    {
+      "id": "b4728hsCbg5NiT1KoXSb",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Viver um dia normal da sua rotina completamente pelado",
+        "en": "Living a normal day of your routine completely naked",
+        "es": "Viviendo un día normal de tu rutina completamente desnuda"
+      },
+      "opcaoB": {
+        "pt": "Dormir por um ano inteiro",
+        "en": "Sleep for a whole year",
+        "es": "Dormir durante todo un año"
+      }
+    },
+    {
+      "id": "bZBaceuNdwx4wnY51iWa",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Se relacionar com alguém que chega ao clímax em 10 segundos",
+        "en": "Having a relationship with someone who climaxes in 10 seconds",
+        "es": "Tener una relación con alguien que llega al clímax en 10 segundos."
+      },
+      "opcaoB": {
+        "pt": "Se relacionar com alguém que demora 3 horas para chegar ao clímax",
+        "en": "Having a relationship with someone who takes 3 hours to reach climax",
+        "es": "Tener una relación con alguien que tarda 3 horas en llegar al clímax"
+      }
+    },
+    {
+      "id": "g0qnCHvHUKAcf7ymyECy",
+      "titulo": {
+        "pt": "Você exporia uma mentira sobre sua vida íntima?",
+        "en": "Would you expose a lie about your intimate life?",
+        "es": "¿Expondrías una mentira sobre tu vida íntima?"
+      },
+      "opcaoA": {
+        "pt": "Descobrir que um ex-parceiro anda contando histórias falsas sobre sua vida sexual para se valorizar entre amigos, e confrontá-lo publicamente para defender sua reputação",
+        "en": "Discovering that an ex-partner has been telling false stories about his sex life to gain value among friends, and publicly confronting him to defend his reputation",
+        "es": "Descubrir que una expareja ha estado contando historias falsas sobre su vida sexual para ganar valor entre amigos y confrontarlo públicamente para defender su reputación."
+      },
+      "opcaoB": {
+        "pt": "Ignorar a situação para evitar criar um conflito maior, mesmo sabendo que as pessoas podem continuar acreditando nessas histórias",
+        "en": "Ignoring the situation to avoid creating a greater conflict, even though people may continue to believe these stories",
+        "es": "Ignorar la situación para evitar crear un conflicto mayor, aunque la gente pueda seguir creyendo estas historias."
+      }
+    },
+    {
+      "id": "gBPcA7rvQ6RDJ1uVAVfQ",
+      "titulo": {
+        "pt": "Você abriria o relacionamento contra sua vontade?",
+        "en": "Would you open the relationship against your will?",
+        "es": "¿Abrirías la relación en contra de tu voluntad?"
+      },
+      "opcaoA": {
+        "pt": "Seu parceiro diz que ama você, mas sente necessidade de explorar experiências sexuais com outras pessoas, e pede para abrir o relacionamento para não terminar",
+        "en": "Your partner says he loves you, but feels the need to explore sexual experiences with other people, and asks you to open the relationship so as not to end it",
+        "es": "Tu pareja dice que te ama, pero siente la necesidad de explorar experiencias sexuales con otras personas, y te pide que abras la relación para no terminarla"
+      },
+      "opcaoB": {
+        "pt": "Recusar a ideia porque isso ultrapassa seus limites, mesmo sabendo que isso pode levar ao fim do relacionamento",
+        "en": "Refusing the idea because it goes beyond your limits, even though you know it could lead to the end of the relationship",
+        "es": "Rechazar la idea porque va más allá de tus límites, aunque sabes que podría llevar al fin de la relación."
+      }
+    },
+    {
+      "id": "hmUDSuwddWSTeIUgPj6D",
+      "titulo": {
+        "pt": "Você esconderia a verdade para evitar vergonha?",
+        "en": "Would you hide the truth to avoid shame?",
+        "es": "¿Ocultarías la verdad para evitar la vergüenza?"
+      },
+      "opcaoA": {
+        "pt": "Durante uma conversa entre amigos, alguém espalha um boato falso sobre a sua vida sexual e você deixa que as pessoas acreditem porque a verdade seria ainda mais constrangedora para outra pessoa envolvida",
+        "en": "During a conversation between friends, someone spreads a false rumor about your sex life and you let people believe it because the truth would be even more embarrassing for someone else involved.",
+        "es": "Durante una conversación entre amigos, alguien difunde un rumor falso sobre tu vida sexual y dejas que la gente lo crea porque la verdad sería aún más vergonzosa para otra persona involucrada."
+      },
+      "opcaoB": {
+        "pt": "Corrigir a história e contar o que realmente aconteceu, mesmo sabendo que isso pode expor outra pessoa a um grande constrangimento",
+        "en": "Correct the story and tell what really happened, even though you know it could expose someone else to great embarrassment",
+        "es": "Corrija la historia y cuente lo que realmente sucedió, aunque sepa que podría exponer a otra persona a una gran vergüenza."
+      }
+    },
+    {
+      "id": "iVye2P4aMt6hS7A0JzGT",
+      "titulo": {
+        "pt": "Você salvaria seu amigo de uma situação constrangedora?",
+        "en": "Would you save your friend from an embarrassing situation?",
+        "es": "¿Salvarías a tu amigo de una situación embarazosa?"
+      },
+      "opcaoA": {
+        "pt": "Durante um jantar com várias pessoas, perceber que seu amigo esqueceu de desligar o celular e todos começam a ouvir um áudio muito íntimo que ele recebeu, e você pega o celular rapidamente e finge que foi você quem abriu o áudio",
+        "en": "During a dinner with several people, you realize that your friend forgot to turn off his cell phone and everyone starts listening to a very intimate audio that he received, and you quickly grab your cell phone and pretend that you were the one who opened the audio",
+        "es": "Durante una cena con varias personas, te das cuenta que a tu amigo se le olvidó apagar su celular y todos comienzan a escuchar un audio muy íntimo que recibió, y rápidamente tomas tu celular y finges que fuiste tú quien abrió el audio."
+      },
+      "opcaoB": {
+        "pt": "Ficar em silêncio e deixar que todos percebam que o áudio era dele, evitando assumir um constrangimento que não é seu",
+        "en": "Stay silent and let everyone know that the audio was his, avoiding taking on an embarrassment that is not yours",
+        "es": "Quédate en silencio y deja que todos sepan que el audio era suyo, evitando asumir un bochorno que no es tuyo."
+      }
+    },
+    {
+      "id": "iptvBK1h5PCMEVh9RAyD",
+      "titulo": {
+        "pt": "Você seria totalmente honesto sobre o passado?",
+        "en": "Would you be completely honest about the past?",
+        "es": "¿Serías completamente honesto sobre el pasado?"
+      },
+      "opcaoA": {
+        "pt": "Contar para seu parceiro atual detalhes de um relacionamento sexual antigo com alguém que ainda faz parte do seu círculo de amigos",
+        "en": "Telling your current partner details of a past sexual relationship with someone who is still part of your circle of friends",
+        "es": "Contarle a tu pareja actual detalles de una relación sexual pasada con alguien que todavía forma parte de tu círculo de amigos."
+      },
+      "opcaoB": {
+        "pt": "Evitar contar essa parte do passado para não gerar insegurança ou ciúmes dentro do relacionamento atual",
+        "en": "Avoid telling this part of the past to avoid generating insecurity or jealousy within the current relationship",
+        "es": "Evita contar esta parte del pasado para evitar generar inseguridad o celos dentro de la relación actual."
+      }
+    },
+    {
+      "id": "mZXyQlD8HnyyypnS2BSR",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Descobrir que alguém ficou com você só por carência",
+        "en": "Discovering that someone stayed with you just out of need",
+        "es": "Descubrir que alguien se quedó contigo sólo por necesidad"
+      },
+      "opcaoB": {
+        "pt": "Descobrir que você foi o plano B",
+        "en": "Finding out you were plan B",
+        "es": "Descubrir que eras el plan B"
+      }
+    },
+    {
+      "id": "plL97BinU2Fqu4loZd8Q",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Morrer e seu corpo ser encontrado sobre um monte de brinquedos sexuais",
+        "en": "Die and your body is found on top of a pile of sex toys",
+        "es": "Muere y tu cuerpo es encontrado encima de un montón de juguetes sexuales."
+      },
+      "opcaoB": {
+        "pt": "Morrer e seu corpo ser encontrado sobre um monte de drogas",
+        "en": "Die and your body is found on top of a pile of drugs",
+        "es": "Muere y tu cuerpo es encontrado encima de un montón de drogas."
+      }
+    },
+    {
+      "id": "qgiOySuau29EPjBh6B97",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Perder seus órgãos sexuais para sempre",
+        "en": "Losing your sexual organs forever",
+        "es": "Perder tus órganos sexuales para siempre."
+      },
+      "opcaoB": {
+        "pt": "Ganhar 100 kg permanentemente",
+        "en": "Gain 100 kg permanently",
+        "es": "Ganar 100 kg permanentemente"
+      }
+    },
+    {
+      "id": "quhLsaRLeC3xr5zwS2vf",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Postar algo no melhores amigos, mas na verade era pra ser no privado de alguém",
+        "en": "Post something on best friends, but it was actually supposed to be on someone's private page",
+        "es": "Publicar algo en mejores amigos, pero en realidad se suponía que debía estar en la página privada de alguien."
+      },
+      "opcaoB": {
+        "pt": "Postar algo no público achando que estava no melhores amigos",
+        "en": "Post something in the public thinking it was in best friends",
+        "es": "Publicar algo en público pensando que era en mejores amigos."
+      }
+    },
+    {
+      "id": "ttQ36lHmQIr7xdKHTguG",
+      "titulo": {
+        "pt": "Você revelaria a verdade em uma situação absurda?",
+        "en": "Would you reveal the truth in an absurd situation?",
+        "es": "¿Revelarías la verdad en una situación absurda?"
+      },
+      "opcaoA": {
+        "pt": "Durante um jogo entre amigos, alguém pergunta quem deixou um objeto íntimo esquecido no banheiro da casa, e você sabe exatamente de quem é porque a pessoa te contou antes em segredo",
+        "en": "During a game between friends, someone asks who left an intimate object forgotten in the bathroom, and you know exactly who it belongs to because the person told you in secret beforehand.",
+        "es": "Durante un juego entre amigos, alguien pregunta quién dejó un objeto íntimo olvidado en el baño, y sabes exactamente a quién pertenece porque la persona te lo dijo en secreto de antemano."
+      },
+      "opcaoB": {
+        "pt": "Ficar em silêncio e deixar que todos continuem suspeitando uns dos outros para evitar expor a pessoa",
+        "en": "Stay silent and let everyone continue to suspect each other to avoid exposing the person",
+        "es": "Permanecer en silencio y dejar que todos sigan sospechando unos de otros para evitar exponer a la persona."
+      }
+    },
+    {
+      "id": "tw60LGmHq9zQbFVzm5Cu",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Delatar seu melhor amigo por um crime que ele cometeu",
+        "en": "Reporting on your best friend for a crime he committed",
+        "es": "Denunciar a tu mejor amigo por un crimen que cometió"
+      },
+      "opcaoB": {
+        "pt": "Ir para a cadeia por um crime cometido por um estranho",
+        "en": "Go to jail for a crime committed by a stranger",
+        "es": "Ir a la cárcel por un delito cometido por un extraño"
+      }
+    },
+    {
+      "id": "wSS6pxklluSS79HPIV4t",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Perder a mão direita",
+        "en": "Losing your right hand",
+        "es": "Perdiendo tu mano derecha"
+      },
+      "opcaoB": {
+        "pt": "Perder o pé esquerdo",
+        "en": "Losing your left foot",
+        "es": "Perdiendo tu pie izquierdo"
+      }
+    }
+  ]
+}
