@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 
 import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
-import { getAppLanguage } from './languageService';
+import { getAppLanguage, SupportedAppLanguage } from './languageService';
 import { isModoJogoConteudo } from '../utils/gameModes';
 import { resolveLocalizedField } from '../utils/localizedText';
 import { parseFirebaseError } from '../utils/firebaseError';
@@ -86,6 +86,96 @@ function getCommunityDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
 
 function getFavoriteDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
   return `${pergunta.modo}__${pergunta.id}`;
+}
+
+type LocalizedValue = Partial<Record<SupportedAppLanguage, string>>;
+
+function asNonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const normalized = value.trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function getLocalizedFromRaw(raw: Record<string, unknown>, field: string): LocalizedValue {
+  const result: LocalizedValue = {};
+
+  const baseValue = raw[field];
+  if (baseValue && typeof baseValue === 'object' && !Array.isArray(baseValue)) {
+    const nested = baseValue as Record<string, unknown>;
+    const pt = asNonEmptyString(nested.pt ?? nested['pt-BR'] ?? nested.pt_BR ?? nested.ptbr);
+    const en = asNonEmptyString(nested.en ?? nested['en-US'] ?? nested.en_US ?? nested.enus);
+    const es = asNonEmptyString(nested.es ?? nested['es-ES'] ?? nested.es_ES ?? nested.eses);
+
+    if (pt) {
+      result.pt = pt;
+    }
+    if (en) {
+      result.en = en;
+    }
+    if (es) {
+      result.es = es;
+    }
+  }
+
+  const flatPt = asNonEmptyString(raw[`${field}_pt`]) ?? asNonEmptyString(raw[`${field}Pt`]);
+  const flatEn = asNonEmptyString(raw[`${field}_en`]) ?? asNonEmptyString(raw[`${field}En`]);
+  const flatEs = asNonEmptyString(raw[`${field}_es`]) ?? asNonEmptyString(raw[`${field}Es`]);
+
+  if (flatPt) {
+    result.pt = result.pt ?? flatPt;
+  }
+  if (flatEn) {
+    result.en = result.en ?? flatEn;
+  }
+  if (flatEs) {
+    result.es = result.es ?? flatEs;
+  }
+
+  return result;
+}
+
+function ensureLocalizedValue(localized: LocalizedValue, fallback: string, language: SupportedAppLanguage): LocalizedValue {
+  if (localized.pt || localized.en || localized.es) {
+    return localized;
+  }
+
+  return {
+    [language]: fallback,
+  };
+}
+
+async function getLocalizedQuestionFields(pergunta: Pergunta): Promise<{
+  titulo: LocalizedValue;
+  opcaoA: LocalizedValue;
+  opcaoB: LocalizedValue;
+}> {
+  const language = getAppLanguage();
+  const fallback = {
+    titulo: { [language]: pergunta.titulo } as LocalizedValue,
+    opcaoA: { [language]: pergunta.opcaoA } as LocalizedValue,
+    opcaoB: { [language]: pergunta.opcaoB } as LocalizedValue,
+  };
+
+  try {
+    const db = getFirebaseFirestore();
+    const sourceRef = doc(db, 'perguntas', pergunta.modo, 'itens', pergunta.id);
+    const sourceSnapshot = await getDoc(sourceRef);
+
+    if (!sourceSnapshot.exists()) {
+      return fallback;
+    }
+
+    const raw = sourceSnapshot.data() as Record<string, unknown>;
+    return {
+      titulo: ensureLocalizedValue(getLocalizedFromRaw(raw, 'titulo'), pergunta.titulo, language),
+      opcaoA: ensureLocalizedValue(getLocalizedFromRaw(raw, 'opcaoA'), pergunta.opcaoA, language),
+      opcaoB: ensureLocalizedValue(getLocalizedFromRaw(raw, 'opcaoB'), pergunta.opcaoB, language),
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 function normalizeSuggestionInput(input: SugestaoInput | SugestaoAtualizacaoInput) {
@@ -257,6 +347,7 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
 
     const db = getFirebaseFirestore();
     const uid = await getCurrentUid();
+    const localizedFields = await getLocalizedQuestionFields(pergunta);
     const favoriteRef = doc(db, 'users', uid, 'favoritos', getFavoriteDocId(pergunta));
     const communityRef = doc(db, 'comunidade_favoritas', getCommunityDocId(pergunta));
     const favoriteSnapshot = await getDoc(favoriteRef);
@@ -285,9 +376,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
     await setDoc(favoriteRef, {
       questionId: pergunta.id,
       modo: pergunta.modo,
-      titulo: pergunta.titulo,
-      opcaoA: pergunta.opcaoA,
-      opcaoB: pergunta.opcaoB,
+      titulo: localizedFields.titulo,
+      opcaoA: localizedFields.opcaoA,
+      opcaoB: localizedFields.opcaoB,
       createdAt: serverTimestamp(),
     });
     await runTransaction(db, async (transaction) => {
@@ -298,9 +389,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
         {
           questionId: pergunta.id,
           modo: pergunta.modo,
-          titulo: pergunta.titulo,
-          opcaoA: pergunta.opcaoA,
-          opcaoB: pergunta.opcaoB,
+          titulo: localizedFields.titulo,
+          opcaoA: localizedFields.opcaoA,
+          opcaoB: localizedFields.opcaoB,
           favoriteCount: currentCount + 1,
           updatedAt: serverTimestamp(),
         },
