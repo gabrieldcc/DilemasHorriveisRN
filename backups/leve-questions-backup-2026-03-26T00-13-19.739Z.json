@@ -1,0 +1,592 @@
+{
+  "exportedAt": "2026-03-26T00:13:19.739Z",
+  "count": 54,
+  "docs": [
+    {
+      "id": "0VaiVMRQN6dSmwkpRAyz",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Ter dois umbigos",
+      "opcaoA": "Ter apenas um mamilo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772893411,
+        "nanoseconds": 682000000
+      }
+    },
+    {
+      "id": "2IxTm1V7rOflLIChSS1U",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Borrar as calças em privado todos os dias",
+      "opcaoA": "Borrar as calças em público uma vez por ano",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890352,
+        "nanoseconds": 718000000
+      }
+    },
+    {
+      "id": "3tuBpTu9s7eDEoAx4w31",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Nunca poder ter ou adotar filhos",
+      "opcaoA": "Ter 20 filhos ao longo da vida",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890350,
+        "nanoseconds": 275000000
+      }
+    },
+    {
+      "id": "49BpW6I5TNybq9mupmfO",
+      "opcaoB": "Sempre ficar com as mãos frias",
+      "opcaoA": "Sempre usar meias molhadas",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890348,
+        "nanoseconds": 965000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "4HkD0r6w2K7DdKcAEDYX",
+      "opcaoB": "Viver para sempre em uma realidade virtual onde todos os seus desejos se realizam",
+      "opcaoA": "Viver no mundo real",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890352,
+        "nanoseconds": 118000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "4hTpSCrKgkvxgLwhDbmg",
+      "opcaoB": "Se perder sozinho em um deserto",
+      "opcaoA": "Se perder sozinho em uma selva",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890353,
+        "nanoseconds": 117000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "5BRo6kcGjevk0chLP3Wu",
+      "opcaoA": "Ter um amigo que está sempre fedendo mas você não pode avisar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890354,
+        "nanoseconds": 889000000
+      },
+      "communityFavoriteCount": 1,
+      "opcaoB": "Você estar sempre fedendo mas alguém pode te avisar",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "5CoY2WTz6yx6PIdvVTKz",
+      "opcaoB": "Voar, mas apenas na velocidade de um passo",
+      "opcaoA": "Falar com animais, mas eles darem conselhos não solicitados o tempo todo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890348,
+        "nanoseconds": 762000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "5GSTwhEqArf9AMqeoar9",
+      "titulo": "O que é mais constrangedor?",
+      "opcaoB": "Dar tchau mas você bate de frente com a pessoa e fica nisso por 10 vezes",
+      "opcaoA": "Dar tchau e a pessoa ir embora pro mesmo lado que você",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890355,
+        "nanoseconds": 265000000
+      }
+    },
+    {
+      "id": "5LPHV7ehFpsya2Md9HvU",
+      "titulo": "Você contaria a verdade?",
+      "opcaoA": "Descobrir que um amigo próximo traiu o parceiro e confiaram em você para guardar o segredo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897345,
+        "nanoseconds": 875000000
+      },
+      "opcaoB": "Contar a verdade para a pessoa traída, mesmo sabendo que isso pode destruir duas relações e sua amizade"
+    },
+    {
+      "id": "84KGmKLsLlm5F5Hlap1o",
+      "opcaoA": "Esquecer completamente quem você é",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890349,
+        "nanoseconds": 459000000
+      },
+      "opcaoB": "Que todas as pessoas esqueçam quem você é",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "9PN0naGv0AtcMeUMBENX",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Que seus irmãos escolham com quem você vai se casar",
+      "opcaoA": "Que seus pais escolham com quem você vai se casar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890353,
+        "nanoseconds": 525000000
+      }
+    },
+    {
+      "id": "AeG5cUh9EoYt8yPcWWVL",
+      "opcaoB": "Ter vizinhos intrometidos",
+      "opcaoA": "Ter vizinhos barulhentos",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890348,
+        "nanoseconds": 545000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "BOlCk10DPW9FWzm9Oavh",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Estar drogado na graduação do seu filho",
+      "opcaoA": "Estar bêbado na graduação da sua filha"
+    },
+    {
+      "id": "DZmqOG8gwVEweRn8foWn",
+      "opcaoB": "Chamar pelo nome errado com confiança o rolê inteiro",
+      "opcaoA": "Esquecer o nome da pessoa logo após ouvir e não poder perguntar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890355,
+        "nanoseconds": 88000000
+      },
+      "titulo": "O que é pior?"
+    },
+    {
+      "id": "EyAlZ3g2J0cUDmDGJnRN",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Viver sabendo que você poderia ter salvado 10.000 pessoas e não salvou",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890352,
+        "nanoseconds": 518000000
+      },
+      "opcaoA": "Morrer salvando 10.000 estranhos sem ninguém nunca saber"
+    },
+    {
+      "id": "GQzVaYHneKn0l67U7FQE",
+      "opcaoB": "Recusar ajudar e deixar que a verdade apareça, mesmo sabendo que a pessoa pode perder o emprego por causa disso",
+      "opcaoA": "Um colega de trabalho confessa que cometeu um erro grave em um projeto e pede sua ajuda para esconder isso do chefe para não ser demitido",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897346,
+        "nanoseconds": 316000000
+      },
+      "titulo": "Você protegeria alguém que errou?"
+    },
+    {
+      "id": "Itd7Napet1qrezehCOdU",
+      "opcaoA": "Lutar contra 100 cavalos do tamanho de pombas",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890351,
+        "nanoseconds": 915000000
+      },
+      "opcaoB": "Lutar contra 1 pomba do tamanho de um cavalo",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "Iw39dPhQ8qQ9cppUuSXf",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Só poder beber bebidas verdes",
+      "opcaoA": "Só poder comer alimentos azuis",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890348,
+        "nanoseconds": 324000000
+      }
+    },
+    {
+      "id": "KgtZImQahql1gdR84X0i",
+      "opcaoB": "Receber uma mala com 5 milhões de dólares",
+      "opcaoA": "Encontrar o amor verdadeiro",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890354,
+        "nanoseconds": 496000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "LPWQzOv5AsqD5aTkgC8i",
+      "titulo": "O que e pior?",
+      "opcaoA": "Chegar atrasado e todo mundo ja estar sentado",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772888294,
+        "nanoseconds": 97000000
+      },
+      "opcaoB": "Chegar cedo demais e ficar esperando sozinho"
+    },
+    {
+      "id": "LV8PehvpEbFvOvkCE1sR",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Viver sem música",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890353,
+        "nanoseconds": 923000000
+      },
+      "opcaoB": "Viver sem televisão"
+    },
+    {
+      "id": "OfqXQt3tXUmXC9pkuUWG",
+      "opcaoB": "Ser um idiota bonito",
+      "opcaoA": "Ser um gênio feio",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890350,
+        "nanoseconds": 691000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "PDkZOPfrpemQSndPLcgB",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Cagar nas calças sempre que se despedir de alguém",
+      "opcaoA": "Fazer xixi na calça sempre que alguém te cumprimentar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890352,
+        "nanoseconds": 315000000
+      }
+    },
+    {
+      "id": "PGpvEyYLKEoVZzjHKDTU",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Saber tocar todos os instrumentos musicais",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890351,
+        "nanoseconds": 310000000
+      },
+      "opcaoB": "Saber falar todas as línguas do mundo"
+    },
+    {
+      "id": "Pa0adwYJT0ylbuE7M86Z",
+      "opcaoB": "Saber como será o futuro da sua vida resumido",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890351,
+        "nanoseconds": 110000000
+      },
+      "opcaoA": "Saber com quem você vai se casar",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "RWodLicG0xXR4Al6MSxE",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Curtir sem querer uma foto antiga de férias do seu ex",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890349,
+        "nanoseconds": 250000000
+      },
+      "opcaoB": "Enviar um emoji de coração para o seu chefe por engano"
+    },
+    {
+      "id": "Sa9xfykUgdCnWSiZvE1z",
+      "titulo": "Você salvaria sua própria reputação?",
+      "opcaoB": "Ficar em silêncio para proteger sua carreira, mesmo sabendo que o colega pode sofrer consequências injustas",
+      "opcaoA": "Durante uma reunião importante no trabalho, perceber que um colega levou a culpa por um erro que na verdade foi seu, e corrigir a situação assumindo a responsabilidade",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897347,
+        "nanoseconds": 167000000
+      }
+    },
+    {
+      "id": "VdUpqJtCPiiJab6CznFV",
+      "opcaoA": "Cumprir uma promessa feita a um amigo de nunca revelar algo que ele fez, mesmo sabendo que isso prejudica outra pessoa",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897346,
+        "nanoseconds": 105000000
+      },
+      "communityFavoriteCount": 0,
+      "opcaoB": "Quebrar a promessa porque acredita que a verdade é mais justa, mesmo sabendo que vai perder a confiança dele",
+      "titulo": "Você manteria a promessa?"
+    },
+    {
+      "id": "ZVWV0E5kdqQRuQ5ux3bh",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Passagens aéreas grátis para qualquer lugar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890351,
+        "nanoseconds": 515000000
+      },
+      "opcaoA": "Comida grátis para sempre"
+    },
+    {
+      "id": "b4Dr7eUpHZ6uvxiFIiFN",
+      "opcaoB": "Nunca mais poder comer comida salgada",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890350,
+        "nanoseconds": 899000000
+      },
+      "opcaoA": "Nunca mais poder comer comida doce",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "gHgnv0MpEd9YH7dv4Oii",
+      "titulo": "Você escolheria entre justiça e lealdade?",
+      "opcaoA": "Um amigo muito próximo pede que você confirme uma versão falsa de uma história para evitar que ele seja responsabilizado por algo que fez",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897346,
+        "nanoseconds": 515000000
+      },
+      "opcaoB": "Recusar mentir por ele e contar o que realmente aconteceu, mesmo sabendo que isso pode acabar com a amizade"
+    },
+    {
+      "id": "hqda5MF2q1p6qwSbDowA",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890355,
+        "nanoseconds": 664000000
+      },
+      "opcaoA": "Mandar figurinha pesada no grupo da igreja",
+      "opcaoB": "Mandar figurinha pesada no grupo do trabalho",
+      "titulo": "O que é pior?"
+    },
+    {
+      "id": "hwTiM76Bv5qst5hdKsea",
+      "opcaoB": "Nenhum desodorante funcionar em você",
+      "opcaoA": "Nunca mais poder se depilar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772893411,
+        "nanoseconds": 455000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "k7OSAkoDSDBHEwEZgjGc",
+      "opcaoB": "Incentivar ele mesmo sem acreditar muito, para não desanimá-lo ou destruir a confiança que ele tem em você",
+      "opcaoA": "Um amigo pergunta sua opinião sincera sobre um projeto ou sonho importante que ele tem, mas você acredita que aquilo provavelmente vai dar errado",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897346,
+        "nanoseconds": 731000000
+      },
+      "titulo": "Você diria a verdade mesmo machucando alguém?"
+    },
+    {
+      "id": "lk53Yl1PFZ29F5Fbs9qZ",
+      "opcaoA": "Assumir a culpa em uma investigação da empresa dizendo que foi você quem alterou dados de um relatório financeiro para esconder um prejuízo, mesmo sabendo que na verdade foi seu irmão — que trabalha com você — e que ele pode ser demitido, perder a carreira e ficar com a reputação profissional destruída",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897348,
+        "nanoseconds": 14000000
+      },
+      "opcaoB": "Dizer a verdade sobre o que aconteceu e deixar que seu irmão enfrente a investigação e as possíveis consequências no trabalho, mesmo sabendo que você poderia protegê-lo assumindo a culpa",
+      "titulo": "Você protegeria quem ama?"
+    },
+    {
+      "id": "muGwEnYUnEuB0GQEpyAx",
+      "opcaoB": "Viver 10 vidas diferentes de 100 anos",
+      "opcaoA": "Viver uma única vida de 1.000 anos",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890349,
+        "nanoseconds": 663000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "npINx1iXgKiBZnOVDhNZ",
+      "opcaoB": "Dizer 'sim' mesmo quando não quer",
+      "opcaoA": "Nunca conseguir dizer 'não' para ninguém",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890353,
+        "nanoseconds": 316000000
+      },
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "oQcPuZOBi9SHENAJ0H6A",
+      "opcaoA": "Cumprimentar alguém que não estava te cumprimentando",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890355,
+        "nanoseconds": 485000000
+      },
+      "opcaoB": "Ignorar alguém que estava te cumprimentando",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "pA4xZxfwJvGBp3PjMWF2",
+      "opcaoB": "Ser totalmente honesto sobre quem é o melhor candidato e não ajudar seu amigo, mesmo sabendo que essa oportunidade poderia mudar a vida dele",
+      "opcaoA": "Durante um processo seletivo na empresa onde você trabalha, recomendar fortemente um amigo próximo para uma vaga, mesmo sabendo que outro candidato desconhecido parece ser mais qualificado",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897347,
+        "nanoseconds": 602000000
+      },
+      "titulo": "Você mudaria o destino de alguém?"
+    },
+    {
+      "id": "r4IEKk1hPUY0bF4dGJhM",
+      "titulo": "Você esconderia uma verdade dolorosa?",
+      "opcaoA": "Um médico revela a você, em particular, que um familiar idoso tem uma doença grave e pouco tempo de vida, e você decide não contar nada agora para que ele continue vivendo tranquilo e feliz",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897347,
+        "nanoseconds": 820000000
+      },
+      "opcaoB": "Contar a verdade para que ele possa tomar decisões importantes sobre o tempo que ainda tem, mesmo sabendo que isso pode causar medo e sofrimento imediato"
+    },
+    {
+      "id": "rVkD5Y2i9Cdv5HsyAVo0",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Peidar incontrolavelmente no trabalho para sempre",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890352,
+        "nanoseconds": 913000000
+      },
+      "opcaoB": "Peidar incontrolavelmente em todos os primeiros encontros amorosos"
+    },
+    {
+      "id": "rtIBe5wQb6jRbuVInEmO",
+      "opcaoB": "Dizer que não pode confirmar a história e deixar que ele enfrente as consequências legais, mesmo sabendo que isso pode destruir a amizade de vocês",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897347,
+        "nanoseconds": 371000000
+      },
+      "opcaoA": "Mentir para a polícia dizendo que um amigo estava com você em casa na noite anterior, criando um álibi falso, porque ele dirigiu bêbado e causou um acidente leve que pode fazer ele perder a carteira de motorista e o emprego",
+      "titulo": "Você protegeria um amigo?"
+    },
+    {
+      "id": "sVFD1k9K150Mwy9X8Qrs",
+      "opcaoA": "Ficar duas vezes mais bonito(a)",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890353,
+        "nanoseconds": 730000000
+      },
+      "opcaoB": "Ficar duas vezes mais inteligente",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "tOeOrHiFqxCYmY11gC7x",
+      "opcaoA": "Voltar no tempo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890354,
+        "nanoseconds": 317000000
+      },
+      "opcaoB": "Saber o futuro",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "tXr6tn7CepcWcVZSrJQq",
+      "titulo": "Você assumiria uma culpa que não é sua?",
+      "opcaoB": "Explicar exatamente quem errou para evitar a punição injusta, mesmo sabendo que isso pode prejudicar a relação com o grupo",
+      "opcaoA": "Durante um trabalho em grupo, alguém comete um erro sério que pode fazer todos serem penalizados, e você decide assumir a culpa sozinho para proteger os outros",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772897346,
+        "nanoseconds": 940000000
+      }
+    },
+    {
+      "id": "w1A4jVqXPP2IdzyIGrcs",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Saber a causa da sua morte",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890350,
+        "nanoseconds": 78000000
+      },
+      "opcaoA": "Saber a data da sua morte"
+    },
+    {
+      "id": "x76PlUlcrInqognUCCe6",
+      "opcaoB": "Fazer som de peido toda vez que rir",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772893411,
+        "nanoseconds": 934000000
+      },
+      "opcaoA": "Ter bafo de peido para sempre",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "xBB4nrwduE5t7QupCQxx",
+      "opcaoA": "Ter super audição",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890351,
+        "nanoseconds": 717000000
+      },
+      "opcaoB": "Ter um olfato extremamente apurado",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "xk2XmyT0tuVJzmRWZkY6",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Ser capaz de prever o futuro",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890350,
+        "nanoseconds": 482000000
+      },
+      "opcaoA": "Ser capaz de ler pensamentos"
+    },
+    {
+      "id": "yroz9pHi4QNxx7s6otir",
+      "titulo": "O que prefere?",
+      "opcaoA": "Ir para 2070",
+      "opcaoB": "Voltar para 1950"
+    },
+    {
+      "id": "zVGJEXULZqLag7AfloVM",
+      "opcaoA": "Falar todos os idiomas do mundo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890354,
+        "nanoseconds": 120000000
+      },
+      "opcaoB": "Conseguir conversar com os animais",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "zXs2FCjLw2eqfVYRFRa3",
+      "titulo": "O que você prefere?",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890354,
+        "nanoseconds": 691000000
+      },
+      "opcaoA": "Ter que assistir seu filme favorito todos os dias",
+      "opcaoB": "Nunca mais assistir seu filme favorito"
+    },
+    {
+      "id": "zkCx5Xu4IgDZ9tY4mibh",
+      "opcaoA": "Falar sempre rimando",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772890349,
+        "nanoseconds": 872000000
+      },
+      "opcaoB": "Falar sempre cantando",
+      "titulo": "O que você prefere?"
+    }
+  ]
+}
