@@ -11,6 +11,7 @@ import { AnalyticsService } from '../src/services/AnalyticsService';
 import { resetSession } from '../src/utils/sessionManager';
 import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
+import { t } from '../src/i18n';
 
 function getFirebaseErrorCode(error: unknown): string | null {
   if (typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string') {
@@ -79,10 +80,10 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="tutorial" options={{ title: 'Tutorial' }} />
+        <Stack.Screen name="tutorial" options={{ title: t('layout.tutorial') }} />
         <Stack.Screen name="game" options={{ title: 'BadPick' }} />
-        <Stack.Screen name="suggest" options={{ title: 'Sugerir dilema' }} />
-        <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
+        <Stack.Screen name="suggest" options={{ title: t('layout.suggest') }} />
+        <Stack.Screen name="admin" options={{ title: t('layout.admin') }} />
       </Stack>
     </GestureHandlerRootView>
   );

@@ -22,6 +22,7 @@ import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
 import { getUserProfile } from './profileService';
+import { t } from '../i18n';
 
 export interface NovaPerguntaInput {
   titulo: string;
@@ -66,9 +67,9 @@ function mapPerguntaDoc(
   fallbackId: string,
   modo: ModoJogo
 ): Pergunta {
-  const titulo = resolveLocalizedField(raw, 'titulo', language) ?? 'Question unavailable.';
-  const opcaoA = resolveLocalizedField(raw, 'opcaoA', language) ?? 'Option A unavailable.';
-  const opcaoB = resolveLocalizedField(raw, 'opcaoB', language) ?? 'Option B unavailable.';
+  const titulo = resolveLocalizedField(raw, 'titulo', language) ?? t('common.questionUnavailable');
+  const opcaoA = resolveLocalizedField(raw, 'opcaoA', language) ?? t('common.optionAUnavailable');
+  const opcaoB = resolveLocalizedField(raw, 'opcaoB', language) ?? t('common.optionBUnavailable');
 
   return {
     id: typeof raw.id === 'string' ? raw.id : fallbackId,
@@ -89,15 +90,15 @@ function getFavoriteDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
 
 function normalizeSuggestionInput(input: SugestaoInput | SugestaoAtualizacaoInput) {
   const tituloRaw = input.titulo?.trim();
-  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : 'O que você prefere?';
+  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : t('common.defaultQuestionTitle');
   const opcaoA = input.opcaoA.trim();
   const opcaoB = input.opcaoB.trim();
 
   if (titulo.length < 6) {
-    throw new Error('Título muito curto.');
+    throw new Error(t('error.question.shortTitle'));
   }
   if (opcaoA.length < 3 || opcaoB.length < 3) {
-    throw new Error('As opções precisam ter pelo menos 3 caracteres.');
+    throw new Error(t('error.question.shortOptions'));
   }
 
   return { titulo, opcaoA, opcaoB };
@@ -119,12 +120,12 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
   return {
     id: docId,
-    titulo: typeof raw.titulo === 'string' ? raw.titulo : 'O que você prefere?',
+    titulo: typeof raw.titulo === 'string' ? raw.titulo : t('common.defaultQuestionTitle'),
     opcaoA: typeof raw.opcaoA === 'string' ? raw.opcaoA : '',
     opcaoB: typeof raw.opcaoB === 'string' ? raw.opcaoB : '',
     modoSugerido: modoSugerido as ModoJogoConteudo,
     autorId: typeof raw.autorId === 'string' ? raw.autorId : '',
-    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : 'Anônimo',
+    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : t('common.anonymous'),
     status,
     createdAtMs: createdAt?.toMillis?.() ?? 0,
     updatedAtMs: updatedAt?.toMillis?.() ?? 0,
@@ -227,7 +228,7 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
 export async function removerPergunta(modo: ModoJogo, id: string): Promise<void> {
   try {
     if (!isModoJogoConteudo(modo)) {
-      throw new Error('Modo inválido para remoção de pergunta.');
+      throw new Error(t('error.question.invalidModeRemoval'));
     }
     const db = getFirebaseFirestore();
     await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
@@ -251,7 +252,7 @@ export async function isPerguntaFavorita(pergunta: Pergunta): Promise<boolean> {
 export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<boolean> {
   try {
     if (!isModoJogoConteudo(pergunta.modo)) {
-      throw new Error('Apenas perguntas dos modos principais podem ser favoritas.');
+      throw new Error(t('error.question.favoriteOnlyContent'));
     }
 
     const db = getFirebaseFirestore();
@@ -401,13 +402,13 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
     const suggestionSnapshot = await getDoc(suggestionRef);
 
     if (!suggestionSnapshot.exists()) {
-      throw new Error('Sugestão não encontrada.');
+      throw new Error(t('error.question.suggestionNotFound'));
     }
 
     const raw = suggestionSnapshot.data() as Record<string, unknown>;
     const mapped = mapSugestaoDoc(id, raw);
     if (!mapped) {
-      throw new Error('Sugestão inválida.');
+      throw new Error(t('error.question.suggestionInvalid'));
     }
 
     const mergedInput: SugestaoAtualizacaoInput = input ?? {

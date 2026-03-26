@@ -19,19 +19,30 @@ import { atualizarFeatureFlags } from '../services/featureFlagsService';
 import { useAdminStore } from '../store/adminStore';
 import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
+import { getLocaleTag, t } from '../i18n';
 
 const SUGGESTION_FILTERS: Array<{ key: SugestaoStatus | 'todas'; label: string }> = [
-  { key: 'pendente', label: 'Pendentes' },
-  { key: 'todas', label: 'Todas' },
-  { key: 'aprovada', label: 'Aprovadas' },
-  { key: 'recusada', label: 'Recusadas' },
+  { key: 'pendente', label: t('admin.filter.pending') },
+  { key: 'todas', label: t('admin.filter.all') },
+  { key: 'aprovada', label: t('admin.filter.approved') },
+  { key: 'recusada', label: t('admin.filter.rejected') },
 ];
 
 function formatDateLabel(value: number) {
   if (!value) {
     return '-';
   }
-  return new Date(value).toLocaleDateString('pt-BR');
+  return new Date(value).toLocaleDateString(getLocaleTag());
+}
+
+function getSuggestionStatusLabel(status: SugestaoStatus): string {
+  if (status === 'pendente') {
+    return t('admin.filter.pending');
+  }
+  if (status === 'aprovada') {
+    return t('admin.filter.approved');
+  }
+  return t('admin.filter.rejected');
 }
 
 export function AdminScreen() {
@@ -75,7 +86,7 @@ export function AdminScreen() {
       const data = await buscarPerguntasPorModo(modo);
       setItems(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erro ao buscar perguntas.');
+      setError(e instanceof Error ? e.message : t('admin.fetchQuestionsError'));
       setItems([]);
     } finally {
       setLoading(false);
@@ -89,7 +100,7 @@ export function AdminScreen() {
       const data = await buscarSugestoes(suggestionFilter === 'todas' ? undefined : suggestionFilter);
       setSuggestions(data);
     } catch (e) {
-      setSuggestionsError(e instanceof Error ? e.message : 'Erro ao buscar sugestões.');
+      setSuggestionsError(e instanceof Error ? e.message : t('admin.fetchSuggestionsError'));
       setSuggestions([]);
     } finally {
       setSuggestionsLoading(false);
@@ -106,7 +117,7 @@ export function AdminScreen() {
 
   const handleSave = async () => {
     if (!titulo.trim() || !opcaoA.trim() || !opcaoB.trim()) {
-      Alert.alert('Campos obrigatórios', 'Preencha título, opção A e opção B.');
+      Alert.alert(t('admin.requiredTitle'), t('admin.requiredBody'));
       return;
     }
 
@@ -124,24 +135,24 @@ export function AdminScreen() {
       setOpcaoB('');
       await loadPerguntas();
     } catch (e) {
-      Alert.alert('Erro ao salvar', e instanceof Error ? e.message : 'Não foi possível salvar.');
+      Alert.alert(t('admin.saveErrorTitle'), e instanceof Error ? e.message : t('admin.saveErrorBody'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = (id: string) => {
-    Alert.alert('Remover pergunta', 'Tem certeza que deseja remover esta pergunta?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('admin.removeQuestionTitle'), t('admin.removeQuestionBody'), [
+      { text: t('modeSelection.cancel'), style: 'cancel' },
       {
-        text: 'Remover',
+        text: t('admin.remove'),
         style: 'destructive',
         onPress: async () => {
           try {
             await removerPergunta(modo, id);
             await loadPerguntas();
           } catch (e) {
-            Alert.alert('Erro', e instanceof Error ? e.message : 'Não foi possível remover.');
+            Alert.alert(t('admin.errorTitle'), e instanceof Error ? e.message : t('admin.removeErrorBody'));
           }
         },
       },
@@ -175,7 +186,7 @@ export function AdminScreen() {
       stopEditSuggestion();
       await loadSuggestions();
     } catch (error) {
-      Alert.alert('Erro ao editar', error instanceof Error ? error.message : 'Não foi possível salvar edição.');
+      Alert.alert(t('admin.editErrorTitle'), error instanceof Error ? error.message : t('admin.editErrorBody'));
     } finally {
       setModerationBusyId(null);
     }
@@ -200,7 +211,7 @@ export function AdminScreen() {
       }
       await Promise.all([loadSuggestions(), loadPerguntas()]);
     } catch (error) {
-      Alert.alert('Erro ao aprovar', error instanceof Error ? error.message : 'Não foi possível aprovar sugestão.');
+      Alert.alert(t('admin.approveErrorTitle'), error instanceof Error ? error.message : t('admin.approveErrorBody'));
     } finally {
       setModerationBusyId(null);
     }
@@ -215,7 +226,7 @@ export function AdminScreen() {
       }
       await loadSuggestions();
     } catch (error) {
-      Alert.alert('Erro ao recusar', error instanceof Error ? error.message : 'Não foi possível recusar sugestão.');
+      Alert.alert(t('admin.rejectErrorTitle'), error instanceof Error ? error.message : t('admin.rejectErrorBody'));
     } finally {
       setModerationBusyId(null);
     }
@@ -223,14 +234,14 @@ export function AdminScreen() {
 
   const suggestionSectionTitle = useMemo(() => {
     const selected = SUGGESTION_FILTERS.find((item) => item.key === suggestionFilter);
-    return `Sugestões (${selected?.label ?? 'Todas'})`;
+    return t('admin.suggestionsTitle', { filter: selected?.label ?? t('admin.filter.all') });
   }, [suggestionFilter]);
 
   if (!isAdminUnlocked) {
     return (
       <ScreenContainer>
         <View style={styles.lockedWrap}>
-          <Text style={styles.lockedText}>Acesso admin bloqueado.</Text>
+          <Text style={styles.lockedText}>{t('admin.locked')}</Text>
         </View>
       </ScreenContainer>
     );
@@ -239,8 +250,8 @@ export function AdminScreen() {
   return (
     <ScreenContainer>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Painel Admin</Text>
-        <Text style={styles.subtitle}>Gerencie perguntas e modere sugestões</Text>
+        <Text style={styles.title}>{t('admin.title')}</Text>
+        <Text style={styles.subtitle}>{t('admin.subtitle')}</Text>
         <View style={styles.topTabsWrap}>
           <Pressable
             onPress={() => setActiveTab('sugestoes')}
@@ -250,7 +261,7 @@ export function AdminScreen() {
               pressed && styles.modeButtonPressed,
             ]}
           >
-            <Text style={[styles.topTabText, activeTab === 'sugestoes' && styles.topTabTextActive]}>Sugestões</Text>
+            <Text style={[styles.topTabText, activeTab === 'sugestoes' && styles.topTabTextActive]}>{t('admin.tab.suggestions')}</Text>
           </Pressable>
           <Pressable
             onPress={() => setActiveTab('perguntas')}
@@ -260,7 +271,7 @@ export function AdminScreen() {
               pressed && styles.modeButtonPressed,
             ]}
           >
-            <Text style={[styles.topTabText, activeTab === 'perguntas' && styles.topTabTextActive]}>Perguntas</Text>
+            <Text style={[styles.topTabText, activeTab === 'perguntas' && styles.topTabTextActive]}>{t('admin.tab.questions')}</Text>
           </Pressable>
           <Pressable
             onPress={() => setActiveTab('features')}
@@ -270,7 +281,7 @@ export function AdminScreen() {
               pressed && styles.modeButtonPressed,
             ]}
           >
-            <Text style={[styles.topTabText, activeTab === 'features' && styles.topTabTextActive]}>Flags</Text>
+            <Text style={[styles.topTabText, activeTab === 'features' && styles.topTabTextActive]}>{t('admin.tab.flags')}</Text>
           </Pressable>
         </View>
         <Pressable
@@ -280,12 +291,12 @@ export function AdminScreen() {
           }}
           style={styles.logoutButton}
         >
-          <Text style={styles.logoutText}>Sair do admin</Text>
+          <Text style={styles.logoutText}>{t('admin.logout')}</Text>
         </Pressable>
 
         {activeTab === 'perguntas' ? (
           <>
-            <Text style={styles.sectionTitle}>Modo</Text>
+            <Text style={styles.sectionTitle}>{t('admin.section.mode')}</Text>
             <View style={styles.modeWrap}>
               {CONTENT_GAME_MODES.map((item) => (
                 <Pressable
@@ -297,28 +308,28 @@ export function AdminScreen() {
                     pressed && styles.modeButtonPressed,
                   ]}
                 >
-                  <Text style={[styles.modeText, modo === item.value && styles.modeTextSelected]}>{item.label}</Text>
+                  <Text style={[styles.modeText, modo === item.value && styles.modeTextSelected]}>{getModoLabel(item.value)}</Text>
                 </Pressable>
               ))}
             </View>
 
-            <Text style={styles.sectionTitle}>Nova Pergunta</Text>
+            <Text style={styles.sectionTitle}>{t('admin.section.newQuestion')}</Text>
             <TextInput
-              placeholder="Título"
+              placeholder={t('admin.titlePlaceholder')}
               placeholderTextColor="#64748b"
               value={titulo}
               onChangeText={setTitulo}
               style={styles.input}
             />
             <TextInput
-              placeholder="Opção A"
+              placeholder={t('admin.optionAPlaceholder')}
               placeholderTextColor="#64748b"
               value={opcaoA}
               onChangeText={setOpcaoA}
               style={styles.input}
             />
             <TextInput
-              placeholder="Opção B"
+              placeholder={t('admin.optionBPlaceholder')}
               placeholderTextColor="#64748b"
               value={opcaoB}
               onChangeText={setOpcaoB}
@@ -329,20 +340,20 @@ export function AdminScreen() {
               onPress={handleSave}
               disabled={saving}
             >
-              <Text style={styles.saveButtonText}>{saving ? 'Salvando...' : 'Salvar pergunta'}</Text>
+              <Text style={styles.saveButtonText}>{saving ? t('admin.saving') : t('admin.saveQuestion')}</Text>
             </Pressable>
 
-            <Text style={styles.sectionTitle}>Perguntas de {getModoLabel(modo)}</Text>
+            <Text style={styles.sectionTitle}>{t('admin.questionsOfMode', { mode: getModoLabel(modo) })}</Text>
             {loading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
-            {!loading && !error && items.length === 0 ? <Text style={styles.emptyText}>Nenhuma pergunta nesse modo.</Text> : null}
+            {!loading && !error && items.length === 0 ? <Text style={styles.emptyText}>{t('admin.emptyQuestions')}</Text> : null}
             {items.map((item) => (
               <View key={item.id} style={styles.itemCard}>
                 <Text style={styles.itemTitle}>{item.titulo}</Text>
-                <Text style={styles.itemOption}>A: {item.opcaoA}</Text>
-                <Text style={styles.itemOption}>B: {item.opcaoB}</Text>
+                <Text style={styles.itemOption}>{t('game.optionA')}: {item.opcaoA}</Text>
+                <Text style={styles.itemOption}>{t('game.optionB')}: {item.opcaoB}</Text>
                 <Pressable onPress={() => handleDelete(item.id)} style={styles.deleteButton}>
-                  <Text style={styles.deleteText}>Remover</Text>
+                  <Text style={styles.deleteText}>{t('admin.remove')}</Text>
                 </Pressable>
               </View>
             ))}
@@ -372,7 +383,7 @@ export function AdminScreen() {
             {suggestionsLoading ? <ActivityIndicator color="#22d3ee" style={styles.loadingIndicator} /> : null}
             {suggestionsError ? <Text style={styles.errorText}>{suggestionsError}</Text> : null}
             {!suggestionsLoading && !suggestionsError && suggestions.length === 0 ? (
-              <Text style={styles.emptyText}>Nenhuma sugestão encontrada.</Text>
+              <Text style={styles.emptyText}>{t('admin.emptySuggestions')}</Text>
             ) : null}
           </>
         ) : null}
@@ -388,7 +399,7 @@ export function AdminScreen() {
               <View style={styles.suggestionTopRow}>
                 <Text style={styles.suggestionAuthor}>{item.autorNome}</Text>
                 <Text style={styles.suggestionMeta}>
-                  {item.status.toUpperCase()} | {formatDateLabel(item.createdAtMs)}
+                  {getSuggestionStatusLabel(item.status).toUpperCase()} | {formatDateLabel(item.createdAtMs)}
                 </Text>
               </View>
 
@@ -398,14 +409,14 @@ export function AdminScreen() {
                     style={styles.editInput}
                     value={editTitulo}
                     onChangeText={setEditTitulo}
-                    placeholder="Título"
+                    placeholder={t('admin.titlePlaceholder')}
                     placeholderTextColor="#64748b"
                   />
                   <TextInput
                     style={[styles.editInput, styles.editInputMulti]}
                     value={editOpcaoA}
                     onChangeText={setEditOpcaoA}
-                    placeholder="Opção A"
+                    placeholder={t('admin.optionAPlaceholder')}
                     placeholderTextColor="#64748b"
                     multiline
                   />
@@ -413,7 +424,7 @@ export function AdminScreen() {
                     style={[styles.editInput, styles.editInputMulti]}
                     value={editOpcaoB}
                     onChangeText={setEditOpcaoB}
-                    placeholder="Opção B"
+                    placeholder={t('admin.optionBPlaceholder')}
                     placeholderTextColor="#64748b"
                     multiline
                   />
@@ -429,7 +440,7 @@ export function AdminScreen() {
                         ]}
                       >
                         <Text style={[styles.modeText, editModo === modeItem.value && styles.modeTextSelected]}>
-                          {modeItem.label}
+                          {getModoLabel(modeItem.value)}
                         </Text>
                       </Pressable>
                     ))}
@@ -438,9 +449,9 @@ export function AdminScreen() {
               ) : (
                 <View>
                   <Text style={styles.itemTitle}>{item.titulo}</Text>
-                  <Text style={styles.itemOption}>A: {item.opcaoA}</Text>
-                  <Text style={styles.itemOption}>B: {item.opcaoB}</Text>
-                  <Text style={styles.suggestionMode}>Modo: {getModoLabel(item.modoSugerido)}</Text>
+                  <Text style={styles.itemOption}>{t('game.optionA')}: {item.opcaoA}</Text>
+                  <Text style={styles.itemOption}>{t('game.optionB')}: {item.opcaoB}</Text>
+                  <Text style={styles.suggestionMode}>{t('admin.modeLabel', { mode: getModoLabel(item.modoSugerido) })}</Text>
                 </View>
               )}
 
@@ -452,16 +463,16 @@ export function AdminScreen() {
                       disabled={isBusy}
                       style={({ pressed }) => [styles.actionPrimary, pressed && styles.modeButtonPressed, isBusy && styles.disabled]}
                     >
-                      <Text style={styles.actionText}>{isBusy ? 'Salvando...' : 'Salvar edição'}</Text>
+                      <Text style={styles.actionText}>{isBusy ? t('admin.saving') : t('admin.saveEdit')}</Text>
                     </Pressable>
                     <Pressable onPress={stopEditSuggestion} style={({ pressed }) => [styles.actionNeutral, pressed && styles.modeButtonPressed]}>
-                      <Text style={styles.actionText}>Cancelar</Text>
+                      <Text style={styles.actionText}>{t('modeSelection.cancel')}</Text>
                     </Pressable>
                   </>
                 ) : (
                   <>
                     <Pressable onPress={() => beginEditSuggestion(item)} style={({ pressed }) => [styles.actionNeutral, pressed && styles.modeButtonPressed]}>
-                      <Text style={styles.actionText}>Editar</Text>
+                      <Text style={styles.actionText}>{t('admin.edit')}</Text>
                     </Pressable>
                     {canModerate ? (
                       <>
@@ -470,14 +481,14 @@ export function AdminScreen() {
                           disabled={isBusy}
                           style={({ pressed }) => [styles.actionApprove, pressed && styles.modeButtonPressed, isBusy && styles.disabled]}
                         >
-                          <Text style={styles.actionText}>{isBusy ? 'Processando...' : 'Aprovar'}</Text>
+                          <Text style={styles.actionText}>{isBusy ? t('admin.processing') : t('admin.approve')}</Text>
                         </Pressable>
                         <Pressable
                           onPress={() => void handleRejectSuggestion(item)}
                           disabled={isBusy}
                           style={({ pressed }) => [styles.actionReject, pressed && styles.modeButtonPressed, isBusy && styles.disabled]}
                         >
-                          <Text style={styles.actionText}>Recusar</Text>
+                          <Text style={styles.actionText}>{t('admin.reject')}</Text>
                         </Pressable>
                       </>
                     ) : null}
@@ -491,12 +502,12 @@ export function AdminScreen() {
 
         {activeTab === 'features' ? (
           <>
-            <Text style={styles.sectionTitle}>Feature Flags</Text>
+            <Text style={styles.sectionTitle}>{t('admin.section.flags')}</Text>
             <View style={styles.featureFlagCard}>
               <View style={styles.featureFlagHeader}>
                 <View style={styles.featureFlagCopy}>
-                  <Text style={styles.featureFlagTitle}>Comentários no jogo</Text>
-                  <Text style={styles.featureFlagSubtitle}>Oculta ou exibe o botão de comentários no card.</Text>
+                  <Text style={styles.featureFlagTitle}>{t('admin.commentsFlagTitle')}</Text>
+                  <Text style={styles.featureFlagSubtitle}>{t('admin.commentsFlagSubtitle')}</Text>
                 </View>
                 <Switch
                   value={featureFlags.commentsEnabled}
@@ -512,7 +523,7 @@ export function AdminScreen() {
                     void atualizarFeatureFlags({ commentsEnabled: value })
                       .catch((error) => {
                         setFeatureFlagsLocal({ commentsEnabled: previous });
-                        Alert.alert('Erro ao salvar flag', error instanceof Error ? error.message : 'Tente novamente.');
+                        Alert.alert(t('admin.flagSaveErrorTitle'), error instanceof Error ? error.message : t('admin.flagSaveErrorBody'));
                       })
                       .finally(() => setFeatureToggleBusyKey(null));
                   }}
@@ -522,7 +533,7 @@ export function AdminScreen() {
                 />
               </View>
               <Text style={styles.featureFlagMeta}>
-                Estado atual: {featureFlags.commentsEnabled ? 'Ativado' : 'Desativado'}
+                {t('admin.currentState', { state: featureFlags.commentsEnabled ? t('admin.enabled') : t('admin.disabled') })}
               </Text>
             </View>
           </>

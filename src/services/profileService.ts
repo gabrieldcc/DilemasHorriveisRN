@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { t } from '../i18n';
 
 export interface UserProfile {
   firstName: string;
@@ -54,7 +55,7 @@ export async function saveUserProfile(firstName: string, lastName: string): Prom
   const normalizedLast = normalizePart(lastName);
 
   if (normalizedFirst.length < 2 || normalizedLast.length < 2) {
-    throw new Error('Digite nome e sobrenome com pelo menos 2 caracteres.');
+    throw new Error(t('error.profile.shortName'));
   }
 
   const profile: UserProfile = {
@@ -66,4 +67,3 @@ export async function saveUserProfile(firstName: string, lastName: string): Prom
   await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
   return profile;
 }
-

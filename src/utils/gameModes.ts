@@ -1,14 +1,15 @@
 import { ModoJogo, ModoJogoConteudo } from '../models/game';
+import { t } from '../i18n';
 
-export const CONTENT_GAME_MODES: Array<{ value: ModoJogoConteudo; label: string }> = [
-  { value: ModoJogo.leve, label: 'Leve' },
-  { value: ModoJogo.pesado, label: 'Pesado' },
-  { value: ModoJogo.nerd, label: 'Nerd' },
+export const CONTENT_GAME_MODES: Array<{ value: ModoJogoConteudo }> = [
+  { value: ModoJogo.leve },
+  { value: ModoJogo.pesado },
+  { value: ModoJogo.nerd },
 ];
 
 export const EXTRA_GAME_MODES = [
-  { value: ModoJogo.favoritas, label: 'Favoritas' },
-  { value: ModoJogo.comunidade, label: 'Comunidade' },
+  { value: ModoJogo.favoritas },
+  { value: ModoJogo.comunidade },
 ] as const;
 
 export const GAME_MODES = [...CONTENT_GAME_MODES, ...EXTRA_GAME_MODES];
@@ -22,6 +23,26 @@ export function isModoJogoConteudo(value: ModoJogo): value is ModoJogoConteudo {
 }
 
 export function getModoLabel(modo: ModoJogo): string {
-  const found = GAME_MODES.find((item) => item.value === modo);
-  return found?.label ?? modo;
+  if (modo === ModoJogo.leve) {
+    return t('mode.leve');
+  }
+  if (modo === ModoJogo.pesado) {
+    return t('mode.pesado');
+  }
+  if (modo === ModoJogo.nerd) {
+    return t('mode.nerd');
+  }
+  if (modo === ModoJogo.culturaBR) {
+    return t('mode.culturaBR');
+  }
+  if (modo === ModoJogo.adultos) {
+    return t('mode.adultos');
+  }
+  if (modo === ModoJogo.favoritas) {
+    return t('mode.favoritas');
+  }
+  if (modo === ModoJogo.comunidade) {
+    return t('mode.comunidade');
+  }
+  return modo;
 }

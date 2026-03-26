@@ -1,9 +1,11 @@
+import { t } from '../i18n';
+
 const COMMON_ERRORS: Record<string, string> = {
-  'permission-denied': 'Sem permissão para acessar o banco de dados.',
-  'network-request-failed': 'Falha de rede. Verifique sua conexão e tente novamente.',
-  unavailable: 'Serviço temporariamente indisponível. Tente novamente.',
-  'configuration-not-found': 'Autenticação anônima não habilitada no Firebase.',
-  'failed-precondition': 'Configuração pendente no Firebase para concluir esta operação.',
+  'permission-denied': t('error.firebase.permission'),
+  'network-request-failed': t('error.firebase.network'),
+  unavailable: t('error.firebase.unavailable'),
+  'configuration-not-found': t('error.firebase.authConfig'),
+  'failed-precondition': t('error.firebase.failedPrecondition'),
 };
 
 export function parseFirebaseError(error: unknown): string {
@@ -22,7 +24,7 @@ export function parseFirebaseError(error: unknown): string {
     normalizedMessage.includes('single field index') ||
     normalizedMessage.includes('firestore.googleapis.com')
   ) {
-    return 'Modo Comunidade indisponível no momento. Falta ajustar o índice do Firestore para ranking por favoritos.';
+    return t('error.firebase.communityIndex');
   }
 
   if (
@@ -32,8 +34,8 @@ export function parseFirebaseError(error: unknown): string {
     typeof error.code === 'string'
   ) {
     const code = error.code.replace('database/', '').replace('auth/', '');
-    return COMMON_ERRORS[code] ?? `Erro no Firebase (${code}).`;
+    return COMMON_ERRORS[code] ?? t('error.firebase.genericCode', { code });
   }
 
-  return 'Ocorreu um erro inesperado.';
+  return t('error.firebase.unknown');
 }

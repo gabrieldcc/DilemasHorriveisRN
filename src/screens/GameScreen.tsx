@@ -39,6 +39,7 @@ import { getModoLabel, isModoJogo } from '../utils/gameModes';
 import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { areAdsEnabled, isFirstSessionAdsEnabled } from '../services/RemoteConfigService';
 import { getQuestionCount } from '../utils/sessionManager';
+import { t } from '../i18n';
 
 function buildResultPercentages(questionId: string, selected: 'A' | 'B') {
   let hash = 0;
@@ -118,9 +119,9 @@ export function GameScreen() {
     return (
       <ScreenContainer>
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Modo de jogo inválido.</Text>
+          <Text style={styles.errorText}>{t('game.invalidMode')}</Text>
           <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
-            <Text style={styles.secondaryButtonText}>Voltar</Text>
+            <Text style={styles.secondaryButtonText}>{t('common.back')}</Text>
           </Pressable>
         </View>
       </ScreenContainer>
@@ -300,7 +301,7 @@ export function GameScreen() {
     try {
       const available = await Sharing.isAvailableAsync();
       if (!available) {
-        Alert.alert('Compartilhamento indisponível', 'Seu dispositivo não suporta compartilhamento nesta plataforma.');
+        Alert.alert(t('game.shareUnavailableTitle'), t('game.shareUnavailableBody'));
         return;
       }
 
@@ -314,11 +315,11 @@ export function GameScreen() {
       await Sharing.shareAsync(imageUri, {
         mimeType: 'image/png',
         UTI: 'public.png',
-        dialogTitle: 'Compartilhar dilema',
+        dialogTitle: t('game.shareDialogTitle'),
       });
       trackShare({ question_id: currentQuestion.id });
     } catch (error) {
-      Alert.alert('Erro ao compartilhar', 'Não foi possível gerar a imagem da pergunta.');
+      Alert.alert(t('game.shareErrorTitle'), t('game.shareErrorBody'));
       if (__DEV__) {
         console.error('[Share] Falha ao compartilhar pergunta:', error);
       }
@@ -340,7 +341,7 @@ export function GameScreen() {
       setComments(loaded);
       setCommentsCount(loaded.length);
     } catch (error) {
-      Alert.alert('Erro ao carregar comentários', error instanceof Error ? error.message : 'Tente novamente.');
+      Alert.alert(t('game.commentsLoadErrorTitle'), error instanceof Error ? error.message : t('game.tryAgain'));
     } finally {
       setIsCommentsLoading(false);
     }
@@ -361,7 +362,7 @@ export function GameScreen() {
 
     const normalized = commentInput.trim();
     if (normalized.length < 3) {
-      Alert.alert('Comentário curto', 'Digite pelo menos 3 caracteres.');
+      Alert.alert(t('game.shortCommentTitle'), t('game.shortCommentBody'));
       return;
     }
 
@@ -371,7 +372,7 @@ export function GameScreen() {
       setCommentInput('');
       await loadComments();
     } catch (error) {
-      Alert.alert('Erro ao comentar', error instanceof Error ? error.message : 'Não foi possível enviar comentário.');
+      Alert.alert(t('game.commentErrorTitle'), error instanceof Error ? error.message : t('game.commentErrorBody'));
     } finally {
       setIsSendingComment(false);
     }
@@ -422,7 +423,7 @@ export function GameScreen() {
       })
       .catch((error) => {
         setComments(previousComments);
-        Alert.alert('Erro ao curtir', error instanceof Error ? error.message : 'Não foi possível atualizar o like.');
+        Alert.alert(t('game.likeErrorTitle'), error instanceof Error ? error.message : t('game.likeErrorBody'));
       })
       .finally(() => {
         delete likingInFlightRef.current[commentId];
@@ -439,10 +440,10 @@ export function GameScreen() {
       return;
     }
 
-    Alert.alert('Excluir comentário', 'Deseja excluir este comentário?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('game.deleteCommentTitle'), t('game.deleteCommentBody'), [
+      { text: t('modeSelection.cancel'), style: 'cancel' },
       {
-        text: 'Excluir',
+        text: t('game.delete'),
         style: 'destructive',
         onPress: () => {
           const previousComments = comments;
@@ -452,7 +453,7 @@ export function GameScreen() {
           void removerComentarioPergunta(currentQuestion, commentId).catch((error) => {
             setComments(previousComments);
             setCommentsCount(previousComments.length);
-            Alert.alert('Erro ao excluir', error instanceof Error ? error.message : 'Não foi possível excluir o comentário.');
+            Alert.alert(t('game.deleteCommentErrorTitle'), error instanceof Error ? error.message : t('game.deleteCommentErrorBody'));
           });
         },
       },
@@ -462,7 +463,7 @@ export function GameScreen() {
   const handleStartInfiltradoSetup = () => {
     const parsed = Number.parseInt(playerCountInput, 10);
     if (Number.isNaN(parsed) || parsed < 3 || parsed > 20) {
-      Alert.alert('Quantidade inválida', 'Informe entre 3 e 20 jogadores.');
+      Alert.alert(t('game.invalidPlayerCountTitle'), t('game.invalidPlayerCountBody'));
       return;
     }
 
@@ -496,12 +497,12 @@ export function GameScreen() {
               onPress={() =>
                 isInfiltradoMatch
                   ? Alert.alert(
-                      'Trocar formato',
-                      'Deseja mudar esta rodada para o formato Clássico?',
+                      t('game.switchFormatTitle'),
+                      t('game.switchFormatBody'),
                       [
-                        { text: 'Cancelar', style: 'cancel' },
+                        { text: t('modeSelection.cancel'), style: 'cancel' },
                         {
-                          text: 'Mudar para Clássico',
+                          text: t('game.switchToClassic'),
                           onPress: () =>
                             router.replace({
                               pathname: '/game',
@@ -511,13 +512,13 @@ export function GameScreen() {
                       ]
                     )
                   : Alert.alert(
-                      'Formato atual',
-                      'Você está no formato Clássico. Para jogar Infiltrado, escolha esse formato ao entrar no modo.'
+                      t('game.currentFormatTitle'),
+                      t('game.currentFormatBody')
                     )
               }
               style={({ pressed }) => [styles.matchTypeChip, pressed && styles.matchTypeChipPressed]}
             >
-              <Text style={styles.matchTypeChipText}>{isInfiltradoMatch ? 'Infiltrado' : 'Clássico'}</Text>
+              <Text style={styles.matchTypeChipText}>{isInfiltradoMatch ? t('game.matchType.infiltrado') : t('game.matchType.classic')}</Text>
             </Pressable>
             <Pressable
               onPress={handleFavoritePress}
@@ -579,12 +580,10 @@ export function GameScreen() {
         {showFavoriteHint ? (
           <View style={styles.favoriteHintOverlay}>
             <View style={styles.favoriteHintBubble}>
-              <Text style={styles.favoriteHintTitle}>Dica rápida</Text>
-              <Text style={styles.favoriteHintText}>
-                Toque na estrela para favoritar este dilema e acessar depois no modo Favoritas.
-              </Text>
+              <Text style={styles.favoriteHintTitle}>{t('game.quickTipTitle')}</Text>
+              <Text style={styles.favoriteHintText}>{t('game.quickTipBody')}</Text>
               <Pressable onPress={() => setShowFavoriteHint(false)} style={styles.favoriteHintButton}>
-                <Text style={styles.favoriteHintButtonText}>Entendi</Text>
+                <Text style={styles.favoriteHintButtonText}>{t('game.gotIt')}</Text>
               </Pressable>
             </View>
             <Text style={styles.favoriteHintArrow}>↗</Text>
@@ -594,29 +593,29 @@ export function GameScreen() {
           <View style={styles.centered}>
             <Text style={styles.errorText}>{error}</Text>
             <Pressable style={styles.secondaryButton} onPress={reload}>
-              <Text style={styles.secondaryButtonText}>Tentar novamente</Text>
+              <Text style={styles.secondaryButtonText}>{t('game.tryAgain')}</Text>
             </Pressable>
           </View>
         ) : null}
 
         {!isLoading && !error && total === 0 ? (
           <View style={styles.centered}>
-            <Text style={styles.helperText}>Não encontramos perguntas nesse modo ainda.</Text>
+            <Text style={styles.helperText}>{t('game.noQuestionsYet')}</Text>
             <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
-              <Text style={styles.secondaryButtonText}>Escolher outro modo</Text>
+              <Text style={styles.secondaryButtonText}>{t('game.chooseAnotherMode')}</Text>
             </Pressable>
           </View>
         ) : null}
 
         {!isLoading && !error && isFinished ? (
           <View style={styles.centered}>
-            <Text style={styles.doneTitle}>Fim da lista</Text>
-            <Text style={styles.helperText}>Você passou por todos os dilemas desse modo.</Text>
+            <Text style={styles.doneTitle}>{t('game.endList')}</Text>
+            <Text style={styles.helperText}>{t('game.endListBody')}</Text>
             <Pressable style={styles.secondaryButton} onPress={reload}>
-              <Text style={styles.secondaryButtonText}>Jogar novamente</Text>
+              <Text style={styles.secondaryButtonText}>{t('game.playAgain')}</Text>
             </Pressable>
             <Pressable style={styles.secondaryButton} onPress={() => router.replace('/')}>
-              <Text style={styles.secondaryButtonText}>Voltar para modos</Text>
+              <Text style={styles.secondaryButtonText}>{t('game.backToModes')}</Text>
             </Pressable>
           </View>
         ) : null}
@@ -636,7 +635,7 @@ export function GameScreen() {
             >
               <View>
                 <View style={styles.arenaPanel}>
-                  <Text style={styles.arenaBadge}>ARENA DE DILEMAS</Text>
+                  <Text style={styles.arenaBadge}>{t('game.arenaBadge')}</Text>
                   {/* <Text style={styles.questionTitle}>{currentQuestion.titulo}</Text> */}
                   <View style={styles.arenaDivider}>
                     <View style={styles.arenaDividerLine} />
@@ -645,7 +644,7 @@ export function GameScreen() {
                   </View>
                   <View style={styles.optionsContainer}>
                     <OptionButton
-                      label="Opção A"
+                      label={t('game.optionA')}
                       value={currentQuestion.opcaoA}
                       isSelected={selectedOption === 'A'}
                       showResult={selectedOption !== null}
@@ -655,7 +654,7 @@ export function GameScreen() {
                       disabled={isShareOverlayVisible}
                     />
                     <OptionButton
-                      label="Opção B"
+                      label={t('game.optionB')}
                       value={currentQuestion.opcaoB}
                       isSelected={selectedOption === 'B'}
                       showResult={selectedOption !== null}
@@ -673,7 +672,7 @@ export function GameScreen() {
           {isLoading && shouldShowLoadingOverlay ? (
           <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color="#22d3ee" />
-            <Text style={styles.loadingText}>Carregando perguntas...</Text>
+            <Text style={styles.loadingText}>{t('game.loadingQuestions')}</Text>
           </View>
           ) : null}
           {currentQuestion ? (
@@ -686,19 +685,19 @@ export function GameScreen() {
               <View style={styles.shareExportCard}>
                 <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
                 <View style={styles.shareExportOption}>
-                  <Text style={styles.shareExportOptionLabel}>Opção A</Text>
+                  <Text style={styles.shareExportOptionLabel}>{t('game.optionA')}</Text>
                   <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoA}</Text>
                 </View>
                 <View style={styles.shareExportVsWrap}>
                   <Text style={styles.shareExportVsText}>VS</Text>
                 </View>
                 <View style={styles.shareExportOption}>
-                  <Text style={styles.shareExportOptionLabel}>Opção B</Text>
+                  <Text style={styles.shareExportOptionLabel}>{t('game.optionB')}</Text>
                   <Text style={styles.shareExportOptionText}>{currentQuestion.opcaoB}</Text>
                 </View>
               </View>
               <View style={styles.shareExportCtaRow}>
-                <Text style={styles.shareExportCtaText}>Baixe o app Dilemas Horríveis</Text>
+                <Text style={styles.shareExportCtaText}>{t('game.downloadApp')}</Text>
                 <View style={styles.shareExportStoresRow}>
                   <Text style={styles.shareExportStoreText}> App Store</Text>
                   <Text style={styles.shareExportStoreText}>▶ Google Play</Text>
@@ -724,7 +723,7 @@ export function GameScreen() {
           >
             <Pressable style={styles.commentsCard} onPress={() => {}}>
             <View style={styles.commentsHeader}>
-              <Text style={styles.commentsTitle}>Comentários</Text>
+              <Text style={styles.commentsTitle}>{t('game.commentsTitle')}</Text>
               <Pressable
                 onPress={() => {
                   Keyboard.dismiss();
@@ -732,7 +731,7 @@ export function GameScreen() {
                 }}
                 style={styles.commentsCloseButton}
               >
-                <Text style={styles.commentsCloseText}>Fechar</Text>
+                <Text style={styles.commentsCloseText}>{t('game.close')}</Text>
               </Pressable>
             </View>
             <ScrollView
@@ -742,7 +741,7 @@ export function GameScreen() {
             >
               {isCommentsLoading ? <ActivityIndicator color="#22d3ee" /> : null}
               {!isCommentsLoading && comments.length === 0 ? (
-                <Text style={styles.commentsEmptyText}>Seja o primeiro a comentar esta pergunta.</Text>
+                <Text style={styles.commentsEmptyText}>{t('game.firstComment')}</Text>
               ) : null}
               {comments.map((comment) => (
                 <View key={comment.id} style={styles.commentItem}>
@@ -756,7 +755,7 @@ export function GameScreen() {
                         onPress={() => handleDeleteComment(comment.id)}
                         style={({ pressed }) => [styles.commentDeleteButton, pressed && styles.commentDeleteButtonPressed]}
                       >
-                        <Text style={styles.commentDeleteText}>Excluir</Text>
+                        <Text style={styles.commentDeleteText}>{t('game.delete')}</Text>
                       </Pressable>
                     ) : null}
                     <Pressable
@@ -777,7 +776,7 @@ export function GameScreen() {
             <TextInput
               value={commentInput}
               onChangeText={setCommentInput}
-              placeholder="Conte sua história..."
+              placeholder={t('game.commentPlaceholder')}
               placeholderTextColor="#64748b"
               multiline
               maxLength={220}
@@ -788,7 +787,7 @@ export function GameScreen() {
               disabled={isSendingComment}
               style={({ pressed }) => [styles.commentSendButton, pressed && styles.commentSendButtonPressed, isSendingComment && styles.commentSendButtonDisabled]}
             >
-              <Text style={styles.commentSendButtonText}>{isSendingComment ? 'Enviando...' : 'Enviar comentário'}</Text>
+              <Text style={styles.commentSendButtonText}>{isSendingComment ? t('game.sending') : t('game.sendComment')}</Text>
             </Pressable>
             </Pressable>
           </KeyboardAvoidingView>
@@ -813,20 +812,18 @@ export function GameScreen() {
           <View style={styles.infiltradoCard}>
             {infiltradoPhase === 'setup' ? (
               <>
-                <Text style={styles.infiltradoTitle}>Configurar rodada infiltrado</Text>
-                <Text style={styles.infiltradoText}>
-                  Informe quantas pessoas estão jogando. Uma delas será infiltrado nesta rodada.
-                </Text>
+                <Text style={styles.infiltradoTitle}>{t('game.setupInfiltradoTitle')}</Text>
+                <Text style={styles.infiltradoText}>{t('game.setupInfiltradoBody')}</Text>
                 <TextInput
                   value={playerCountInput}
                   onChangeText={setPlayerCountInput}
                   keyboardType="number-pad"
-                  placeholder="Quantidade de jogadores"
+                  placeholder={t('game.playersPlaceholder')}
                   placeholderTextColor="#64748b"
                   style={styles.infiltradoInput}
                 />
                 <Pressable style={styles.infiltradoPrimaryButton} onPress={handleStartInfiltradoSetup}>
-                  <Text style={styles.infiltradoPrimaryButtonText}>Sortear papéis</Text>
+                  <Text style={styles.infiltradoPrimaryButtonText}>{t('game.drawRoles')}</Text>
                 </Pressable>
                 <Pressable
                   style={styles.infiltradoSecondaryButton}
@@ -837,29 +834,29 @@ export function GameScreen() {
                     })
                   }
                 >
-                  <Text style={styles.infiltradoSecondaryButtonText}>Jogar no modo clássico</Text>
+                  <Text style={styles.infiltradoSecondaryButtonText}>{t('game.playClassic')}</Text>
                 </Pressable>
               </>
             ) : null}
 
             {infiltradoPhase === 'reveal' ? (
               <>
-                <Text style={styles.infiltradoTitle}>Passe o celular</Text>
-                <Text style={styles.infiltradoText}>Jogador {revealIndex + 1} de {playerCount}</Text>
+                <Text style={styles.infiltradoTitle}>{t('game.passPhone')}</Text>
+                <Text style={styles.infiltradoText}>{t('game.playerProgress', { current: revealIndex + 1, total: playerCount })}</Text>
                 {!isRoleVisible ? (
                   <Pressable style={styles.infiltradoPrimaryButton} onPress={() => setIsRoleVisible(true)}>
-                    <Text style={styles.infiltradoPrimaryButtonText}>Ver meu papel</Text>
+                    <Text style={styles.infiltradoPrimaryButtonText}>{t('game.revealRole')}</Text>
                   </Pressable>
                 ) : (
                   <View style={styles.infiltradoRoleBox}>
                     <Text style={styles.infiltradoRoleText}>
                       {revealIndex === infiltradoIndex
-                        ? 'Você é o infiltrado. Defenda o lado contrário do que você acredita.'
-                        : 'Você é LEAL. Defenda o lado que você realmente concorda.'}
+                        ? t('game.roleInfiltrado')
+                        : t('game.roleLoyal')}
                     </Text>
                     <Pressable style={styles.infiltradoPrimaryButton} onPress={handleNextRevealPlayer}>
                       <Text style={styles.infiltradoPrimaryButtonText}>
-                        {revealIndex + 1 >= playerCount ? 'Concluir distribuição' : 'Próximo jogador'}
+                        {revealIndex + 1 >= playerCount ? t('game.finishDistribution') : t('game.nextPlayer')}
                       </Text>
                     </Pressable>
                   </View>
@@ -869,12 +866,10 @@ export function GameScreen() {
 
             {infiltradoPhase === 'ready' ? (
               <>
-                <Text style={styles.infiltradoTitle}>Rodada pronta</Text>
-                <Text style={styles.infiltradoText}>
-                  Papéis distribuídos. Debatam normalmente e, no fim da rodada, tentem descobrir quem era o infiltrado.
-                </Text>
+                <Text style={styles.infiltradoTitle}>{t('game.roundReady')}</Text>
+                <Text style={styles.infiltradoText}>{t('game.roundReadyBody')}</Text>
                 <Pressable style={styles.infiltradoPrimaryButton} onPress={() => setInfiltradoPhase(null)}>
-                  <Text style={styles.infiltradoPrimaryButtonText}>Começar rodada</Text>
+                  <Text style={styles.infiltradoPrimaryButtonText}>{t('game.startRound')}</Text>
                 </Pressable>
               </>
             ) : null}
