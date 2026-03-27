@@ -5,35 +5,55 @@ export type SupportedAppLanguage = 'pt' | 'en' | 'es';
 const DEFAULT_LANGUAGE: SupportedAppLanguage = 'en';
 const SUPPORTED_LANGUAGES: SupportedAppLanguage[] = ['pt', 'en', 'es'];
 
+function readSettingsManagerLocale(): string | null {
+  const settingsManager = NativeModules.SettingsManager;
+  const settings = settingsManager?.settings ?? settingsManager?.getConstants?.().settings;
+  const appleLocale = settings?.AppleLocale;
+  if (typeof appleLocale === 'string' && appleLocale.trim().length > 0) {
+    return appleLocale;
+  }
+
+  const appleLanguages = settings?.AppleLanguages;
+  if (Array.isArray(appleLanguages) && appleLanguages.length > 0) {
+    const primaryLanguage = appleLanguages[0];
+    if (typeof primaryLanguage === 'string' && primaryLanguage.trim().length > 0) {
+      return primaryLanguage;
+    }
+  }
+
+  return null;
+}
+
+function readI18nManagerLocale(): string | null {
+  const i18nManager = NativeModules.I18nManager;
+  const localeIdentifier = i18nManager?.localeIdentifier ?? i18nManager?.getConstants?.().localeIdentifier;
+  if (typeof localeIdentifier === 'string' && localeIdentifier.trim().length > 0) {
+    return localeIdentifier;
+  }
+
+  return null;
+}
+
 function readDeviceLocale(): string | null {
+  if (Platform.OS === 'ios') {
+    const iosLocale = readSettingsManagerLocale();
+    if (iosLocale) {
+      return iosLocale;
+    }
+  }
+
+  const i18nLocale = readI18nManagerLocale();
+  if (i18nLocale) {
+    return i18nLocale;
+  }
+
   try {
     const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
     if (typeof intlLocale === 'string' && intlLocale.trim().length > 0) {
       return intlLocale;
     }
   } catch {
-    // Ignora e tenta os caminhos nativos abaixo.
-  }
-
-  if (Platform.OS === 'ios') {
-    const settings = NativeModules.SettingsManager?.settings;
-    const appleLocale = settings?.AppleLocale;
-    if (typeof appleLocale === 'string' && appleLocale.trim().length > 0) {
-      return appleLocale;
-    }
-
-    const appleLanguages = settings?.AppleLanguages;
-    if (Array.isArray(appleLanguages) && appleLanguages.length > 0) {
-      const primaryLanguage = appleLanguages[0];
-      if (typeof primaryLanguage === 'string' && primaryLanguage.trim().length > 0) {
-        return primaryLanguage;
-      }
-    }
-  }
-
-  const androidLocale = NativeModules.I18nManager?.localeIdentifier;
-  if (typeof androidLocale === 'string' && androidLocale.trim().length > 0) {
-    return androidLocale;
+    // Ignora e usa o fallback abaixo.
   }
 
   return null;
@@ -54,6 +74,26 @@ function normalizeLanguage(locale: string | null): SupportedAppLanguage {
 
 export function getAppLanguage(): SupportedAppLanguage {
   const locale = readDeviceLocale();
+  if (__DEV__) {
+    const settingsManager = NativeModules.SettingsManager;
+    const settings = settingsManager?.settings ?? settingsManager?.getConstants?.().settings;
+    const i18nConstants = NativeModules.I18nManager?.getConstants?.();
+    console.info('[i18n] locale debug', {
+      platform: Platform.OS,
+      resolvedLocale: locale,
+      intlLocale: (() => {
+        try {
+          return Intl.DateTimeFormat().resolvedOptions().locale;
+        } catch {
+          return null;
+        }
+      })(),
+      settingsAppleLocale: settings?.AppleLocale ?? null,
+      settingsAppleLanguages: settings?.AppleLanguages ?? null,
+      i18nLocaleIdentifier: NativeModules.I18nManager?.localeIdentifier ?? null,
+      i18nConstantsLocaleIdentifier: i18nConstants?.localeIdentifier ?? null,
+    });
+  }
   return normalizeLanguage(locale);
 }
 
