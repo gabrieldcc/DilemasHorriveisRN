@@ -1,0 +1,370 @@
+{
+  "exportedAt": "2026-03-26T00:28:19.476Z",
+  "count": 33,
+  "docs": [
+    {
+      "id": "0VHcMwJpUMI6nPXagsSK",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892086,
+        "nanoseconds": 272000000
+      },
+      "opcaoA": "Mandar um áudio falando mal de alguém diretamente para a pessoa",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Mandar o áudio para um grupo que a pessoas não está, mas tem amigos dela"
+    },
+    {
+      "id": "2CYMHVjPIZQDU9QoXNV8",
+      "titulo": "Você protegeria um amigo que ainda não se assumiu?",
+      "opcaoB": "Ficar em silêncio para proteger o segredo dele, mesmo sabendo que ele está sendo alvo de comentários desconfortáveis",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898347,
+        "nanoseconds": 516000000
+      },
+      "opcaoA": "Durante uma discussão em grupo, alguém começa a fazer piadas sobre a possível orientação sexual de um amigo que te contou em segredo que é gay, e você intervém defendendo ele de forma direta, mesmo correndo o risco de levantar suspeitas"
+    },
+    {
+      "id": "3lG0HcZjR3ijLqFhiIgU",
+      "opcaoB": "Viver o resto da vida convivendo com a culpa de algo terrível que fez",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Ser preso por 3 anos por algo que você não fez",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892087,
+        "nanoseconds": 929000000
+      }
+    },
+    {
+      "id": "5odjKtlQ2w80ZbZOQYBI",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892086,
+        "nanoseconds": 903000000
+      },
+      "opcaoA": "Passar 5 anos na prisão e sair milionário(a)",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Nunca ser preso e viver a vida inteira como classe média"
+    },
+    {
+      "id": "5q9TOAhR65b8oAdpEc3o",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892088,
+        "nanoseconds": 554000000
+      },
+      "opcaoA": "Ter todo seu histórico do WhatsApp lido em rede nacional",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Nunca mais poder usar nenhuma rede social"
+    },
+    {
+      "id": "6vGCpRdr6bUXAYMdrC6u",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892084,
+        "nanoseconds": 965000000
+      },
+      "opcaoA": "Que leiam suas mensagens",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Que vejam suas fotos no celular"
+    },
+    {
+      "id": "938nDG3c2L8rEyMi3ack",
+      "opcaoA": "Fazer um voto de celibato para o resto da vida",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892086,
+        "nanoseconds": 483000000
+      },
+      "opcaoB": "Fazer um voto de silêncio para o resto da vida",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "9P0bevDx9xGBHHfXQGuk",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898347,
+        "nanoseconds": 930000000
+      },
+      "opcaoA": "Descobrir que um amigo está prestes a começar um relacionamento com alguém que, em particular, te contou que ainda está explorando sua orientação sexual e não quer algo sério agora, e avisar seu amigo para evitar que ele se envolva emocionalmente",
+      "titulo": "Você revelaria um segredo para proteger alguém?",
+      "opcaoB": "Guardar o segredo porque foi algo pessoal que a pessoa compartilhou com você em confiança"
+    },
+    {
+      "id": "ECx3Su4rVo8oUYm5ZQOe",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898347,
+        "nanoseconds": 729000000
+      },
+      "opcaoA": "Perceber que um amigo muito próximo está claramente interessado em você romanticamente, mas você sabe que sua orientação sexual não é compatível com a dele, e falar isso abertamente para evitar falsas expectativas",
+      "titulo": "Você contaria algo que pode mudar uma amizade?",
+      "opcaoB": "Evitar tocar no assunto para não criar um momento constrangedor, mesmo sabendo que ele pode continuar alimentando sentimentos que não serão correspondidos"
+    },
+    {
+      "id": "GQDlocT7qQGXBw967ZWD",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898347,
+        "nanoseconds": 87000000
+      },
+      "opcaoA": "Um amigo contou para todo mundo que já teve uma experiência sexual extremamente exagerada e impossível, e todos começam a pedir confirmação para você porque sabem que vocês são muito próximos",
+      "titulo": "Você manteria uma mentira ridícula?",
+      "opcaoB": "Contar a verdade e dizer que ele inventou a história, mesmo sabendo que isso vai virar uma piada eterna no grupo"
+    },
+    {
+      "id": "GfdRSBJHJ3vcib8d0VRo",
+      "opcaoA": "Revelar para a pessoa que ele é seu plano B",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892085,
+        "nanoseconds": 849000000
+      },
+      "opcaoB": "Descobrir que você foi o plano B",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "M0pOUbyr3LDKvNX6hFWM",
+      "titulo": "Você contaria uma verdade que pode destruir uma família?",
+      "opcaoB": "Guardar essa informação para sempre porque não foi você quem causou a situação, mesmo sabendo que seu amigo continua vivendo uma vida construída sobre uma mentira",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898345,
+        "nanoseconds": 282000000
+      },
+      "opcaoA": "Descobrir por acaso, através de um teste de DNA, que o filho adolescente do seu melhor amigo provavelmente não é biologicamente dele, e contar isso mesmo sabendo que pode destruir um casamento de 20 anos e afetar profundamente o garoto"
+    },
+    {
+      "id": "N7Ga0gAFrBr8147FsDJt",
+      "opcaoA": "Namorar com alguém que ri muito quando você tira as roupas",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892087,
+        "nanoseconds": 113000000
+      },
+      "communityFavoriteCount": 1,
+      "titulo": "O que você prefere?",
+      "opcaoB": "Namorar com alguém que chora muito na mesma situação?"
+    },
+    {
+      "id": "QGVRgj4SB4FjAddNWet2",
+      "opcaoB": "Dizer que não sabe de nada porque acredita que revelar isso agora pode destruir a família antes mesmo da criança nascer",
+      "titulo": "Você diria uma verdade devastadora?",
+      "opcaoA": "Um amigo está prestes a ter um filho com a parceira e te pergunta sinceramente se você sabe de algo que ele deveria saber, e você sabe que ela teve um caso recente que pode colocar em dúvida a paternidade",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898345,
+        "nanoseconds": 602000000
+      }
+    },
+    {
+      "id": "Rh9Jog14o5OcMuvHG2to",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892088,
+        "nanoseconds": 764000000
+      },
+      "opcaoA": "Ter diarreia explosiva sempre que encontrar seu chefe",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Ter diarreia explosiva sempre que encontrar a família do seu parceiro"
+    },
+    {
+      "id": "T3DN7V8kFopX1z7kUgxO",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898346,
+        "nanoseconds": 652000000
+      },
+      "opcaoA": "Começar um relacionamento sério com alguém que tem valores muito conservadores e decidir esconder aspectos da sua vida sexual passada para evitar julgamentos e conflitos",
+      "titulo": "Você esconderia uma parte importante de quem você é?",
+      "opcaoB": "Ser totalmente honesto sobre seu passado, mesmo sabendo que isso pode fazer a pessoa repensar se quer continuar o relacionamento"
+    },
+    {
+      "id": "YoFAO3aQC4EomOaJa942",
+      "titulo": "O que é mais humilhante?",
+      "opcaoB": "Nem ser considerado uma opção",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892085,
+        "nanoseconds": 426000000
+      },
+      "opcaoA": "Ser rejeitado depois de tomar coragem"
+    },
+    {
+      "id": "ZXKXVw6sc0kLuMuRnFmI",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Que todas as pessoas do seu trabalho recebam uma notificação quando você está tendo relações",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892087,
+        "nanoseconds": 727000000
+      },
+      "opcaoA": "Receber uma notificação toda vez que seus pais estão tendo relações"
+    },
+    {
+      "id": "ZtzTU7w8KeN0w8XTTqR8",
+      "titulo": "Você prefere:",
+      "opcaoB": "Que saibam quem já quis te beijar e você recusou",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892085,
+        "nanoseconds": 201000000
+      },
+      "opcaoA": "Que saibam quem você já quis beijar nessa roda"
+    },
+    {
+      "id": "b4728hsCbg5NiT1KoXSb",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892086,
+        "nanoseconds": 49000000
+      },
+      "opcaoA": "Viver um dia normal da sua rotina completamente pelado",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Dormir por um ano inteiro"
+    },
+    {
+      "id": "bZBaceuNdwx4wnY51iWa",
+      "opcaoB": "Se relacionar com alguém que demora 3 horas para chegar ao clímax",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Se relacionar com alguém que chega ao clímax em 10 segundos",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892087,
+        "nanoseconds": 523000000
+      }
+    },
+    {
+      "id": "g0qnCHvHUKAcf7ymyECy",
+      "opcaoB": "Ignorar a situação para evitar criar um conflito maior, mesmo sabendo que as pessoas podem continuar acreditando nessas histórias",
+      "titulo": "Você exporia uma mentira sobre sua vida íntima?",
+      "opcaoA": "Descobrir que um ex-parceiro anda contando histórias falsas sobre sua vida sexual para se valorizar entre amigos, e confrontá-lo publicamente para defender sua reputação",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898346,
+        "nanoseconds": 254000000
+      }
+    },
+    {
+      "id": "gBPcA7rvQ6RDJ1uVAVfQ",
+      "titulo": "Você abriria o relacionamento contra sua vontade?",
+      "opcaoB": "Recusar a ideia porque isso ultrapassa seus limites, mesmo sabendo que isso pode levar ao fim do relacionamento",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898346,
+        "nanoseconds": 469000000
+      },
+      "opcaoA": "Seu parceiro diz que ama você, mas sente necessidade de explorar experiências sexuais com outras pessoas, e pede para abrir o relacionamento para não terminar"
+    },
+    {
+      "id": "hmUDSuwddWSTeIUgPj6D",
+      "opcaoB": "Corrigir a história e contar o que realmente aconteceu, mesmo sabendo que isso pode expor outra pessoa a um grande constrangimento",
+      "titulo": "Você esconderia a verdade para evitar vergonha?",
+      "opcaoA": "Durante uma conversa entre amigos, alguém espalha um boato falso sobre a sua vida sexual e você deixa que as pessoas acreditem porque a verdade seria ainda mais constrangedora para outra pessoa envolvida",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898346,
+        "nanoseconds": 31000000
+      }
+    },
+    {
+      "id": "iVye2P4aMt6hS7A0JzGT",
+      "opcaoA": "Durante um jantar com várias pessoas, perceber que seu amigo esqueceu de desligar o celular e todos começam a ouvir um áudio muito íntimo que ele recebeu, e você pega o celular rapidamente e finge que foi você quem abriu o áudio",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898346,
+        "nanoseconds": 873000000
+      },
+      "opcaoB": "Ficar em silêncio e deixar que todos percebam que o áudio era dele, evitando assumir um constrangimento que não é seu",
+      "titulo": "Você salvaria seu amigo de uma situação constrangedora?"
+    },
+    {
+      "id": "iptvBK1h5PCMEVh9RAyD",
+      "opcaoA": "Contar para seu parceiro atual detalhes de um relacionamento sexual antigo com alguém que ainda faz parte do seu círculo de amigos",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898345,
+        "nanoseconds": 818000000
+      },
+      "opcaoB": "Evitar contar essa parte do passado para não gerar insegurança ou ciúmes dentro do relacionamento atual",
+      "titulo": "Você seria totalmente honesto sobre o passado?"
+    },
+    {
+      "id": "mZXyQlD8HnyyypnS2BSR",
+      "opcaoB": "Descobrir que você foi o plano B",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Descobrir que alguém ficou com você só por carência",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892085,
+        "nanoseconds": 636000000
+      }
+    },
+    {
+      "id": "plL97BinU2Fqu4loZd8Q",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Morrer e seu corpo ser encontrado sobre um monte de drogas",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892088,
+        "nanoseconds": 139000000
+      },
+      "opcaoA": "Morrer e seu corpo ser encontrado sobre um monte de brinquedos sexuais"
+    },
+    {
+      "id": "qgiOySuau29EPjBh6B97",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Ganhar 100 kg permanentemente",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892088,
+        "nanoseconds": 346000000
+      },
+      "opcaoA": "Perder seus órgãos sexuais para sempre"
+    },
+    {
+      "id": "quhLsaRLeC3xr5zwS2vf",
+      "titulo": "O que você prefere?",
+      "opcaoB": "Postar algo no público achando que estava no melhores amigos",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892086,
+        "nanoseconds": 687000000
+      },
+      "opcaoA": "Postar algo no melhores amigos, mas na verade era pra ser no privado de alguém"
+    },
+    {
+      "id": "ttQ36lHmQIr7xdKHTguG",
+      "opcaoA": "Durante um jogo entre amigos, alguém pergunta quem deixou um objeto íntimo esquecido no banheiro da casa, e você sabe exatamente de quem é porque a pessoa te contou antes em segredo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772898347,
+        "nanoseconds": 308000000
+      },
+      "opcaoB": "Ficar em silêncio e deixar que todos continuem suspeitando uns dos outros para evitar expor a pessoa",
+      "titulo": "Você revelaria a verdade em uma situação absurda?"
+    },
+    {
+      "id": "tw60LGmHq9zQbFVzm5Cu",
+      "opcaoA": "Delatar seu melhor amigo por um crime que ele cometeu",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892087,
+        "nanoseconds": 330000000
+      },
+      "opcaoB": "Ir para a cadeia por um crime cometido por um estranho",
+      "titulo": "O que você prefere?"
+    },
+    {
+      "id": "wSS6pxklluSS79HPIV4t",
+      "opcaoB": "Perder o pé esquerdo",
+      "titulo": "O que você prefere?",
+      "opcaoA": "Perder a mão direita",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772892089,
+        "nanoseconds": 13000000
+      }
+    }
+  ]
+}

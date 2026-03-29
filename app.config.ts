@@ -44,6 +44,31 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       iosAppId: iosAdmobAppId,
     },
   ]);
+  plugins.push([
+    'expo-build-properties',
+    {
+      ios: {
+        extraPods: [
+          {
+            name: 'GoogleUtilities',
+            modular_headers: true,
+          },
+          {
+            name: 'GoogleDataTransport',
+            modular_headers: true,
+          },
+          {
+            name: 'nanopb',
+            modular_headers: true,
+          },
+          {
+            name: 'FirebaseABTesting',
+            modular_headers: true,
+          },
+        ],
+      },
+    },
+  ]);
 
   return {
     ...config,

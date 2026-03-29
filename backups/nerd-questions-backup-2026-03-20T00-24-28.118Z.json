@@ -1,0 +1,217 @@
+{
+  "exportedAt": "2026-03-20T00:24:28.118Z",
+  "count": 18,
+  "docs": [
+    {
+      "id": "07D28yXpFJ0w0wsCeuOu",
+      "titulo": "Você prefere?",
+      "opcaoA": "Seu amigo de trabalho ser o Dwight",
+      "opcaoB": "Seu chefe ser o Michael Scott",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896178,
+        "nanoseconds": 638000000
+      }
+    },
+    {
+      "id": "3EwXDIAvIBfvwv8xPyAb",
+      "opcaoA": "Destruir todas as pesquisas que poderiam recriar dinossauros como em Jurassic Park para evitar qualquer risco futuro",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896179,
+        "nanoseconds": 519000000
+      },
+      "opcaoB": "Permitir que a ciência continue, sabendo que um erro pode causar uma catástrofe global",
+      "titulo": "Você prefere?"
+    },
+    {
+      "id": "49lCLVHfdVSJprLJ80Bc",
+      "opcaoA": "Ter que andar para trás como no moonwalk do Michael Jackson para sempre",
+      "opcaoB": "Ter que falar hee-hee no meio de toda conversa séria",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896178,
+        "nanoseconds": 851000000
+      },
+      "titulo": "Você prefere?"
+    },
+    {
+      "id": "6VR6sl6XwHHmckeJO8LN",
+      "titulo": "Você prefere?",
+      "opcaoA": "Ter os poderes do Spider-Man, mas rasgar todas as suas roupas toda vez que usar",
+      "opcaoB": "Ter que esconder sua identidade secreta de absolutamente todo mundo",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896179,
+        "nanoseconds": 77000000
+      }
+    },
+    {
+      "id": "9YOVaYImgBfEZYsSFWYJ",
+      "opcaoA": "Fazer o que Walter White fez para garantir o futuro financeiro da sua família",
+      "opcaoB": "Permanecer honesto e ver sua família sofrer com dificuldades que você poderia ter evitado",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896179,
+        "nanoseconds": 689000000
+      },
+      "titulo": "O que é pior?"
+    },
+    {
+      "id": "Ce3lLYfYeJ8dxJfNtfV0",
+      "titulo": "Você prefere?",
+      "opcaoA": "Assistir apenas a filmes de Quentin Tarantino para sempre",
+      "opcaoB": "Assistir apenas a filmes de Christopher Nolan para sempre",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896177,
+        "nanoseconds": 889000000
+      }
+    },
+    {
+      "id": "G9Lyg795bRhA2weT0pDV",
+      "titulo": "Você prefere?",
+      "opcaoA": "Tomar a mesma decisão de Joel Miller em The Last of Us para salvar alguém que você ama",
+      "opcaoB": "Permitir o sacrifício dessa pessoa para que a humanidade tenha uma chance de cura",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896179,
+        "nanoseconds": 927000000
+      }
+    },
+    {
+      "id": "HnzeMJc3Ff1rhLMLEzpK",
+      "source": "codex_seed",
+      "opcaoA": {
+        "en": "Teleportation",
+        "pt": "Teletransporte",
+        "es": "Teletransportacion"
+      },
+      "opcaoB": {
+        "pt": "Invisibilidade",
+        "en": "Invisibility",
+        "es": "Invisibilidad"
+      },
+      "titulo": {
+        "es": "prueba i18n: que superpoder elegirias?",
+        "pt": "Teste i18n: qual superpoder voce escolheria?",
+        "en": "i18n test: which superpower would you choose?"
+      },
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1773964240,
+        "nanoseconds": 48000000
+      }
+    },
+    {
+      "id": "OcaFX7WJZa1JnXzxVLre",
+      "titulo": "Você prefere?",
+      "opcaoA": "Libertar toda a humanidade da simulação como em The Matrix, mesmo sabendo que bilhões sofreriam ao descobrir a realidade",
+      "opcaoB": "Manter todos vivendo felizes na simulação, escondendo a verdade para sempre",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896179,
+        "nanoseconds": 302000000
+      }
+    },
+    {
+      "id": "Ork7e37Ed3WmKfK7M7Rf",
+      "opcaoA": "Saber todos os segredos do mundo como se tivesse a mente do Professor X, mas nunca poder contar a verdade completa para ninguém",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896178,
+        "nanoseconds": 241000000
+      },
+      "opcaoB": "Conseguir convencer qualquer pessoa de qualquer coisa como o Loki, mas nunca mais saber se alguém está sendo sincero com você",
+      "titulo": "Você prefere?"
+    },
+    {
+      "id": "V6mxjKTpVJTwKvhWGi47",
+      "opcaoA": "Lady Gaga",
+      "opcaoB": "Beyoncé",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896176,
+        "nanoseconds": 929000000
+      },
+      "titulo": "Você prefere?"
+    },
+    {
+      "id": "YfTkEoraYHIb4ifPX5Xg",
+      "titulo": "O que é pior?",
+      "opcaoA": "Ter o poder de apagar qualquer pessoa da existência como o Thanos, mas perder uma memória importante sua toda vez que usar",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896178,
+        "nanoseconds": 66000000
+      },
+      "opcaoB": "Ter o poder de salvar qualquer pessoa da morte, mas alguém aleatório no mundo morrer sempre que você usar"
+    },
+    {
+      "id": "gEnMl97BXl9UdsrB3w7k",
+      "titulo": "Você prefere?",
+      "opcaoA": "Friends",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896176,
+        "nanoseconds": 473000000
+      },
+      "opcaoB": "How I Met Your Mother"
+    },
+    {
+      "id": "hKDF79vtnFjiuaWtDlJL",
+      "titulo": "Você prefere?",
+      "opcaoA": "Harry Potter",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896177,
+        "nanoseconds": 158000000
+      },
+      "opcaoB": "O Senhor dos Anéis"
+    },
+    {
+      "id": "kQzsKMK6cso4ZIQrl4o0",
+      "titulo": "O que é pior?",
+      "opcaoA": "Ter a inteligência de Tony Stark e criar tecnologia que poderia salvar milhões, mas governos usarem tudo para guerra",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896178,
+        "nanoseconds": 461000000
+      },
+      "opcaoB": "Destruir todas as tecnologias perigosas do mundo, mas impedir descobertas que poderiam curar doenças"
+    },
+    {
+      "id": "roASNWDPrVlfXIRqIjE1",
+      "titulo": "Você prefere?",
+      "opcaoA": "Taylor Swift",
+      "opcaoB": "Britney Spears",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896176,
+        "nanoseconds": 713000000
+      }
+    },
+    {
+      "id": "xbLa2IpJP5HUVY6FsLrl",
+      "titulo": "Você prefere?",
+      "opcaoA": "Ser convidado para Hogwarts",
+      "opcaoB": "Morar em Hawkins e ser amigo das crianças de Stranger Things",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896177,
+        "nanoseconds": 672000000
+      }
+    },
+    {
+      "id": "yxpBXVPIeHsY35xKPGVD",
+      "opcaoA": "Filmes de terror",
+      "opcaoB": "Comédias românticas",
+      "createdAt": {
+        "type": "firestore/timestamp/1.0",
+        "seconds": 1772896177,
+        "nanoseconds": 460000000
+      },
+      "titulo": "Você prefere?"
+    }
+  ]
+}

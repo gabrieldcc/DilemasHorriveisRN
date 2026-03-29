@@ -1,0 +1,330 @@
+{
+  "generatedAt": "2026-03-20T00:27:58.388Z",
+  "count": 18,
+  "docs": [
+    {
+      "id": "07D28yXpFJ0w0wsCeuOu",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Seu amigo de trabalho ser o Dwight",
+        "en": "Your coworker is Dwight",
+        "es": "Que tu companero de trabajo sea Dwight"
+      },
+      "opcaoB": {
+        "pt": "Seu chefe ser o Michael Scott",
+        "en": "Your boss is Michael Scott",
+        "es": "Que tu jefe sea Michael Scott"
+      }
+    },
+    {
+      "id": "3EwXDIAvIBfvwv8xPyAb",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Destruir todas as pesquisas que poderiam recriar dinossauros como em Jurassic Park para evitar qualquer risco futuro",
+        "en": "Destroy all research that could recreate dinosaurs like in Jurassic Park to avoid any future risk",
+        "es": "Destruir toda la investigacion que podria recrear dinosaurios como en Jurassic Park para evitar cualquier riesgo futuro"
+      },
+      "opcaoB": {
+        "pt": "Permitir que a ciência continue, sabendo que um erro pode causar uma catástrofe global",
+        "en": "Allow science to continue, knowing that one mistake could cause a global catastrophe",
+        "es": "Permitir que la ciencia continue, sabiendo que un error puede causar una catastrofe global"
+      }
+    },
+    {
+      "id": "49lCLVHfdVSJprLJ80Bc",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter que andar para trás como no moonwalk do Michael Jackson para sempre",
+        "en": "Have to walk backward like Michael Jackson's moonwalk forever",
+        "es": "Tener que caminar hacia atras como el moonwalk de Michael Jackson para siempre"
+      },
+      "opcaoB": {
+        "pt": "Ter que falar hee-hee no meio de toda conversa séria",
+        "en": "Have to say 'hee-hee' in the middle of every serious conversation",
+        "es": "Tener que decir 'hee-hee' en medio de toda conversacion seria"
+      }
+    },
+    {
+      "id": "6VR6sl6XwHHmckeJO8LN",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter os poderes do Spider-Man, mas rasgar todas as suas roupas toda vez que usar",
+        "en": "Have Spider-Man powers but tear all your clothes every time you use them",
+        "es": "Tener los poderes de Spider-Man, pero romper toda tu ropa cada vez que los uses"
+      },
+      "opcaoB": {
+        "pt": "Ter que esconder sua identidade secreta de absolutamente todo mundo",
+        "en": "Have to hide your secret identity from absolutely everyone",
+        "es": "Tener que esconder tu identidad secreta de absolutamente todo el mundo"
+      }
+    },
+    {
+      "id": "9YOVaYImgBfEZYsSFWYJ",
+      "titulo": {
+        "pt": "O que é pior?",
+        "en": "What's worse?",
+        "es": "¿Que es peor?"
+      },
+      "opcaoA": {
+        "pt": "Fazer o que Walter White fez para garantir o futuro financeiro da sua família",
+        "en": "Do what Walter White did to secure your family's financial future",
+        "es": "Hacer lo que hizo Walter White para asegurar el futuro financiero de tu familia"
+      },
+      "opcaoB": {
+        "pt": "Permanecer honesto e ver sua família sofrer com dificuldades que você poderia ter evitado",
+        "en": "Stay honest and watch your family suffer hardships you could have avoided",
+        "es": "Permanecer honesto y ver a tu familia sufrir dificultades que podrias haber evitado"
+      }
+    },
+    {
+      "id": "Ce3lLYfYeJ8dxJfNtfV0",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Assistir apenas a filmes de Quentin Tarantino para sempre",
+        "en": "Watch only Quentin Tarantino movies forever",
+        "es": "Ver solo peliculas de Quentin Tarantino para siempre"
+      },
+      "opcaoB": {
+        "pt": "Assistir apenas a filmes de Christopher Nolan para sempre",
+        "en": "Watch only Christopher Nolan movies forever",
+        "es": "Ver solo peliculas de Christopher Nolan para siempre"
+      }
+    },
+    {
+      "id": "G9Lyg795bRhA2weT0pDV",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Tomar a mesma decisão de Joel Miller em The Last of Us para salvar alguém que você ama",
+        "en": "Make the same choice Joel Miller made in The Last of Us to save someone you love",
+        "es": "Tomar la misma decision de Joel Miller en The Last of Us para salvar a alguien que amas"
+      },
+      "opcaoB": {
+        "pt": "Permitir o sacrifício dessa pessoa para que a humanidade tenha uma chance de cura",
+        "en": "Allow that person to be sacrificed so humanity has a chance for a cure",
+        "es": "Permitir el sacrificio de esa persona para que la humanidad tenga una oportunidad de cura"
+      }
+    },
+    {
+      "id": "HnzeMJc3Ff1rhLMLEzpK",
+      "titulo": {
+        "pt": "Teste i18n: qual superpoder voce escolheria?",
+        "en": "i18n test: which superpower would you choose?",
+        "es": "prueba i18n: que superpoder elegirias?"
+      },
+      "opcaoA": {
+        "pt": "Teletransporte",
+        "en": "Teleportation",
+        "es": "Teletransportacion"
+      },
+      "opcaoB": {
+        "pt": "Invisibilidade",
+        "en": "Invisibility",
+        "es": "Invisibilidad"
+      }
+    },
+    {
+      "id": "OcaFX7WJZa1JnXzxVLre",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Libertar toda a humanidade da simulação como em The Matrix, mesmo sabendo que bilhões sofreriam ao descobrir a realidade",
+        "en": "Free all humanity from the simulation like in The Matrix, even knowing billions would suffer when discovering reality",
+        "es": "Liberar a toda la humanidad de la simulacion como en The Matrix, aun sabiendo que miles de millones sufririan al descubrir la realidad"
+      },
+      "opcaoB": {
+        "pt": "Manter todos vivendo felizes na simulação, escondendo a verdade para sempre",
+        "en": "Keep everyone living happily in the simulation, hiding the truth forever",
+        "es": "Mantener a todos viviendo felices en la simulacion, ocultando la verdad para siempre"
+      }
+    },
+    {
+      "id": "Ork7e37Ed3WmKfK7M7Rf",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Saber todos os segredos do mundo como se tivesse a mente do Professor X, mas nunca poder contar a verdade completa para ninguém",
+        "en": "Know all the world's secrets as if you had Professor X's mind, but never be able to tell the whole truth to anyone",
+        "es": "Saber todos los secretos del mundo como si tuvieras la mente del Profesor X, pero nunca poder contar la verdad completa a nadie"
+      },
+      "opcaoB": {
+        "pt": "Conseguir convencer qualquer pessoa de qualquer coisa como o Loki, mas nunca mais saber se alguém está sendo sincero com você",
+        "en": "Convince anyone of anything like Loki, but never know again if someone is being honest with you",
+        "es": "Convencer a cualquier persona de cualquier cosa como Loki, pero nunca volver a saber si alguien esta siendo sincero contigo"
+      }
+    },
+    {
+      "id": "V6mxjKTpVJTwKvhWGi47",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Lady Gaga",
+        "en": "Lady Gaga",
+        "es": "Lady Gaga"
+      },
+      "opcaoB": {
+        "pt": "Beyoncé",
+        "en": "Beyonce",
+        "es": "Beyonce"
+      }
+    },
+    {
+      "id": "YfTkEoraYHIb4ifPX5Xg",
+      "titulo": {
+        "pt": "O que é pior?",
+        "en": "What's worse?",
+        "es": "¿Que es peor?"
+      },
+      "opcaoA": {
+        "pt": "Ter o poder de apagar qualquer pessoa da existência como o Thanos, mas perder uma memória importante sua toda vez que usar",
+        "en": "Have the power to erase anyone from existence like Thanos, but lose an important memory every time you use it",
+        "es": "Tener el poder de borrar a cualquier persona de la existencia como Thanos, pero perder un recuerdo importante cada vez que lo uses"
+      },
+      "opcaoB": {
+        "pt": "Ter o poder de salvar qualquer pessoa da morte, mas alguém aleatório no mundo morrer sempre que você usar",
+        "en": "Have the power to save anyone from death, but a random person in the world dies every time you use it",
+        "es": "Tener el poder de salvar a cualquier persona de la muerte, pero una persona aleatoria en el mundo muere cada vez que lo uses"
+      }
+    },
+    {
+      "id": "gEnMl97BXl9UdsrB3w7k",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Friends",
+        "en": "Friends",
+        "es": "Friends"
+      },
+      "opcaoB": {
+        "pt": "How I Met Your Mother",
+        "en": "How I Met Your Mother",
+        "es": "How I Met Your Mother"
+      }
+    },
+    {
+      "id": "hKDF79vtnFjiuaWtDlJL",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Harry Potter",
+        "en": "Harry Potter",
+        "es": "Harry Potter"
+      },
+      "opcaoB": {
+        "pt": "O Senhor dos Anéis",
+        "en": "The Lord of the Rings",
+        "es": "El Senor de los Anillos"
+      }
+    },
+    {
+      "id": "kQzsKMK6cso4ZIQrl4o0",
+      "titulo": {
+        "pt": "O que é pior?",
+        "en": "What's worse?",
+        "es": "¿Que es peor?"
+      },
+      "opcaoA": {
+        "pt": "Ter a inteligência de Tony Stark e criar tecnologia que poderia salvar milhões, mas governos usarem tudo para guerra",
+        "en": "Have Tony Stark-level intelligence and create technology that could save millions, but governments use it all for war",
+        "es": "Tener la inteligencia de Tony Stark y crear tecnologia que podria salvar a millones, pero que los gobiernos lo usen todo para la guerra"
+      },
+      "opcaoB": {
+        "pt": "Destruir todas as tecnologias perigosas do mundo, mas impedir descobertas que poderiam curar doenças",
+        "en": "Destroy all dangerous technologies in the world, but prevent discoveries that could cure diseases",
+        "es": "Destruir todas las tecnologias peligrosas del mundo, pero impedir descubrimientos que podrian curar enfermedades"
+      }
+    },
+    {
+      "id": "roASNWDPrVlfXIRqIjE1",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Taylor Swift",
+        "en": "Taylor Swift",
+        "es": "Taylor Swift"
+      },
+      "opcaoB": {
+        "pt": "Britney Spears",
+        "en": "Britney Spears",
+        "es": "Britney Spears"
+      }
+    },
+    {
+      "id": "xbLa2IpJP5HUVY6FsLrl",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ser convidado para Hogwarts",
+        "en": "Be invited to Hogwarts",
+        "es": "Ser invitado a Hogwarts"
+      },
+      "opcaoB": {
+        "pt": "Morar em Hawkins e ser amigo das crianças de Stranger Things",
+        "en": "Live in Hawkins and be friends with the Stranger Things kids",
+        "es": "Vivir en Hawkins y ser amigo de los ninos de Stranger Things"
+      }
+    },
+    {
+      "id": "yxpBXVPIeHsY35xKPGVD",
+      "titulo": {
+        "pt": "Você prefere?",
+        "en": "Would you rather?",
+        "es": "¿Que prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Filmes de terror",
+        "en": "Horror movies",
+        "es": "Peliculas de terror"
+      },
+      "opcaoB": {
+        "pt": "Comédias românticas",
+        "en": "Romantic comedies",
+        "es": "Comedias romanticas"
+      }
+    }
+  ]
+}

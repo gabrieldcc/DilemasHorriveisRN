@@ -15,11 +15,14 @@ import {
 } from 'firebase/firestore';
 
 import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
+import { getAppLanguage, SupportedAppLanguage } from './languageService';
 import { isModoJogoConteudo } from '../utils/gameModes';
+import { resolveLocalizedField } from '../utils/localizedText';
 import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
 import { getUserProfile } from './profileService';
+import { t } from '../i18n';
 
 export interface NovaPerguntaInput {
   titulo: string;
@@ -58,6 +61,25 @@ export interface SugestaoAtualizacaoInput {
   modoSugerido: ModoJogoConteudo;
 }
 
+function mapPerguntaDoc(
+  raw: Record<string, unknown>,
+  language: ReturnType<typeof getAppLanguage>,
+  fallbackId: string,
+  modo: ModoJogo
+): Pergunta {
+  const titulo = resolveLocalizedField(raw, 'titulo', language) ?? t('common.questionUnavailable');
+  const opcaoA = resolveLocalizedField(raw, 'opcaoA', language) ?? t('common.optionAUnavailable');
+  const opcaoB = resolveLocalizedField(raw, 'opcaoB', language) ?? t('common.optionBUnavailable');
+
+  return {
+    id: typeof raw.id === 'string' ? raw.id : fallbackId,
+    titulo,
+    opcaoA,
+    opcaoB,
+    modo,
+  };
+}
+
 function getCommunityDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
   return `${pergunta.modo}__${pergunta.id}`;
 }
@@ -66,17 +88,107 @@ function getFavoriteDocId(pergunta: Pick<Pergunta, 'id' | 'modo'>): string {
   return `${pergunta.modo}__${pergunta.id}`;
 }
 
+type LocalizedValue = Partial<Record<SupportedAppLanguage, string>>;
+
+function asNonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const normalized = value.trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function getLocalizedFromRaw(raw: Record<string, unknown>, field: string): LocalizedValue {
+  const result: LocalizedValue = {};
+
+  const baseValue = raw[field];
+  if (baseValue && typeof baseValue === 'object' && !Array.isArray(baseValue)) {
+    const nested = baseValue as Record<string, unknown>;
+    const pt = asNonEmptyString(nested.pt ?? nested['pt-BR'] ?? nested.pt_BR ?? nested.ptbr);
+    const en = asNonEmptyString(nested.en ?? nested['en-US'] ?? nested.en_US ?? nested.enus);
+    const es = asNonEmptyString(nested.es ?? nested['es-ES'] ?? nested.es_ES ?? nested.eses);
+
+    if (pt) {
+      result.pt = pt;
+    }
+    if (en) {
+      result.en = en;
+    }
+    if (es) {
+      result.es = es;
+    }
+  }
+
+  const flatPt = asNonEmptyString(raw[`${field}_pt`]) ?? asNonEmptyString(raw[`${field}Pt`]);
+  const flatEn = asNonEmptyString(raw[`${field}_en`]) ?? asNonEmptyString(raw[`${field}En`]);
+  const flatEs = asNonEmptyString(raw[`${field}_es`]) ?? asNonEmptyString(raw[`${field}Es`]);
+
+  if (flatPt) {
+    result.pt = result.pt ?? flatPt;
+  }
+  if (flatEn) {
+    result.en = result.en ?? flatEn;
+  }
+  if (flatEs) {
+    result.es = result.es ?? flatEs;
+  }
+
+  return result;
+}
+
+function ensureLocalizedValue(localized: LocalizedValue, fallback: string, language: SupportedAppLanguage): LocalizedValue {
+  if (localized.pt || localized.en || localized.es) {
+    return localized;
+  }
+
+  return {
+    [language]: fallback,
+  };
+}
+
+async function getLocalizedQuestionFields(pergunta: Pergunta): Promise<{
+  titulo: LocalizedValue;
+  opcaoA: LocalizedValue;
+  opcaoB: LocalizedValue;
+}> {
+  const language = getAppLanguage();
+  const fallback = {
+    titulo: { [language]: pergunta.titulo } as LocalizedValue,
+    opcaoA: { [language]: pergunta.opcaoA } as LocalizedValue,
+    opcaoB: { [language]: pergunta.opcaoB } as LocalizedValue,
+  };
+
+  try {
+    const db = getFirebaseFirestore();
+    const sourceRef = doc(db, 'perguntas', pergunta.modo, 'itens', pergunta.id);
+    const sourceSnapshot = await getDoc(sourceRef);
+
+    if (!sourceSnapshot.exists()) {
+      return fallback;
+    }
+
+    const raw = sourceSnapshot.data() as Record<string, unknown>;
+    return {
+      titulo: ensureLocalizedValue(getLocalizedFromRaw(raw, 'titulo'), pergunta.titulo, language),
+      opcaoA: ensureLocalizedValue(getLocalizedFromRaw(raw, 'opcaoA'), pergunta.opcaoA, language),
+      opcaoB: ensureLocalizedValue(getLocalizedFromRaw(raw, 'opcaoB'), pergunta.opcaoB, language),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
 function normalizeSuggestionInput(input: SugestaoInput | SugestaoAtualizacaoInput) {
   const tituloRaw = input.titulo?.trim();
-  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : 'O que você prefere?';
+  const titulo = tituloRaw && tituloRaw.length > 0 ? tituloRaw : t('common.defaultQuestionTitle');
   const opcaoA = input.opcaoA.trim();
   const opcaoB = input.opcaoB.trim();
 
   if (titulo.length < 6) {
-    throw new Error('Título muito curto.');
+    throw new Error(t('error.question.shortTitle'));
   }
   if (opcaoA.length < 3 || opcaoB.length < 3) {
-    throw new Error('As opções precisam ter pelo menos 3 caracteres.');
+    throw new Error(t('error.question.shortOptions'));
   }
 
   return { titulo, opcaoA, opcaoB };
@@ -98,12 +210,12 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
   return {
     id: docId,
-    titulo: typeof raw.titulo === 'string' ? raw.titulo : 'O que você prefere?',
+    titulo: typeof raw.titulo === 'string' ? raw.titulo : t('common.defaultQuestionTitle'),
     opcaoA: typeof raw.opcaoA === 'string' ? raw.opcaoA : '',
     opcaoB: typeof raw.opcaoB === 'string' ? raw.opcaoB : '',
     modoSugerido: modoSugerido as ModoJogoConteudo,
     autorId: typeof raw.autorId === 'string' ? raw.autorId : '',
-    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : 'Anônimo',
+    autorNome: typeof raw.autorNome === 'string' ? raw.autorNome : t('common.anonymous'),
     status,
     createdAtMs: createdAt?.toMillis?.() ?? 0,
     updatedAtMs: updatedAt?.toMillis?.() ?? 0,
@@ -113,28 +225,23 @@ function mapSugestaoDoc(docId: string, raw: Record<string, unknown>): SugestaoPe
 
 export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]> {
   try {
+    const language = getAppLanguage();
+
     if (modo === ModoJogo.favoritas) {
-      return buscarPerguntasFavoritas();
+      return buscarPerguntasFavoritas(language);
     }
 
     if (modo === ModoJogo.comunidade) {
-      return buscarPerguntasComunidade();
+      return buscarPerguntasComunidade(language);
     }
 
     const db = getFirebaseFirestore();
     const questionsRef = collection(db, 'perguntas', modo, 'itens');
     const snapshot = await getDocs(questionsRef);
 
-    return snapshot.docs.map((questionDoc) => {
-      const data = questionDoc.data() as Omit<Pergunta, 'id' | 'modo'>;
-      return {
-        id: questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo,
-      };
-    });
+    return snapshot.docs.map((questionDoc) =>
+      mapPerguntaDoc(questionDoc.data() as Record<string, unknown>, language, questionDoc.id, modo)
+    );
   } catch (error) {
     if (__DEV__) {
       console.error(`[Firestore] Falha ao buscar perguntas do modo "${modo}".`, error);
@@ -143,73 +250,52 @@ export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]
   }
 }
 
-async function buscarPerguntasFavoritas(): Promise<Pergunta[]> {
+async function buscarPerguntasFavoritas(language: ReturnType<typeof getAppLanguage>): Promise<Pergunta[]> {
   const db = getFirebaseFirestore();
   const uid = await getCurrentUid();
   const favoritesRef = collection(db, 'users', uid, 'favoritos');
   const snapshot = await getDocs(query(favoritesRef, orderBy('createdAt', 'desc')));
 
   const mapped: Array<Pergunta | null> = snapshot.docs.map((favoriteDoc) => {
-      const data = favoriteDoc.data() as {
-        questionId: string;
-        modo: ModoJogo;
-        titulo: string;
-        opcaoA: string;
-        opcaoB: string;
-      };
+      const data = favoriteDoc.data() as Record<string, unknown>;
+      const modo = data.modo;
+      const questionId = typeof data.questionId === 'string' ? data.questionId : favoriteDoc.id;
 
-      if (!isModoJogoConteudo(data.modo)) {
+      if (!modo || typeof modo !== 'string' || !isModoJogoConteudo(modo as ModoJogo)) {
         return null;
       }
 
-      return {
-        id: data.questionId,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo: data.modo,
-      };
+      return mapPerguntaDoc(data, language, questionId, modo as ModoJogoConteudo);
     });
 
   return mapped.filter((item): item is Pergunta => item !== null);
 }
 
-async function buscarPerguntasComunidade(): Promise<Pergunta[]> {
+async function buscarPerguntasComunidade(language: ReturnType<typeof getAppLanguage>): Promise<Pergunta[]> {
   const db = getFirebaseFirestore();
   const communityRef = collection(db, 'comunidade_favoritas');
   const snapshot = await getDocs(query(communityRef, orderBy('favoriteCount', 'desc'), limit(80)));
 
   const mapped: Array<Pergunta | null> = snapshot.docs.map((questionDoc) => {
-      const data = questionDoc.data() as {
-        titulo?: string;
-        opcaoA?: string;
-        opcaoB?: string;
-        favoriteCount?: number;
-        modo?: ModoJogo;
-        questionId?: string;
-      };
-
+      const data = questionDoc.data() as Record<string, unknown>;
+      const favoriteCount = typeof data.favoriteCount === 'number' ? data.favoriteCount : 0;
       const modeFromDoc = data.modo;
+      const questionId = typeof data.questionId === 'string' ? data.questionId : questionDoc.id;
 
-      if (!modeFromDoc || !isModoJogoConteudo(modeFromDoc)) {
+      if (!modeFromDoc || typeof modeFromDoc !== 'string' || !isModoJogoConteudo(modeFromDoc as ModoJogo)) {
         return null;
       }
 
-      if ((data.favoriteCount ?? 0) <= 0) {
+      if (favoriteCount <= 0) {
         return null;
       }
 
-      if (!data.titulo || !data.opcaoA || !data.opcaoB) {
+      const mappedQuestion = mapPerguntaDoc(data, language, questionId, modeFromDoc as ModoJogoConteudo);
+      if (!mappedQuestion.titulo || !mappedQuestion.opcaoA || !mappedQuestion.opcaoB) {
         return null;
       }
 
-      return {
-        id: data.questionId ?? questionDoc.id,
-        titulo: data.titulo,
-        opcaoA: data.opcaoA,
-        opcaoB: data.opcaoB,
-        modo: modeFromDoc,
-      };
+      return mappedQuestion;
     });
 
   return mapped.filter((item): item is Pergunta => item !== null);
@@ -232,7 +318,7 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
 export async function removerPergunta(modo: ModoJogo, id: string): Promise<void> {
   try {
     if (!isModoJogoConteudo(modo)) {
-      throw new Error('Modo inválido para remoção de pergunta.');
+      throw new Error(t('error.question.invalidModeRemoval'));
     }
     const db = getFirebaseFirestore();
     await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
@@ -256,11 +342,12 @@ export async function isPerguntaFavorita(pergunta: Pergunta): Promise<boolean> {
 export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<boolean> {
   try {
     if (!isModoJogoConteudo(pergunta.modo)) {
-      throw new Error('Apenas perguntas dos modos principais podem ser favoritas.');
+      throw new Error(t('error.question.favoriteOnlyContent'));
     }
 
     const db = getFirebaseFirestore();
     const uid = await getCurrentUid();
+    const localizedFields = await getLocalizedQuestionFields(pergunta);
     const favoriteRef = doc(db, 'users', uid, 'favoritos', getFavoriteDocId(pergunta));
     const communityRef = doc(db, 'comunidade_favoritas', getCommunityDocId(pergunta));
     const favoriteSnapshot = await getDoc(favoriteRef);
@@ -289,9 +376,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
     await setDoc(favoriteRef, {
       questionId: pergunta.id,
       modo: pergunta.modo,
-      titulo: pergunta.titulo,
-      opcaoA: pergunta.opcaoA,
-      opcaoB: pergunta.opcaoB,
+      titulo: localizedFields.titulo,
+      opcaoA: localizedFields.opcaoA,
+      opcaoB: localizedFields.opcaoB,
       createdAt: serverTimestamp(),
     });
     await runTransaction(db, async (transaction) => {
@@ -302,9 +389,9 @@ export async function alternarPerguntaFavorita(pergunta: Pergunta): Promise<bool
         {
           questionId: pergunta.id,
           modo: pergunta.modo,
-          titulo: pergunta.titulo,
-          opcaoA: pergunta.opcaoA,
-          opcaoB: pergunta.opcaoB,
+          titulo: localizedFields.titulo,
+          opcaoA: localizedFields.opcaoA,
+          opcaoB: localizedFields.opcaoB,
           favoriteCount: currentCount + 1,
           updatedAt: serverTimestamp(),
         },
@@ -406,13 +493,13 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
     const suggestionSnapshot = await getDoc(suggestionRef);
 
     if (!suggestionSnapshot.exists()) {
-      throw new Error('Sugestão não encontrada.');
+      throw new Error(t('error.question.suggestionNotFound'));
     }
 
     const raw = suggestionSnapshot.data() as Record<string, unknown>;
     const mapped = mapSugestaoDoc(id, raw);
     if (!mapped) {
-      throw new Error('Sugestão inválida.');
+      throw new Error(t('error.question.suggestionInvalid'));
     }
 
     const mergedInput: SugestaoAtualizacaoInput = input ?? {

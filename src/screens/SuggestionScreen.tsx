@@ -7,10 +7,11 @@ import { ModoJogo, ModoJogoConteudo } from '../models/game';
 import { trackSubmitSuggestion } from '../services/analyticsService';
 import { enviarSugestaoPergunta } from '../services/questionsService';
 import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
+import { t } from '../i18n';
 
 export function SuggestionScreen() {
   const router = useRouter();
-  const [titulo, setTitulo] = useState('O que você prefere?');
+  const [titulo, setTitulo] = useState(t('suggestion.titlePlaceholder'));
   const [opcaoA, setOpcaoA] = useState('');
   const [opcaoB, setOpcaoB] = useState('');
   const [modoSugerido, setModoSugerido] = useState<ModoJogoConteudo>(ModoJogo.leve);
@@ -31,12 +32,12 @@ export function SuggestionScreen() {
       });
       void trackSubmitSuggestion(modoSugerido);
 
-      setTitulo('O que você prefere?');
+      setTitulo(t('suggestion.titlePlaceholder'));
       setOpcaoA('');
       setOpcaoB('');
-      Alert.alert('Sugestão enviada', 'Recebemos seu dilema. Obrigado por contribuir.');
+      Alert.alert(t('suggestion.sentTitle'), t('suggestion.sentBody'));
     } catch (error) {
-      Alert.alert('Erro ao enviar', error instanceof Error ? error.message : 'Não foi possível enviar.');
+      Alert.alert(t('suggestion.sendErrorTitle'), error instanceof Error ? error.message : t('suggestion.sendErrorBody'));
     } finally {
       setSending(false);
     }
@@ -45,10 +46,10 @@ export function SuggestionScreen() {
   return (
     <ScreenContainer>
       <ScrollView style={styles.container} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>Sugerir Dilema</Text>
-        <Text style={styles.subtitle}>Envie suas ideias e analisaremos para entrar no app.</Text>
+        <Text style={styles.title}>{t('suggestion.title')}</Text>
+        <Text style={styles.subtitle}>{t('suggestion.subtitle')}</Text>
 
-        <Text style={styles.label}>Modo sugerido</Text>
+        <Text style={styles.label}>{t('suggestion.modeSuggested')}</Text>
         <View style={styles.modeWrap}>
           {CONTENT_GAME_MODES.map((item) => (
             <Pressable
@@ -67,31 +68,31 @@ export function SuggestionScreen() {
           ))}
         </View>
 
-        <Text style={styles.label}>Título</Text>
+        <Text style={styles.label}>{t('suggestion.titleLabel')}</Text>
         <TextInput
           style={styles.input}
           value={titulo}
           onChangeText={setTitulo}
-          placeholder="Título"
+          placeholder={t('suggestion.titlePlaceholder')}
           placeholderTextColor="#64748b"
         />
 
-        <Text style={styles.label}>Opção A</Text>
+        <Text style={styles.label}>{t('suggestion.optionA')}</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoA}
           onChangeText={setOpcaoA}
-          placeholder="Descreva a primeira opção"
+          placeholder={t('suggestion.optionAPlaceholder')}
           placeholderTextColor="#64748b"
           multiline
         />
 
-        <Text style={styles.label}>Opção B</Text>
+        <Text style={styles.label}>{t('suggestion.optionB')}</Text>
         <TextInput
           style={[styles.input, styles.multilineInput]}
           value={opcaoB}
           onChangeText={setOpcaoB}
-          placeholder="Descreva a segunda opção"
+          placeholder={t('suggestion.optionBPlaceholder')}
           placeholderTextColor="#64748b"
           multiline
         />
@@ -101,11 +102,11 @@ export function SuggestionScreen() {
           disabled={sending}
           style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed, sending && styles.disabled]}
         >
-          <Text style={styles.primaryButtonText}>{sending ? 'Enviando...' : 'Enviar sugestão'}</Text>
+          <Text style={styles.primaryButtonText}>{sending ? t('suggestion.sending') : t('suggestion.send')}</Text>
         </Pressable>
 
         <Pressable onPress={() => router.back()} style={styles.secondaryButton}>
-          <Text style={styles.secondaryButtonText}>Voltar</Text>
+          <Text style={styles.secondaryButtonText}>{t('common.back')}</Text>
         </Pressable>
       </ScrollView>
     </ScreenContainer>

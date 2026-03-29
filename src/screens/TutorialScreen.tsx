@@ -6,6 +6,7 @@ import { ScreenContainer } from '../components/ScreenContainer';
 import { hasSeenTutorial, markModeTutorialAsSeen, markTutorialAsSeen } from '../hooks/useTutorialGate';
 import { ModoJogo } from '../models/game';
 import { isModoJogo } from '../utils/gameModes';
+import { t } from '../i18n';
 
 export function TutorialScreen() {
   const router = useRouter();
@@ -24,15 +25,15 @@ export function TutorialScreen() {
 
     if (mode === ModoJogo.favoritas) {
       return [
-        'Modo Favoritas: aqui ficam as perguntas que você marcou com estrela.',
-        'Use este modo para revisitar dilemas que renderam mais discussão no seu grupo.',
+        t('tutorial.favorites.tip1'),
+        t('tutorial.favorites.tip2'),
       ];
     }
 
     if (mode === ModoJogo.comunidade) {
       return [
-        'Modo Comunidade: mostra perguntas mais favoritadas pelos jogadores.',
-        'Quanto mais pessoas favoritam uma pergunta, mais ela sobe no ranking.',
+        t('tutorial.community.tip1'),
+        t('tutorial.community.tip2'),
       ];
     }
 
@@ -70,15 +71,15 @@ export function TutorialScreen() {
     <ScreenContainer>
       <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.wrapper}>
-          <Text style={styles.title}>Como jogar</Text>
-          <Text style={styles.text}>Esse jogo pode ser jogado individualmente ou em grupo.</Text>
-          <Text style={styles.text}>A ideia é gerar um debate sobre as respostas antes de escolher.</Text>
-          <Text style={styles.text}>1. Leia o dilema exibido na tela.</Text>
-          <Text style={styles.text}>2. Escolha entre a opção A ou B.</Text>
-          <Text style={styles.text}>3. Se estiver em grupo, escolham a resposta mais votada.</Text>
-          <Text style={styles.text}>4. A próxima pergunta aparece automaticamente.</Text>
-          <Text style={styles.text}>5. Continue até acabar a lista do modo.</Text>
-          {modeSpecificTips ? <Text style={styles.modeTipsTitle}>Sobre este modo</Text> : null}
+          <Text style={styles.title}>{t('tutorial.title')}</Text>
+          <Text style={styles.text}>{t('tutorial.line1')}</Text>
+          <Text style={styles.text}>{t('tutorial.line2')}</Text>
+          <Text style={styles.text}>{t('tutorial.step1')}</Text>
+          <Text style={styles.text}>{t('tutorial.step2')}</Text>
+          <Text style={styles.text}>{t('tutorial.step3')}</Text>
+          <Text style={styles.text}>{t('tutorial.step4')}</Text>
+          <Text style={styles.text}>{t('tutorial.step5')}</Text>
+          {modeSpecificTips ? <Text style={styles.modeTipsTitle}>{t('tutorial.aboutMode')}</Text> : null}
           {modeSpecificTips?.map((tip) => (
             <Text key={tip} style={styles.text}>
               • {tip}
@@ -92,12 +93,12 @@ export function TutorialScreen() {
           >
             <Text style={styles.buttonText}>
               {openedFromGame
-                ? 'Voltar ao jogo'
+                ? t('tutorial.backToGame')
                 : hasValidMode
                   ? loading
-                    ? 'Entrando...'
-                    : 'Entendi, começar'
-                  : 'Voltar aos modos'}
+                    ? t('tutorial.entering')
+                    : t('tutorial.start')
+                  : t('tutorial.backToModes')}
             </Text>
           </Pressable>
         </View>

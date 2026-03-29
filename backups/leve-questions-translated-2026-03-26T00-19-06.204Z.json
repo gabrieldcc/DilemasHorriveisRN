@@ -1,0 +1,978 @@
+{
+  "generatedAt": "2026-03-26T00:19:06.204Z",
+  "count": 54,
+  "docs": [
+    {
+      "id": "0VaiVMRQN6dSmwkpRAyz",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter apenas um mamilo",
+        "en": "Having only one nipple",
+        "es": "Tener un solo pezón"
+      },
+      "opcaoB": {
+        "pt": "Ter dois umbigos",
+        "en": "Have two belly buttons",
+        "es": "Tener dos ombligos"
+      }
+    },
+    {
+      "id": "2IxTm1V7rOflLIChSS1U",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Borrar as calças em público uma vez por ano",
+        "en": "Staining your pants in public once a year",
+        "es": "Mancharse los pantalones en público una vez al año"
+      },
+      "opcaoB": {
+        "pt": "Borrar as calças em privado todos os dias",
+        "en": "Staining your pants in private every day",
+        "es": "Mancharse los pantalones en privado todos los días."
+      }
+    },
+    {
+      "id": "3tuBpTu9s7eDEoAx4w31",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter 20 filhos ao longo da vida",
+        "en": "Have 20 children in your lifetime",
+        "es": "Tener 20 hijos en tu vida."
+      },
+      "opcaoB": {
+        "pt": "Nunca poder ter ou adotar filhos",
+        "en": "Never being able to have or adopt children",
+        "es": "Nunca poder tener o adoptar hijos."
+      }
+    },
+    {
+      "id": "49BpW6I5TNybq9mupmfO",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Sempre usar meias molhadas",
+        "en": "Always wear wet socks",
+        "es": "Utilice siempre calcetines mojados"
+      },
+      "opcaoB": {
+        "pt": "Sempre ficar com as mãos frias",
+        "en": "Always keep your hands cold",
+        "es": "Mantén siempre las manos frías."
+      }
+    },
+    {
+      "id": "4HkD0r6w2K7DdKcAEDYX",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Viver no mundo real",
+        "en": "Living in the real world",
+        "es": "Viviendo en el mundo real"
+      },
+      "opcaoB": {
+        "pt": "Viver para sempre em uma realidade virtual onde todos os seus desejos se realizam",
+        "en": "Live forever in a virtual reality where all your wishes come true",
+        "es": "Vive para siempre en una realidad virtual donde todos tus deseos se hacen realidad"
+      }
+    },
+    {
+      "id": "4hTpSCrKgkvxgLwhDbmg",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Se perder sozinho em uma selva",
+        "en": "Getting lost alone in a jungle",
+        "es": "Perderse solo en una jungla"
+      },
+      "opcaoB": {
+        "pt": "Se perder sozinho em um deserto",
+        "en": "Getting lost alone in a desert",
+        "es": "Perderse solo en un desierto"
+      }
+    },
+    {
+      "id": "5BRo6kcGjevk0chLP3Wu",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter um amigo que está sempre fedendo mas você não pode avisar",
+        "en": "Having a friend who always smells but you can't tell them",
+        "es": "Tener un amigo que siempre huele pero no puedes decirle"
+      },
+      "opcaoB": {
+        "pt": "Você estar sempre fedendo mas alguém pode te avisar",
+        "en": "You're always stinking but someone can tell you",
+        "es": "Siempre apestas pero alguien puede decirte"
+      }
+    },
+    {
+      "id": "5CoY2WTz6yx6PIdvVTKz",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Falar com animais, mas eles darem conselhos não solicitados o tempo todo",
+        "en": "Talk to animals, but they give unsolicited advice all the time",
+        "es": "Habla con los animales, pero todo el tiempo te dan consejos no solicitados."
+      },
+      "opcaoB": {
+        "pt": "Voar, mas apenas na velocidade de um passo",
+        "en": "Fly, but only at the speed of one step",
+        "es": "Vuela, pero sólo a la velocidad de un paso."
+      }
+    },
+    {
+      "id": "5GSTwhEqArf9AMqeoar9",
+      "titulo": {
+        "pt": "O que é mais constrangedor?",
+        "en": "What's more embarrassing?",
+        "es": "¿Qué es más vergonzoso?"
+      },
+      "opcaoA": {
+        "pt": "Dar tchau e a pessoa ir embora pro mesmo lado que você",
+        "en": "Say goodbye and the person leaves to the same side as you",
+        "es": "Te despides y la persona se va hacia el mismo lado que tú."
+      },
+      "opcaoB": {
+        "pt": "Dar tchau mas você bate de frente com a pessoa e fica nisso por 10 vezes",
+        "en": "Say goodbye but you bump into the person and stay like that for 10 times",
+        "es": "Te despides pero te topas con la persona y te quedas así 10 veces."
+      }
+    },
+    {
+      "id": "5LPHV7ehFpsya2Md9HvU",
+      "titulo": {
+        "pt": "Você contaria a verdade?",
+        "en": "Would you tell the truth?",
+        "es": "¿Dirías la verdad?"
+      },
+      "opcaoA": {
+        "pt": "Descobrir que um amigo próximo traiu o parceiro e confiaram em você para guardar o segredo",
+        "en": "Discovering that a close friend cheated on their partner and they trusted you to keep the secret",
+        "es": "Descubrir que un amigo cercano engañó a su pareja y confió en ti para guardar el secreto"
+      },
+      "opcaoB": {
+        "pt": "Contar a verdade para a pessoa traída, mesmo sabendo que isso pode destruir duas relações e sua amizade",
+        "en": "Tell the truth to the betrayed person, even though you know it can destroy two relationships and your friendship",
+        "es": "Dile la verdad a la persona traicionada, aunque sepas que puede destruir dos relaciones y tu amistad."
+      }
+    },
+    {
+      "id": "84KGmKLsLlm5F5Hlap1o",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Esquecer completamente quem você é",
+        "en": "Completely forget who you are",
+        "es": "Olvida por completo quien eres"
+      },
+      "opcaoB": {
+        "pt": "Que todas as pessoas esqueçam quem você é",
+        "en": "May all people forget who you are",
+        "es": "Que todas las personas olviden quién eres"
+      }
+    },
+    {
+      "id": "9PN0naGv0AtcMeUMBENX",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Que seus pais escolham com quem você vai se casar",
+        "en": "Let your parents choose who you marry",
+        "es": "Deja que tus padres elijan con quién te casas"
+      },
+      "opcaoB": {
+        "pt": "Que seus irmãos escolham com quem você vai se casar",
+        "en": "Let your brothers choose who you marry",
+        "es": "Deja que tus hermanos elijan con quién te casas."
+      }
+    },
+    {
+      "id": "AeG5cUh9EoYt8yPcWWVL",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter vizinhos barulhentos",
+        "en": "Having noisy neighbors",
+        "es": "Tener vecinos ruidosos"
+      },
+      "opcaoB": {
+        "pt": "Ter vizinhos intrometidos",
+        "en": "Having nosy neighbors",
+        "es": "Tener vecinos entrometidos"
+      }
+    },
+    {
+      "id": "BOlCk10DPW9FWzm9Oavh",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Estar bêbado na graduação da sua filha",
+        "en": "Being drunk at your daughter's graduation",
+        "es": "Estar borracho en la graduación de tu hija"
+      },
+      "opcaoB": {
+        "pt": "Estar drogado na graduação do seu filho",
+        "en": "Being drugged at your child's graduation",
+        "es": "Ser drogado en la graduación de su hijo"
+      }
+    },
+    {
+      "id": "DZmqOG8gwVEweRn8foWn",
+      "titulo": {
+        "pt": "O que é pior?",
+        "en": "What's worse?",
+        "es": "¿Qué es peor?"
+      },
+      "opcaoA": {
+        "pt": "Esquecer o nome da pessoa logo após ouvir e não poder perguntar",
+        "en": "Forgetting the person's name right after listening and not being able to ask",
+        "es": "Olvidar el nombre de la persona inmediatamente después de escuchar y no poder preguntar"
+      },
+      "opcaoB": {
+        "pt": "Chamar pelo nome errado com confiança o rolê inteiro",
+        "en": "Call the wrong name with confidence the entire ride",
+        "es": "Di el nombre equivocado con confianza durante todo el viaje."
+      }
+    },
+    {
+      "id": "EyAlZ3g2J0cUDmDGJnRN",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Morrer salvando 10.000 estranhos sem ninguém nunca saber",
+        "en": "Die saving 10,000 strangers without anyone ever knowing",
+        "es": "Muere salvando a 10.000 desconocidos sin que nadie lo sepa"
+      },
+      "opcaoB": {
+        "pt": "Viver sabendo que você poderia ter salvado 10.000 pessoas e não salvou",
+        "en": "Living knowing that you could have saved 10,000 people and didn't",
+        "es": "Vivir sabiendo que podrías haber salvado a 10.000 personas y no lo hiciste"
+      }
+    },
+    {
+      "id": "GQzVaYHneKn0l67U7FQE",
+      "titulo": {
+        "pt": "Você protegeria alguém que errou?",
+        "en": "Would you protect someone who made a mistake?",
+        "es": "¿Protegerías a alguien que cometió un error?"
+      },
+      "opcaoA": {
+        "pt": "Um colega de trabalho confessa que cometeu um erro grave em um projeto e pede sua ajuda para esconder isso do chefe para não ser demitido",
+        "en": "A co-worker confesses that he made a serious mistake on a project and asks for your help in hiding it from his boss so he doesn't get fired",
+        "es": "Un compañero de trabajo confiesa que cometió un grave error en un proyecto y te pide ayuda para ocultárselo a su jefe para que no lo despidan"
+      },
+      "opcaoB": {
+        "pt": "Recusar ajudar e deixar que a verdade apareça, mesmo sabendo que a pessoa pode perder o emprego por causa disso",
+        "en": "Refusing to help and letting the truth come out, even knowing that the person could lose their job because of it",
+        "es": "Negarse a ayudar y dejar que la verdad salga a la luz, incluso sabiendo que la persona podría perder su trabajo por ello."
+      }
+    },
+    {
+      "id": "Itd7Napet1qrezehCOdU",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Lutar contra 100 cavalos do tamanho de pombas",
+        "en": "Fight 100 horses the size of doves",
+        "es": "Lucha contra 100 caballos del tamaño de palomas."
+      },
+      "opcaoB": {
+        "pt": "Lutar contra 1 pomba do tamanho de um cavalo",
+        "en": "Fight against 1 horse-sized dove",
+        "es": "Lucha contra 1 paloma del tamaño de un caballo."
+      }
+    },
+    {
+      "id": "Iw39dPhQ8qQ9cppUuSXf",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Só poder comer alimentos azuis",
+        "en": "Only being able to eat blue foods",
+        "es": "Solo poder comer alimentos azules."
+      },
+      "opcaoB": {
+        "pt": "Só poder beber bebidas verdes",
+        "en": "Only being able to drink green drinks",
+        "es": "Sólo poder beber bebidas verdes."
+      }
+    },
+    {
+      "id": "KgtZImQahql1gdR84X0i",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Encontrar o amor verdadeiro",
+        "en": "Find true love",
+        "es": "encontrar el amor verdadero"
+      },
+      "opcaoB": {
+        "pt": "Receber uma mala com 5 milhões de dólares",
+        "en": "Receiving a suitcase with 5 million dollars",
+        "es": "Recibiendo una maleta con 5 millones de dólares"
+      }
+    },
+    {
+      "id": "LPWQzOv5AsqD5aTkgC8i",
+      "titulo": {
+        "pt": "O que e pior?",
+        "en": "What's worse?",
+        "es": "¿Qué es peor?"
+      },
+      "opcaoA": {
+        "pt": "Chegar atrasado e todo mundo ja estar sentado",
+        "en": "Arriving late and everyone is already seated",
+        "es": "Llega tarde y ya están todos sentados."
+      },
+      "opcaoB": {
+        "pt": "Chegar cedo demais e ficar esperando sozinho",
+        "en": "Arriving too early and waiting alone",
+        "es": "Llegar demasiado temprano y esperar solo"
+      }
+    },
+    {
+      "id": "LV8PehvpEbFvOvkCE1sR",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Viver sem música",
+        "en": "Living without music",
+        "es": "Vivir sin música"
+      },
+      "opcaoB": {
+        "pt": "Viver sem televisão",
+        "en": "Living without television",
+        "es": "Vivir sin televisión"
+      }
+    },
+    {
+      "id": "OfqXQt3tXUmXC9pkuUWG",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ser um gênio feio",
+        "en": "Being an ugly genius",
+        "es": "Ser un genio feo"
+      },
+      "opcaoB": {
+        "pt": "Ser um idiota bonito",
+        "en": "Be a handsome idiot",
+        "es": "Se un idiota guapo"
+      }
+    },
+    {
+      "id": "PDkZOPfrpemQSndPLcgB",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Fazer xixi na calça sempre que alguém te cumprimentar",
+        "en": "Peeing your pants whenever someone greets you",
+        "es": "Orinarse en los pantalones cada vez que alguien te saluda"
+      },
+      "opcaoB": {
+        "pt": "Cagar nas calças sempre que se despedir de alguém",
+        "en": "Shitting your pants every time you say goodbye to someone",
+        "es": "Cagarte en los pantalones cada vez que dices adiós a alguien"
+      }
+    },
+    {
+      "id": "PGpvEyYLKEoVZzjHKDTU",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Saber tocar todos os instrumentos musicais",
+        "en": "Know how to play all musical instruments",
+        "es": "Saber tocar todos los instrumentos musicales."
+      },
+      "opcaoB": {
+        "pt": "Saber falar todas as línguas do mundo",
+        "en": "Know how to speak all the languages ​​of the world",
+        "es": "Saber hablar todos los idiomas del mundo"
+      }
+    },
+    {
+      "id": "Pa0adwYJT0ylbuE7M86Z",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Saber com quem você vai se casar",
+        "en": "Know who you are going to marry",
+        "es": "Sepa con quién te vas a casar"
+      },
+      "opcaoB": {
+        "pt": "Saber como será o futuro da sua vida resumido",
+        "en": "Know what the future of your life will be like in a nutshell",
+        "es": "Conoce en pocas palabras cómo será el futuro de tu vida"
+      }
+    },
+    {
+      "id": "RWodLicG0xXR4Al6MSxE",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Curtir sem querer uma foto antiga de férias do seu ex",
+        "en": "Accidentally liking an old vacation photo of your ex",
+        "es": "Darle me gusta accidentalmente a una vieja foto de vacaciones de tu ex"
+      },
+      "opcaoB": {
+        "pt": "Enviar um emoji de coração para o seu chefe por engano",
+        "en": "Sending a heart emoji to your boss by mistake",
+        "es": "Enviar un emoji de corazón a tu jefe por error"
+      }
+    },
+    {
+      "id": "Sa9xfykUgdCnWSiZvE1z",
+      "titulo": {
+        "pt": "Você salvaria sua própria reputação?",
+        "en": "Would you save your own reputation?",
+        "es": "¿Salvarías tu propia reputación?"
+      },
+      "opcaoA": {
+        "pt": "Durante uma reunião importante no trabalho, perceber que um colega levou a culpa por um erro que na verdade foi seu, e corrigir a situação assumindo a responsabilidade",
+        "en": "During an important meeting at work, realizing that a colleague took the blame for a mistake that was actually yours, and correcting the situation by taking responsibility",
+        "es": "Durante una reunión importante en el trabajo, darse cuenta de que un colega asumió la culpa de un error que en realidad fue suyo y corregir la situación asumiendo la responsabilidad."
+      },
+      "opcaoB": {
+        "pt": "Ficar em silêncio para proteger sua carreira, mesmo sabendo que o colega pode sofrer consequências injustas",
+        "en": "Staying silent to protect your career, even though you know your colleague may suffer unfair consequences",
+        "es": "Permanecer en silencio para proteger su carrera, aunque sepa que su colega puede sufrir consecuencias injustas."
+      }
+    },
+    {
+      "id": "VdUpqJtCPiiJab6CznFV",
+      "titulo": {
+        "pt": "Você manteria a promessa?",
+        "en": "Would you keep your promise?",
+        "es": "¿Mantendrías tu promesa?"
+      },
+      "opcaoA": {
+        "pt": "Cumprir uma promessa feita a um amigo de nunca revelar algo que ele fez, mesmo sabendo que isso prejudica outra pessoa",
+        "en": "Keeping a promise to a friend to never reveal something they have done, even if they know it harms someone else",
+        "es": "Cumplir la promesa a un amigo de nunca revelar algo que ha hecho, incluso si sabe que perjudica a otra persona."
+      },
+      "opcaoB": {
+        "pt": "Quebrar a promessa porque acredita que a verdade é mais justa, mesmo sabendo que vai perder a confiança dele",
+        "en": "Breaking the promise because you believe the truth is fairer, even though you know you will lose his trust",
+        "es": "Romper la promesa porque cree que la verdad es más justa, aunque sepa que perderá su confianza."
+      }
+    },
+    {
+      "id": "ZVWV0E5kdqQRuQ5ux3bh",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Comida grátis para sempre",
+        "en": "Free food forever",
+        "es": "comida gratis para siempre"
+      },
+      "opcaoB": {
+        "pt": "Passagens aéreas grátis para qualquer lugar",
+        "en": "Free flights to anywhere",
+        "es": "Vuelos gratis a cualquier lugar"
+      }
+    },
+    {
+      "id": "b4Dr7eUpHZ6uvxiFIiFN",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Nunca mais poder comer comida doce",
+        "en": "Never being able to eat sweet food again",
+        "es": "No poder volver a comer alimentos dulces nunca más."
+      },
+      "opcaoB": {
+        "pt": "Nunca mais poder comer comida salgada",
+        "en": "Never be able to eat salty food again",
+        "es": "Nunca más podrás comer comida salada."
+      }
+    },
+    {
+      "id": "gHgnv0MpEd9YH7dv4Oii",
+      "titulo": {
+        "pt": "Você escolheria entre justiça e lealdade?",
+        "en": "Would you choose between justice and loyalty?",
+        "es": "¿Elegirías entre justicia y lealtad?"
+      },
+      "opcaoA": {
+        "pt": "Um amigo muito próximo pede que você confirme uma versão falsa de uma história para evitar que ele seja responsabilizado por algo que fez",
+        "en": "A very close friend asks you to confirm a false version of a story to avoid being held responsible for something he did",
+        "es": "Un amigo muy cercano te pide que confirmes una versión falsa de una historia para evitar ser responsabilizado por algo que hizo"
+      },
+      "opcaoB": {
+        "pt": "Recusar mentir por ele e contar o que realmente aconteceu, mesmo sabendo que isso pode acabar com a amizade",
+        "en": "Refuse to lie for him and tell him what really happened, even though you know it could end the friendship",
+        "es": "Niégate a mentir por él y cuéntale lo que realmente pasó, aunque sabes que eso podría terminar con la amistad."
+      }
+    },
+    {
+      "id": "hqda5MF2q1p6qwSbDowA",
+      "titulo": {
+        "pt": "O que é pior?",
+        "en": "What's worse?",
+        "es": "¿Qué es peor?"
+      },
+      "opcaoA": {
+        "pt": "Mandar figurinha pesada no grupo da igreja",
+        "en": "Send a big sticker to the church group",
+        "es": "Envía una calcomanía grande al grupo de la iglesia."
+      },
+      "opcaoB": {
+        "pt": "Mandar figurinha pesada no grupo do trabalho",
+        "en": "Send a big message to the work group",
+        "es": "Envía un gran mensaje al grupo de trabajo."
+      }
+    },
+    {
+      "id": "hwTiM76Bv5qst5hdKsea",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Nunca mais poder se depilar",
+        "en": "Never be able to shave again",
+        "es": "Nunca más podrás afeitarte"
+      },
+      "opcaoB": {
+        "pt": "Nenhum desodorante funcionar em você",
+        "en": "No deodorant works on you",
+        "es": "Ningún desodorante te funciona"
+      }
+    },
+    {
+      "id": "k7OSAkoDSDBHEwEZgjGc",
+      "titulo": {
+        "pt": "Você diria a verdade mesmo machucando alguém?",
+        "en": "Would you tell the truth even if it hurt someone?",
+        "es": "¿Dirías la verdad incluso si lastimara a alguien?"
+      },
+      "opcaoA": {
+        "pt": "Um amigo pergunta sua opinião sincera sobre um projeto ou sonho importante que ele tem, mas você acredita que aquilo provavelmente vai dar errado",
+        "en": "A friend asks your honest opinion about an important project or dream he has, but you believe it will probably go wrong",
+        "es": "Un amigo te pide tu opinión honesta sobre un proyecto o sueño importante que tiene, pero crees que probablemente saldrá mal."
+      },
+      "opcaoB": {
+        "pt": "Incentivar ele mesmo sem acreditar muito, para não desanimá-lo ou destruir a confiança que ele tem em você",
+        "en": "Encourage him without believing too much, so as not to discourage him or destroy the trust he has in you",
+        "es": "Anímalo sin creer demasiado, para no desanimarlo ni destruir la confianza que tiene en ti."
+      }
+    },
+    {
+      "id": "lk53Yl1PFZ29F5Fbs9qZ",
+      "titulo": {
+        "pt": "Você protegeria quem ama?",
+        "en": "Would you protect the ones you love?",
+        "es": "¿Protegerías a tus seres queridos?"
+      },
+      "opcaoA": {
+        "pt": "Assumir a culpa em uma investigação da empresa dizendo que foi você quem alterou dados de um relatório financeiro para esconder um prejuízo, mesmo sabendo que na verdade foi seu irmão — que trabalha com você — e que ele pode ser demitido, perder a carreira e ficar com a reputação profissional destruída",
+        "en": "Taking the blame in a company investigation saying that it was you who altered data in a financial report to hide a loss, even though you know that it was actually your brother — who works with you — and that he could be fired, lose his career and have his professional reputation destroyed",
+        "es": "Asumir la culpa en una investigación de la empresa que dice que fue usted quien alteró los datos de un informe financiero para ocultar una pérdida, aunque sabe que en realidad fue su hermano, que trabaja con usted, y que podría ser despedido, perder su carrera y destruir su reputación profesional."
+      },
+      "opcaoB": {
+        "pt": "Dizer a verdade sobre o que aconteceu e deixar que seu irmão enfrente a investigação e as possíveis consequências no trabalho, mesmo sabendo que você poderia protegê-lo assumindo a culpa",
+        "en": "Tell the truth about what happened and let your brother face the investigation and possible consequences at work, even though you know you could protect him by taking the blame",
+        "es": "Di la verdad sobre lo que pasó y deja que tu hermano enfrente la investigación y las posibles consecuencias en el trabajo, aunque sabes que podrías protegerlo asumiendo la culpa."
+      }
+    },
+    {
+      "id": "muGwEnYUnEuB0GQEpyAx",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Viver uma única vida de 1.000 anos",
+        "en": "Live a single life of 1,000 years",
+        "es": "Vive una sola vida de 1.000 años."
+      },
+      "opcaoB": {
+        "pt": "Viver 10 vidas diferentes de 100 anos",
+        "en": "Live 10 different 100-year lives",
+        "es": "Vive 10 vidas diferentes de 100 años"
+      }
+    },
+    {
+      "id": "npINx1iXgKiBZnOVDhNZ",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Nunca conseguir dizer 'não' para ninguém",
+        "en": "Never being able to say 'no' to anyone",
+        "es": "Nunca poder decir 'no' a nadie"
+      },
+      "opcaoB": {
+        "pt": "Dizer 'sim' mesmo quando não quer",
+        "en": "Saying 'yes' even when you don't want to",
+        "es": "Decir \"sí\" incluso cuando no quieres"
+      }
+    },
+    {
+      "id": "oQcPuZOBi9SHENAJ0H6A",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Cumprimentar alguém que não estava te cumprimentando",
+        "en": "Greeting someone who wasn't greeting you",
+        "es": "Saludar a alguien que no te saludaba"
+      },
+      "opcaoB": {
+        "pt": "Ignorar alguém que estava te cumprimentando",
+        "en": "Ignoring someone who was greeting you",
+        "es": "Ignorar a alguien que te estaba saludando"
+      }
+    },
+    {
+      "id": "pA4xZxfwJvGBp3PjMWF2",
+      "titulo": {
+        "pt": "Você mudaria o destino de alguém?",
+        "en": "Would you change someone's destiny?",
+        "es": "¿Cambiarías el destino de alguien?"
+      },
+      "opcaoA": {
+        "pt": "Durante um processo seletivo na empresa onde você trabalha, recomendar fortemente um amigo próximo para uma vaga, mesmo sabendo que outro candidato desconhecido parece ser mais qualificado",
+        "en": "During a selection process at the company where you work, strongly recommending a close friend for a position, even though you know that another unknown candidate seems to be more qualified",
+        "es": "Durante un proceso de selección en la empresa donde trabajas, recomendar encarecidamente a un amigo cercano para un puesto, aunque sepas que otro candidato desconocido parece estar más cualificado"
+      },
+      "opcaoB": {
+        "pt": "Ser totalmente honesto sobre quem é o melhor candidato e não ajudar seu amigo, mesmo sabendo que essa oportunidade poderia mudar a vida dele",
+        "en": "Being completely honest about who the best candidate is and not helping your friend, even though you know this opportunity could change their life",
+        "es": "Ser completamente honesto acerca de quién es el mejor candidato y no ayudar a tu amigo, aunque sepas que esta oportunidad podría cambiarle la vida."
+      }
+    },
+    {
+      "id": "r4IEKk1hPUY0bF4dGJhM",
+      "titulo": {
+        "pt": "Você esconderia uma verdade dolorosa?",
+        "en": "Would you hide a painful truth?",
+        "es": "¿Ocultarías una verdad dolorosa?"
+      },
+      "opcaoA": {
+        "pt": "Um médico revela a você, em particular, que um familiar idoso tem uma doença grave e pouco tempo de vida, e você decide não contar nada agora para que ele continue vivendo tranquilo e feliz",
+        "en": "A doctor reveals to you, in private, that an elderly relative has a serious illness and has little time left to live, and you decide not to tell him anything now so that he can continue to live peacefully and happily.",
+        "es": "Un médico te revela, en privado, que un familiar anciano tiene una enfermedad grave y le queda poco tiempo de vida, y decides no contarle nada ahora para que pueda seguir viviendo en paz y felicidad."
+      },
+      "opcaoB": {
+        "pt": "Contar a verdade para que ele possa tomar decisões importantes sobre o tempo que ainda tem, mesmo sabendo que isso pode causar medo e sofrimento imediato",
+        "en": "Tell the truth so that he can make important decisions about the time he still has, even knowing that this can cause fear and immediate suffering",
+        "es": "Dile la verdad para que pueda tomar decisiones importantes sobre el tiempo que aún le queda, aun sabiendo que esto puede causarle miedo y sufrimiento inmediato."
+      }
+    },
+    {
+      "id": "rVkD5Y2i9Cdv5HsyAVo0",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Peidar incontrolavelmente no trabalho para sempre",
+        "en": "Farting uncontrollably at work forever",
+        "es": "Tirarse pedos incontrolablemente en el trabajo para siempre"
+      },
+      "opcaoB": {
+        "pt": "Peidar incontrolavelmente em todos os primeiros encontros amorosos",
+        "en": "Farting uncontrollably on every first date",
+        "es": "Tirarse pedos incontrolablemente en cada primera cita"
+      }
+    },
+    {
+      "id": "rtIBe5wQb6jRbuVInEmO",
+      "titulo": {
+        "pt": "Você protegeria um amigo?",
+        "en": "Would you protect a friend?",
+        "es": "¿Protegerías a un amigo?"
+      },
+      "opcaoA": {
+        "pt": "Mentir para a polícia dizendo que um amigo estava com você em casa na noite anterior, criando um álibi falso, porque ele dirigiu bêbado e causou um acidente leve que pode fazer ele perder a carteira de motorista e o emprego",
+        "en": "Lying to the police saying that a friend was home with you the night before, creating a false alibi because he drove drunk and caused a minor accident that could lose him his driver's license and his job",
+        "es": "Mentirle a la policía diciendo que un amigo estaba en casa contigo la noche anterior, creando una coartada falsa porque conducía ebrio y provocó un accidente menor que podría hacerle perder su licencia de conducir y su trabajo."
+      },
+      "opcaoB": {
+        "pt": "Dizer que não pode confirmar a história e deixar que ele enfrente as consequências legais, mesmo sabendo que isso pode destruir a amizade de vocês",
+        "en": "Saying you can't confirm the story and letting him face the legal consequences, even though you know it could destroy your friendship",
+        "es": "Decir que no puedes confirmar la historia y dejarlo enfrentar las consecuencias legales, aunque sabes que podría destruir tu amistad."
+      }
+    },
+    {
+      "id": "sVFD1k9K150Mwy9X8Qrs",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ficar duas vezes mais bonito(a)",
+        "en": "Be twice as beautiful",
+        "es": "Se el doble de hermosa"
+      },
+      "opcaoB": {
+        "pt": "Ficar duas vezes mais inteligente",
+        "en": "Get twice as smart",
+        "es": "Sea el doble de inteligente"
+      }
+    },
+    {
+      "id": "tOeOrHiFqxCYmY11gC7x",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Voltar no tempo",
+        "en": "Go back in time",
+        "es": "retroceder en el tiempo"
+      },
+      "opcaoB": {
+        "pt": "Saber o futuro",
+        "en": "Know the future",
+        "es": "conocer el futuro"
+      }
+    },
+    {
+      "id": "tXr6tn7CepcWcVZSrJQq",
+      "titulo": {
+        "pt": "Você assumiria uma culpa que não é sua?",
+        "en": "Would you accept a fault that is not yours?",
+        "es": "¿Aceptarías una falta que no es tuya?"
+      },
+      "opcaoA": {
+        "pt": "Durante um trabalho em grupo, alguém comete um erro sério que pode fazer todos serem penalizados, e você decide assumir a culpa sozinho para proteger os outros",
+        "en": "During group work, someone makes a serious mistake that could result in everyone being penalized, and you decide to take the blame alone to protect others.",
+        "es": "Durante el trabajo en grupo, alguien comete un error grave que podría resultar en que todos sean penalizados, y usted decide asumir la culpa solo para proteger a los demás."
+      },
+      "opcaoB": {
+        "pt": "Explicar exatamente quem errou para evitar a punição injusta, mesmo sabendo que isso pode prejudicar a relação com o grupo",
+        "en": "Explain exactly who made a mistake to avoid unfair punishment, even knowing that this could harm the relationship with the group",
+        "es": "Explicar exactamente quién cometió un error para evitar un castigo injusto, aun sabiendo que esto podría dañar la relación con el grupo."
+      }
+    },
+    {
+      "id": "w1A4jVqXPP2IdzyIGrcs",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Saber a data da sua morte",
+        "en": "Know the date of your death",
+        "es": "Conoce la fecha de tu muerte"
+      },
+      "opcaoB": {
+        "pt": "Saber a causa da sua morte",
+        "en": "Know the cause of your death",
+        "es": "Conoce la causa de tu muerte"
+      }
+    },
+    {
+      "id": "x76PlUlcrInqognUCCe6",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter bafo de peido para sempre",
+        "en": "Have fart breath forever",
+        "es": "Tener aliento de pedo para siempre"
+      },
+      "opcaoB": {
+        "pt": "Fazer som de peido toda vez que rir",
+        "en": "Make a fart sound every time you laugh",
+        "es": "Haz un sonido de pedo cada vez que te rías"
+      }
+    },
+    {
+      "id": "xBB4nrwduE5t7QupCQxx",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter super audição",
+        "en": "Have super hearing",
+        "es": "Tener súper audición"
+      },
+      "opcaoB": {
+        "pt": "Ter um olfato extremamente apurado",
+        "en": "Have an extremely keen sense of smell",
+        "es": "Tener un sentido del olfato extremadamente agudo."
+      }
+    },
+    {
+      "id": "xk2XmyT0tuVJzmRWZkY6",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ser capaz de ler pensamentos",
+        "en": "Being able to read thoughts",
+        "es": "Ser capaz de leer pensamientos"
+      },
+      "opcaoB": {
+        "pt": "Ser capaz de prever o futuro",
+        "en": "Being able to predict the future",
+        "es": "Ser capaz de predecir el futuro."
+      }
+    },
+    {
+      "id": "yroz9pHi4QNxx7s6otir",
+      "titulo": {
+        "pt": "O que prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ir para 2070",
+        "en": "Go to 2070",
+        "es": "Ir a 2070"
+      },
+      "opcaoB": {
+        "pt": "Voltar para 1950",
+        "en": "Back to 1950",
+        "es": "Volver a 1950"
+      }
+    },
+    {
+      "id": "zVGJEXULZqLag7AfloVM",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Falar todos os idiomas do mundo",
+        "en": "Speak all languages ​​in the world",
+        "es": "Habla todos los idiomas del mundo."
+      },
+      "opcaoB": {
+        "pt": "Conseguir conversar com os animais",
+        "en": "Being able to talk to animals",
+        "es": "Poder hablar con los animales."
+      }
+    },
+    {
+      "id": "zXs2FCjLw2eqfVYRFRa3",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Ter que assistir seu filme favorito todos os dias",
+        "en": "Having to watch your favorite movie every day",
+        "es": "Tener que ver tu película favorita todos los días."
+      },
+      "opcaoB": {
+        "pt": "Nunca mais assistir seu filme favorito",
+        "en": "Never watch your favorite movie again",
+        "es": "Nunca vuelvas a ver tu película favorita"
+      }
+    },
+    {
+      "id": "zkCx5Xu4IgDZ9tY4mibh",
+      "titulo": {
+        "pt": "O que você prefere?",
+        "en": "What do you prefer?",
+        "es": "¿Qué prefieres?"
+      },
+      "opcaoA": {
+        "pt": "Falar sempre rimando",
+        "en": "Always speak in rhyme",
+        "es": "Habla siempre en rima"
+      },
+      "opcaoB": {
+        "pt": "Falar sempre cantando",
+        "en": "Always speak while singing",
+        "es": "Habla siempre mientras cantas."
+      }
+    }
+  ]
+}

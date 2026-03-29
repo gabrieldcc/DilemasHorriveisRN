@@ -19,6 +19,7 @@ import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
 import { getUserProfile } from './profileService';
+import { t } from '../i18n';
 
 export interface ComentarioPergunta {
   id: string;
@@ -32,7 +33,7 @@ export interface ComentarioPergunta {
 
 function getComentariosCollectionPath(pergunta: Pergunta): [string, string, string, string] {
   if (!isModoJogoConteudo(pergunta.modo)) {
-    throw new Error('Comentários só podem ser adicionados em perguntas de modos principais.');
+    throw new Error(t('error.comment.onlyContent'));
   }
 
   return ['perguntas', pergunta.modo, 'itens', pergunta.id];
@@ -83,7 +84,7 @@ export async function buscarComentariosPergunta(pergunta: Pergunta): Promise<Com
       return {
         id: commentDoc.id,
         texto: data.texto ?? '',
-        autorNome: data.autorNome ?? 'Anônimo',
+        autorNome: data.autorNome ?? t('common.anonymous'),
         createdAtMs: data.createdAt?.toMillis?.() ?? Date.now(),
         likeCount: data.likeCount ?? 0,
         likedByCurrentUser: likedMap.get(commentDoc.id) ?? false,
@@ -99,7 +100,7 @@ export async function adicionarComentarioPergunta(pergunta: Pergunta, texto: str
   try {
     const normalized = texto.trim();
     if (normalized.length < 3) {
-      throw new Error('Comentário muito curto.');
+      throw new Error(t('error.comment.short'));
     }
 
     const db = getFirebaseFirestore();
@@ -138,7 +139,7 @@ export async function alternarLikeComentario(pergunta: Pergunta, comentarioId: s
       const [commentSnapshot, likeSnapshot] = await Promise.all([transaction.get(commentRef), transaction.get(likeRef)]);
 
       if (!commentSnapshot.exists()) {
-        throw new Error('Comentário não encontrado.');
+        throw new Error(t('error.comment.notFound'));
       }
 
       const currentCount = (commentSnapshot.data().likeCount as number | undefined) ?? 0;
@@ -173,12 +174,12 @@ export async function removerComentarioPergunta(pergunta: Pergunta, comentarioId
     const commentSnapshot = await getDoc(commentRef);
 
     if (!commentSnapshot.exists()) {
-      throw new Error('Comentário não encontrado.');
+      throw new Error(t('error.comment.notFound'));
     }
 
     const autorId = commentSnapshot.data().autorId as string | undefined;
     if (autorId !== uid) {
-      throw new Error('Você só pode excluir comentários criados por você.');
+      throw new Error(t('error.comment.onlyOwnDelete'));
     }
 
     await deleteDoc(commentRef);
