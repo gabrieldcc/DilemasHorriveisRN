@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
 import { initRemoteConfig } from '../src/services/RemoteConfigService';
-import { AnalyticsService } from '../src/services/AnalyticsService';
+import { AnalyticsService } from '../src/services/analyticsService';
 import { resetSession } from '../src/utils/sessionManager';
 import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';

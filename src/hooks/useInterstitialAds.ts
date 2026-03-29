@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { AnalyticsService } from '../services/AnalyticsService';
+import { AnalyticsService } from '../services/analyticsService';
 import { areAdsEnabled, getInterstitialFrequency, initRemoteConfig, isFirstSessionAdsEnabled } from '../services/RemoteConfigService';
 import { adsAreReady, initializeAds, preloadInterstitial, showInterstitial } from '../services/AdsService';
 import { incrementQuestionCount, shouldShowAd } from '../utils/sessionManager';

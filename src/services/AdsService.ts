@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 
-import { AnalyticsService } from './AnalyticsService';
+import { AnalyticsService } from './analyticsService';
 
 type AdEvents = {
   onLoaded?: () => void;

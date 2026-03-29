@@ -61,3 +61,106 @@ export const AnalyticsService = {
   trackPremiumPurchaseStarted: () => logEvent('premium_purchase_started'),
   trackPremiumPurchaseCompleted: () => logEvent('premium_purchase_completed'),
 };
+
+export const trackScreenView = async (screenName: string) =>
+  logEvent('screen_view', {
+    screen_name: screenName,
+    screen_class: screenName,
+  });
+
+export const trackSelectMode = async (mode: string) =>
+  logEvent('select_mode', {
+    mode,
+  });
+
+export const trackSelectGameType = async (gameType: 'classic' | 'infiltrado', mode: string) =>
+  logEvent('select_game_type', {
+    game_type: gameType,
+    mode,
+  });
+
+export const trackQuestionView = async (
+  question: { id: string; modo: string },
+  index: number,
+  total: number
+) =>
+  logEvent('question_view', {
+    question_id: question.id,
+    mode: question.modo,
+    question_index: index,
+    total_questions: total,
+  });
+
+export const trackQuestionAnswer = async (
+  question: { id: string; modo: string },
+  answer: string,
+  responseTimeMs: number
+) =>
+  logEvent('question_answer', {
+    question_id: question.id,
+    mode: question.modo,
+    answer,
+    response_time_ms: Math.round(responseTimeMs),
+  });
+
+export const trackQuestionSwipeBack = async (question: { id: string; modo: string }, index: number) =>
+  logEvent('question_swipe_back', {
+    question_id: question.id,
+    mode: question.modo,
+    question_index: index,
+  });
+
+export const trackToggleFavorite = async (question: { id: string; modo: string }, favorited: boolean) =>
+  logEvent('toggle_favorite', {
+    question_id: question.id,
+    mode: question.modo,
+    favorited,
+  });
+
+export const trackShareQuestion = async (question: { id: string; modo: string }) =>
+  logEvent('share_question', {
+    question_id: question.id,
+    mode: question.modo,
+  });
+
+export const trackSubmitSuggestion = async (modeSuggested: string) =>
+  logEvent('submit_suggestion', {
+    mode_suggested: modeSuggested,
+  });
+
+export const trackOpenComments = async (question: { id: string; modo: string }) =>
+  logEvent('open_comments', {
+    question_id: question.id,
+    mode: question.modo,
+  });
+
+export const trackPostComment = async (question: { id: string; modo: string }, commentLength: number) =>
+  logEvent('post_comment', {
+    question_id: question.id,
+    mode: question.modo,
+    comment_length: commentLength,
+  });
+
+export const trackGameOver = async (mode: string, questionsAnswered: number) =>
+  logEvent('game_over', {
+    mode,
+    questions_answered: questionsAnswered,
+  });
+
+export const trackAdImpression = async (adFormat: string, adUnitId: string) =>
+  logEvent('ad_impression', {
+    ad_platform: 'admob',
+    ad_source: 'google_mobile_ads',
+    ad_format: adFormat,
+    ad_unit_name: adUnitId,
+  });
+
+export const trackAdClick = async (adFormat: string, adUnitId: string) =>
+  logEvent('ad_click', {
+    ad_platform: 'admob',
+    ad_source: 'google_mobile_ads',
+    ad_format: adFormat,
+    ad_unit_name: adUnitId,
+  });
+
+export const trackSetName = async () => logEvent('set_name');

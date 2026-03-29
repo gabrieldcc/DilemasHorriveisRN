@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { AnalyticsService } from '../services/AnalyticsService';
+import { AnalyticsService } from '../services/analyticsService';
 
 export function useAnalytics() {
   const trackQuestionViewed = useCallback(
