@@ -4,6 +4,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { ModoJogo, ModoJogoConteudo } from '../models/game';
+import { trackSubmitSuggestion } from '../services/analyticsService';
 import { enviarSugestaoPergunta } from '../services/questionsService';
 import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
 
@@ -28,6 +29,7 @@ export function SuggestionScreen() {
         opcaoB: opcaoB.trim(),
         modoSugerido,
       });
+      void trackSubmitSuggestion(modoSugerido);
 
       setTitulo('O que você prefere?');
       setOpcaoA('');

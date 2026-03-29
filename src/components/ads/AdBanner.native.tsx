@@ -1,5 +1,6 @@
 import { Platform, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
+import { trackAdClick, trackAdImpression } from '../../services/analyticsService';
 
 const BUILD_PROFILE =
   ((Constants.expoConfig?.extra as { buildProfile?: string } | undefined)?.buildProfile ??
@@ -63,7 +64,16 @@ export function AdBanner() {
 
   return (
     <View style={styles.wrapper}>
-      <BannerAd unitId={adUnitId} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        onAdLoaded={() => {
+          void trackAdImpression('banner', adUnitId);
+        }}
+        onAdOpened={() => {
+          void trackAdClick('banner', adUnitId);
+        }}
+      />
     </View>
   );
 }

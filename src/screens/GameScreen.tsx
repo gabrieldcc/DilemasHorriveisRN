@@ -36,6 +36,17 @@ import {
 } from '../services/commentsService';
 import { useGame } from '../hooks/useGame';
 import { getModoLabel, isModoJogo } from '../utils/gameModes';
+import {
+  trackGameOver,
+  trackOpenComments,
+  trackPostComment,
+  trackQuestionAnswer,
+  trackQuestionSwipeBack,
+  trackQuestionView,
+  trackScreenView,
+  trackShareQuestion,
+  trackToggleFavorite,
+} from '../services/analyticsService';
 import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { areAdsEnabled, isFirstSessionAdsEnabled } from '../services/RemoteConfigService';
 import { getQuestionCount } from '../utils/sessionManager';
@@ -76,6 +87,7 @@ export function GameScreen() {
   const [isSendingComment, setIsSendingComment] = useState(false);
   const [likingCommentIds, setLikingCommentIds] = useState<Record<string, boolean>>({});
   const likingInFlightRef = useRef<Record<string, boolean>>({});
+  const questionViewTimeRef = useRef(0);
   const shareGhostTapUntilRef = useRef(0);
   const commentsEnabled = useFeatureFlagsStore((state) => state.flags.commentsEnabled);
   const gameType = params.gameType === 'infiltrado' ? 'infiltrado' : 'classic';
@@ -185,14 +197,20 @@ export function GameScreen() {
   }, [currentQuestion?.id, currentQuestion?.modo]);
 
   useEffect(() => {
+    void trackScreenView('GameScreen');
+  }, []);
+
+  useEffect(() => {
     if (!currentQuestion) {
       return;
     }
+    questionViewTimeRef.current = Date.now();
+    void trackQuestionView(currentQuestion, currentIndex, total);
     questionStartRef.current = Date.now();
     setResultPercents(null);
     trackQuestionViewed({ question_id: currentQuestion.id, mode: modo });
     ensurePreload();
-  }, [currentQuestion?.id, modo, trackQuestionViewed, ensurePreload]);
+  }, [currentQuestion, currentQuestion?.id, currentIndex, total, modo, trackQuestionViewed, ensurePreload]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -221,6 +239,9 @@ export function GameScreen() {
     if (selectedOption !== null) {
       return;
     }
+    if (currentQuestion) {
+      void trackQuestionSwipeBack(currentQuestion, currentIndex);
+    }
     setTransitionType('back');
     previousQuestion();
   };
@@ -237,7 +258,9 @@ export function GameScreen() {
       return;
     }
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
-    void toggleFavorite();
+    void toggleFavorite().then((isNowFavorite) => {
+      if (currentQuestion) void trackToggleFavorite(currentQuestion, isNowFavorite);
+    });
   };
 
   const handleSelectOptionA = () => {
@@ -248,6 +271,7 @@ export function GameScreen() {
     if (selectedOption === null) {
       setTransitionType('default');
       const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      void trackQuestionAnswer(currentQuestion, 'A', responseTime);
       setResultPercents(buildResultPercentages(currentQuestion.id, 'A'));
       trackQuestionAnswered({
         question_id: currentQuestion.id,
@@ -268,6 +292,7 @@ export function GameScreen() {
     if (selectedOption === null) {
       setTransitionType('default');
       const responseTime = Math.max(0, Date.now() - questionStartRef.current);
+      void trackQuestionAnswer(currentQuestion, 'B', responseTime);
       setResultPercents(buildResultPercentages(currentQuestion.id, 'B'));
       trackQuestionAnswered({
         question_id: currentQuestion.id,
@@ -294,6 +319,7 @@ export function GameScreen() {
     if (!currentQuestion || !shareTemplateRef.current || isSharing || isShareOverlayVisible || isShareGhostTapActive()) {
       return;
     }
+    void trackShareQuestion(currentQuestion);
 
     setIsShareOverlayVisible(true);
     setIsSharing(true);
@@ -350,6 +376,9 @@ export function GameScreen() {
     if (!commentsEnabled) {
       return;
     }
+    if (currentQuestion) {
+      void trackOpenComments(currentQuestion);
+    }
     setShowCommentsModal(true);
     void loadComments();
   };
@@ -368,6 +397,7 @@ export function GameScreen() {
     setIsSendingComment(true);
     try {
       await adicionarComentarioPergunta(currentQuestion, normalized);
+      void trackPostComment(currentQuestion, normalized.length);
       setCommentInput('');
       await loadComments();
     } catch (error) {
@@ -485,6 +515,13 @@ export function GameScreen() {
   };
 
   const isFinished = !isLoading && !error && total > 0 && currentQuestion === null;
+
+  useEffect(() => {
+    if (isFinished) {
+      void trackGameOver(modo, total);
+    }
+  }, [isFinished, modo, total]);
+
   const shouldBlockGameTouches = showCommentsModal || isShareOverlayVisible;
 
   return (
