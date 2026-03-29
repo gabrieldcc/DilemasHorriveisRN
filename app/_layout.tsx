@@ -6,7 +6,32 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
+import { initRemoteConfig } from '../src/services/RemoteConfigService';
+import { AnalyticsService } from '../src/services/AnalyticsService';
+import { resetSession } from '../src/utils/sessionManager';
+import { isFirstLaunch } from '../src/utils/firstLaunchManager';
 import { useFeatureFlagsStore } from '../src/store/featureFlagsStore';
+
+function getFirebaseErrorCode(error: unknown): string | null {
+  if (typeof error === 'object' && error !== null && 'code' in error && typeof error.code === 'string') {
+    return error.code;
+  }
+  return null;
+}
+
+function isPermissionDeniedError(error: unknown): boolean {
+  const code = getFirebaseErrorCode(error)?.toLowerCase() ?? '';
+  if (code.includes('permission-denied')) {
+    return true;
+  }
+
+  const message =
+    typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string'
+      ? error.message.toLowerCase()
+      : '';
+
+  return message.includes('missing or insufficient permissions');
+}
 
 export default function RootLayout() {
   const startListeningFeatureFlags = useFeatureFlagsStore((state) => state.startListening);
@@ -14,6 +39,11 @@ export default function RootLayout() {
 
   useEffect(() => {
     void initializeCrashlytics();
+    void initRemoteConfig();
+    resetSession();
+    void AnalyticsService.trackAppOpen();
+    void AnalyticsService.trackSessionStart();
+    void isFirstLaunch();
     startListeningFeatureFlags();
 
     const runFirebaseStartupCheck = async () => {
@@ -25,6 +55,14 @@ export default function RootLayout() {
           console.info('[Firebase] Startup check concluído com sucesso.');
         }
       } catch (error) {
+        if (isPermissionDeniedError(error)) {
+          logCrashlyticsMessage('Firebase startup check sem permissão (ignorado).');
+          if (__DEV__) {
+            console.warn('[Firebase] Startup check sem permissão. Verifique as regras do Firestore se isso nao for esperado.');
+          }
+          return;
+        }
+
         recordCrashlyticsError(error, 'Falha no Firebase startup check');
         if (__DEV__) {
           const message = error instanceof Error ? error.message : 'Erro desconhecido no startup check.';
@@ -54,7 +92,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="tutorial" options={{ title: 'Tutorial' }} />
-        <Stack.Screen name="game" options={{ title: 'Dilemas Horríveis' }} />
+        <Stack.Screen name="game" options={{ title: 'BadPick' }} />
         <Stack.Screen name="suggest" options={{ title: 'Sugerir dilema' }} />
         <Stack.Screen name="admin" options={{ title: 'Administrador' }} />
       </Stack>

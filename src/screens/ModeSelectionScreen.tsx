@@ -18,27 +18,27 @@ const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }>
   [ModoJogo.leve]: {
     icon: '🎲',
     subtitle: 'Dilemas descontraídos para aquecer o jogo.',
-    tag: 'ARENA 1',
+    tag: '',
   },
   [ModoJogo.pesado]: {
     icon: '🔥',
     subtitle: 'Escolhas tensas para grupos sem medo de debate.',
-    tag: 'ARENA 3',
+    tag: '',
   },
   [ModoJogo.nerd]: {
     icon: '🧠',
     subtitle: 'Conflitos de cultura pop, filmes, séries e tecnologia.',
-    tag: 'ARENA 2',
+    tag: '',
   },
   [ModoJogo.culturaBR]: {
     icon: '🇧🇷',
     subtitle: 'Referências brasileiras para debate em grupo.',
-    tag: 'ARENA BR',
+    tag: '',
   },
   [ModoJogo.adultos]: {
     icon: '🔞',
     subtitle: 'Dilemas para grupos adultos e debates sem filtro.',
-    tag: 'ARENA X',
+    tag: '',
   },
   [ModoJogo.favoritas]: {
     icon: '⭐',
@@ -208,8 +208,8 @@ export function ModeSelectionScreen() {
         <View style={styles.headerContainer}>
           <Pressable onPress={handleLogoTap} onLongPress={openAdminGate} delayLongPress={3000}>
             <View style={styles.logoWrap}>
-              <Text style={styles.logoTopLine}>DILEMAS</Text>
-              <Text style={styles.logoBottomLine}>Horríveis</Text>
+              <Text style={styles.logoTopLine}>Bad</Text>
+              <Text style={styles.logoBottomLine}>Pick</Text>
             </View>
           </Pressable>
         </View>
@@ -373,18 +373,22 @@ const styles = StyleSheet.create({
   },
   logoWrap: {
     alignItems: 'center',
+    flexDirection: 'row',
   },
   logoTopLine: {
     color: '#e2e8f0',
-    fontSize: 26,
-    letterSpacing: 3,
-    fontWeight: '500',
-    lineHeight: 30,
+      fontSize: 42,
+    lineHeight: 48,
+    fontStyle: 'italic',
+    fontWeight: '700',
     textAlign: 'center',
+    textShadowColor: 'rgba(34, 211, 238, 0.35)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 12,
   },
   logoBottomLine: {
     color: '#67e8f9',
-    fontSize: 46,
+    fontSize: 42,
     lineHeight: 48,
     fontStyle: 'italic',
     fontWeight: '700',

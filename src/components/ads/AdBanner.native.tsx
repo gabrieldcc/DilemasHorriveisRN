@@ -9,7 +9,7 @@ const BUILD_PROFILE =
     .toString()
     .toLowerCase();
 
-const ADS_ENABLED = BUILD_PROFILE === 'production' || BUILD_PROFILE === 'preview';
+const ADS_ENABLED = true;
 
 function getAdUnitId() {
   const configured = Platform.select({
@@ -29,11 +29,6 @@ function getAdUnitId() {
 
 export function AdBanner() {
   if (!ADS_ENABLED) {
-    return null;
-  }
-
-  // Expo Go does not include native AdMob modules.
-  if (Constants.appOwnership === 'expo') {
     return null;
   }
 
@@ -61,6 +56,10 @@ export function AdBanner() {
 
   if (!adUnitId) {
     return null;
+  }
+
+  if (__DEV__) {
+    console.info('[Ads][Banner] Rendering banner', { adUnitId, buildProfile: BUILD_PROFILE });
   }
 
   return (
