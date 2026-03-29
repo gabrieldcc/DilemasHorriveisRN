@@ -16,6 +16,7 @@ import {
   SugestaoStatus,
 } from '../services/questionsService';
 import { atualizarFeatureFlags } from '../services/featureFlagsService';
+import { getAppLanguage, getLanguageOverride, setLanguageOverride, SupportedAppLanguage } from '../services/languageService';
 import { useAdminStore } from '../store/adminStore';
 import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { CONTENT_GAME_MODES, getModoLabel } from '../utils/gameModes';
@@ -72,6 +73,8 @@ export function AdminScreen() {
   const featureFlags = useFeatureFlagsStore((state) => state.flags);
   const setFeatureFlagsLocal = useFeatureFlagsStore((state) => state.setFlagsLocal);
   const [featureToggleBusyKey, setFeatureToggleBusyKey] = useState<string | null>(null);
+  const [languageOverride, setLanguageOverrideState] = useState<SupportedAppLanguage | null>(getLanguageOverride());
+  const [languageBusy, setLanguageBusy] = useState(false);
 
   useEffect(() => {
     if (!isAdminUnlocked) {
@@ -236,6 +239,29 @@ export function AdminScreen() {
     const selected = SUGGESTION_FILTERS.find((item) => item.key === suggestionFilter);
     return t('admin.suggestionsTitle', { filter: selected?.label ?? t('admin.filter.all') });
   }, [suggestionFilter]);
+
+  const currentLanguageStateLabel = useMemo(() => {
+    const value = languageOverride ?? getAppLanguage();
+    if (value === 'pt') {
+      return 'Português';
+    }
+    if (value === 'es') {
+      return 'Español';
+    }
+    return 'English';
+  }, [languageOverride]);
+
+  const handleChangeLanguage = async (language: SupportedAppLanguage | null) => {
+    setLanguageBusy(true);
+    try {
+      await setLanguageOverride(language);
+      setLanguageOverrideState(language);
+    } catch (error) {
+      Alert.alert(t('admin.errorTitle'), error instanceof Error ? error.message : 'Could not change language.');
+    } finally {
+      setLanguageBusy(false);
+    }
+  };
 
   if (!isAdminUnlocked) {
     return (
@@ -503,6 +529,40 @@ export function AdminScreen() {
         {activeTab === 'features' ? (
           <>
             <Text style={styles.sectionTitle}>{t('admin.section.flags')}</Text>
+            <View style={styles.featureFlagCard}>
+              <View style={styles.featureFlagCopy}>
+                <Text style={styles.featureFlagTitle}>Idioma de teste</Text>
+                <Text style={styles.featureFlagSubtitle}>Force um idioma para testes no app. Use Automático para voltar ao idioma do dispositivo.</Text>
+              </View>
+              <View style={styles.filterWrap}>
+                {[
+                  { key: null, label: 'Automático' },
+                  { key: 'pt' as const, label: 'Português' },
+                  { key: 'en' as const, label: 'English' },
+                  { key: 'es' as const, label: 'Español' },
+                ].map((item) => {
+                  const selected = languageOverride === item.key;
+                  return (
+                    <Pressable
+                      key={item.label}
+                      onPress={() => void handleChangeLanguage(item.key)}
+                      disabled={languageBusy}
+                      style={({ pressed }) => [
+                        styles.filterButton,
+                        selected && styles.filterButtonSelected,
+                        pressed && styles.modeButtonPressed,
+                        languageBusy && styles.disabled,
+                      ]}
+                    >
+                      <Text style={[styles.filterButtonText, selected && styles.filterButtonTextSelected]}>{item.label}</Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+              <Text style={styles.featureFlagMeta}>
+                {`Idioma atual: ${currentLanguageStateLabel}${languageOverride ? ' (forçado)' : ' (automático)'}`}
+              </Text>
+            </View>
             <View style={styles.featureFlagCard}>
               <View style={styles.featureFlagHeader}>
                 <View style={styles.featureFlagCopy}>

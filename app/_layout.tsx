@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { initializeCrashlytics, logCrashlyticsMessage, recordCrashlyticsError } from '../src/services/crashlytics';
 import { getFirebaseFirestore } from '../src/services/firebase';
+import { hydrateLanguageOverride } from '../src/services/languageService';
 import { initRemoteConfig } from '../src/services/RemoteConfigService';
 import { AnalyticsService } from '../src/services/analyticsService';
 import { resetSession } from '../src/utils/sessionManager';
@@ -39,6 +40,7 @@ export default function RootLayout() {
   const stopListeningFeatureFlags = useFeatureFlagsStore((state) => state.stopListening);
 
   useEffect(() => {
+    void hydrateLanguageOverride();
     void initializeCrashlytics();
     void initRemoteConfig();
     resetSession();
