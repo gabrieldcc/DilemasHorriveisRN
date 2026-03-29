@@ -401,7 +401,7 @@ export const pt: Record<TranslationKey, string> = {
   'game.optionA': 'Opção A',
   'game.optionB': 'Opção B',
   'game.loadingQuestions': 'Carregando perguntas...',
-  'game.downloadApp': 'Baixe o app Dilemas Horríveis',
+  'game.downloadApp': 'Baixe o app BadPick',
   'game.commentsTitle': 'Comentários',
   'game.close': 'Fechar',
   'game.firstComment': 'Seja o primeiro a comentar esta pergunta.',

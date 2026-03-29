@@ -72,7 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
 
   return {
     ...config,
-    name: 'dilemas-horriveis-rn',
+    name: 'BadPick',
     slug: 'dilemas-horriveis-rn',
     scheme: 'dilemas-horriveis-rn',
     userInterfaceStyle: 'dark',
