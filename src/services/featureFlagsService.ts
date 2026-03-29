@@ -7,10 +7,21 @@ import { getFirebaseFirestore } from './firebase';
 
 const FEATURE_FLAGS_REF_PATH = ['config', 'feature_flags'] as const;
 
+function resolveBooleanFlag(data: Record<string, unknown> | undefined, key: keyof FeatureFlags): boolean {
+  return typeof data?.[key] === 'boolean' ? (data[key] as boolean) : DEFAULT_FEATURE_FLAGS[key];
+}
+
 function sanitizeFlags(data: Record<string, unknown> | undefined): FeatureFlags {
   return {
-    commentsEnabled:
-      typeof data?.commentsEnabled === 'boolean' ? data.commentsEnabled : DEFAULT_FEATURE_FLAGS.commentsEnabled,
+    commentsEnabled: resolveBooleanFlag(data, 'commentsEnabled'),
+    suggestButtonEnabled: resolveBooleanFlag(data, 'suggestButtonEnabled'),
+    modeLeveEnabled: resolveBooleanFlag(data, 'modeLeveEnabled'),
+    modePesadoEnabled: resolveBooleanFlag(data, 'modePesadoEnabled'),
+    modeNerdEnabled: resolveBooleanFlag(data, 'modeNerdEnabled'),
+    modeCulturaBREnabled: resolveBooleanFlag(data, 'modeCulturaBREnabled'),
+    modeAdultosEnabled: resolveBooleanFlag(data, 'modeAdultosEnabled'),
+    modeFavoritasEnabled: resolveBooleanFlag(data, 'modeFavoritasEnabled'),
+    modeComunidadeEnabled: resolveBooleanFlag(data, 'modeComunidadeEnabled'),
   };
 }
 

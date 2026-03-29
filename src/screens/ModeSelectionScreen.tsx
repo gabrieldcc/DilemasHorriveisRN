@@ -6,12 +6,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModeCard } from '../components/ModeCard';
 import { ScreenContainer } from '../components/ScreenContainer';
 import { hasSeenModeTutorial, hasSeenTutorial } from '../hooks/useTutorialGate';
+import { t } from '../i18n';
+import { FeatureFlags } from '../models/featureFlags';
 import { ModoJogo } from '../models/game';
 import { getUserProfile, saveUserProfile } from '../services/profileService';
 import { trackSelectGameType, trackSelectMode, trackSetName } from '../services/analyticsService';
 import { isAdminPinConfigured, useAdminStore } from '../store/adminStore';
+import { useFeatureFlagsStore } from '../store/featureFlagsStore';
 import { GAME_MODES, getModoLabel } from '../utils/gameModes';
-import { t } from '../i18n';
 
 type TipoPartida = 'classic' | 'infiltrado';
 
@@ -53,10 +55,21 @@ const MODE_UI: Record<ModoJogo, { icon: string; subtitle: string; tag: string }>
   },
 };
 
+const MODE_VISIBILITY_FLAG: Record<ModoJogo, keyof FeatureFlags> = {
+  [ModoJogo.leve]: 'modeLeveEnabled',
+  [ModoJogo.pesado]: 'modePesadoEnabled',
+  [ModoJogo.nerd]: 'modeNerdEnabled',
+  [ModoJogo.culturaBR]: 'modeCulturaBREnabled',
+  [ModoJogo.adultos]: 'modeAdultosEnabled',
+  [ModoJogo.favoritas]: 'modeFavoritasEnabled',
+  [ModoJogo.comunidade]: 'modeComunidadeEnabled',
+};
+
 export function ModeSelectionScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const unlockAdmin = useAdminStore((state) => state.unlock);
+  const featureFlags = useFeatureFlagsStore((state) => state.flags);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
   const [adminError, setAdminError] = useState<string | null>(null);
@@ -70,6 +83,8 @@ export function ModeSelectionScreen() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [showGameTypeModal, setShowGameTypeModal] = useState(false);
   const [pendingMode, setPendingMode] = useState<ModoJogo | null>(null);
+
+  const visibleModes = GAME_MODES.filter((mode) => featureFlags[MODE_VISIBILITY_FLAG[mode.value]]);
 
   useEffect(() => {
     let isMounted = true;
@@ -163,6 +178,9 @@ export function ModeSelectionScreen() {
     if (showProfileModal) {
       return;
     }
+    if (!featureFlags[MODE_VISIBILITY_FLAG[mode]]) {
+      return;
+    }
 
     void trackSelectMode(mode);
     setPendingMode(mode);
@@ -216,7 +234,7 @@ export function ModeSelectionScreen() {
         </View>
 
         <View style={styles.listContainer}>
-          {GAME_MODES.map((mode) => {
+          {visibleModes.map((mode) => {
             const ui = MODE_UI[mode.value as ModoJogo];
             return (
               <ModeCard
@@ -231,12 +249,14 @@ export function ModeSelectionScreen() {
           })}
         </View>
 
-        <Pressable
-          onPress={() => router.push('/suggest' as never)}
-          style={({ pressed }) => [styles.suggestButton, { marginBottom: insets.bottom + 16 }, pressed && styles.suggestButtonPressed]}
-        >
-          <Text style={styles.suggestButtonText}>{t('modeSelection.suggestNew')}</Text>
-        </Pressable>
+        {featureFlags.suggestButtonEnabled ? (
+          <Pressable
+            onPress={() => router.push('/suggest' as never)}
+            style={({ pressed }) => [styles.suggestButton, { marginBottom: insets.bottom + 16 }, pressed && styles.suggestButtonPressed]}
+          >
+            <Text style={styles.suggestButtonText}>{t('modeSelection.suggestNew')}</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
 
       <Modal visible={showAdminModal} transparent animationType="fade" onRequestClose={() => setShowAdminModal(false)}>

@@ -5,6 +5,8 @@ export const CONTENT_GAME_MODES: Array<{ value: ModoJogoConteudo }> = [
   { value: ModoJogo.leve },
   { value: ModoJogo.pesado },
   { value: ModoJogo.nerd },
+  { value: ModoJogo.culturaBR },
+  { value: ModoJogo.adultos },
 ];
 
 export const EXTRA_GAME_MODES = [

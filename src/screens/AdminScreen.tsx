@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
+import { FeatureFlags } from '../models/featureFlags';
 import { ModoJogo, ModoJogoConteudo, Pergunta } from '../models/game';
 import {
   adicionarPergunta,
@@ -45,6 +46,58 @@ function getSuggestionStatusLabel(status: SugestaoStatus): string {
   }
   return t('admin.filter.rejected');
 }
+
+const FEATURE_FLAG_CONTROLS: Array<{
+  key: keyof FeatureFlags;
+  title: string;
+  subtitle: string;
+}> = [
+  {
+    key: 'commentsEnabled',
+    title: t('admin.commentsFlagTitle'),
+    subtitle: t('admin.commentsFlagSubtitle'),
+  },
+  {
+    key: 'suggestButtonEnabled',
+    title: 'Botao sugerir dilemas',
+    subtitle: 'Mostra ou esconde o botao de enviar novos dilemas na tela inicial.',
+  },
+  {
+    key: 'modeLeveEnabled',
+    title: 'Modo Leve',
+    subtitle: 'Controla a exibicao do botao do modo Leve.',
+  },
+  {
+    key: 'modePesadoEnabled',
+    title: 'Modo Pesado',
+    subtitle: 'Controla a exibicao do botao do modo Pesado.',
+  },
+  {
+    key: 'modeNerdEnabled',
+    title: 'Modo Nerd',
+    subtitle: 'Controla a exibicao do botao do modo Nerd.',
+  },
+  {
+    key: 'modeCulturaBREnabled',
+    title: 'Modo Cultura BR',
+    subtitle: 'Controla a exibicao do botao do modo Cultura BR.',
+  },
+  {
+    key: 'modeAdultosEnabled',
+    title: 'Modo Adultos',
+    subtitle: 'Controla a exibicao do botao do modo Adultos.',
+  },
+  {
+    key: 'modeFavoritasEnabled',
+    title: 'Modo Favoritas',
+    subtitle: 'Controla a exibicao do botao do modo Favoritas.',
+  },
+  {
+    key: 'modeComunidadeEnabled',
+    title: 'Modo Comunidade',
+    subtitle: 'Controla a exibicao do botao do modo Comunidade.',
+  },
+];
 
 export function AdminScreen() {
   const router = useRouter();
@@ -261,6 +314,23 @@ export function AdminScreen() {
     } finally {
       setLanguageBusy(false);
     }
+  };
+
+  const handleToggleFeatureFlag = (key: keyof FeatureFlags, value: boolean) => {
+    if (featureToggleBusyKey) {
+      return;
+    }
+
+    const previous = featureFlags[key];
+    setFeatureFlagsLocal({ [key]: value });
+    setFeatureToggleBusyKey(key);
+
+    void atualizarFeatureFlags({ [key]: value })
+      .catch((error) => {
+        setFeatureFlagsLocal({ [key]: previous });
+        Alert.alert(t('admin.flagSaveErrorTitle'), error instanceof Error ? error.message : t('admin.flagSaveErrorBody'));
+      })
+      .finally(() => setFeatureToggleBusyKey(null));
   };
 
   if (!isAdminUnlocked) {
@@ -564,37 +634,31 @@ export function AdminScreen() {
               </Text>
             </View>
             <View style={styles.featureFlagCard}>
-              <View style={styles.featureFlagHeader}>
-                <View style={styles.featureFlagCopy}>
-                  <Text style={styles.featureFlagTitle}>{t('admin.commentsFlagTitle')}</Text>
-                  <Text style={styles.featureFlagSubtitle}>{t('admin.commentsFlagSubtitle')}</Text>
-                </View>
-                <Switch
-                  value={featureFlags.commentsEnabled}
-                  onValueChange={(value) => {
-                    if (featureToggleBusyKey) {
-                      return;
-                    }
+              {FEATURE_FLAG_CONTROLS.map((item) => {
+                const value = featureFlags[item.key];
+                const isBusy = featureToggleBusyKey === item.key;
 
-                    const previous = featureFlags.commentsEnabled;
-                    setFeatureFlagsLocal({ commentsEnabled: value });
-                    setFeatureToggleBusyKey('commentsEnabled');
-
-                    void atualizarFeatureFlags({ commentsEnabled: value })
-                      .catch((error) => {
-                        setFeatureFlagsLocal({ commentsEnabled: previous });
-                        Alert.alert(t('admin.flagSaveErrorTitle'), error instanceof Error ? error.message : t('admin.flagSaveErrorBody'));
-                      })
-                      .finally(() => setFeatureToggleBusyKey(null));
-                  }}
-                  disabled={featureToggleBusyKey === 'commentsEnabled'}
-                  trackColor={{ false: '#334155', true: '#0891b2' }}
-                  thumbColor={featureFlags.commentsEnabled ? '#ecfeff' : '#cbd5e1'}
-                />
-              </View>
-              <Text style={styles.featureFlagMeta}>
-                {t('admin.currentState', { state: featureFlags.commentsEnabled ? t('admin.enabled') : t('admin.disabled') })}
-              </Text>
+                return (
+                  <View key={item.key} style={styles.featureFlagItem}>
+                    <View style={styles.featureFlagHeader}>
+                      <View style={styles.featureFlagCopy}>
+                        <Text style={styles.featureFlagTitle}>{item.title}</Text>
+                        <Text style={styles.featureFlagSubtitle}>{item.subtitle}</Text>
+                      </View>
+                      <Switch
+                        value={value}
+                        onValueChange={(nextValue) => handleToggleFeatureFlag(item.key, nextValue)}
+                        disabled={isBusy}
+                        trackColor={{ false: '#334155', true: '#0891b2' }}
+                        thumbColor={value ? '#ecfeff' : '#cbd5e1'}
+                      />
+                    </View>
+                    <Text style={styles.featureFlagMeta}>
+                      {t('admin.currentState', { state: value ? t('admin.enabled') : t('admin.disabled') })}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
           </>
         ) : null}
@@ -893,6 +957,12 @@ const styles = StyleSheet.create({
     borderColor: '#1f2937',
     backgroundColor: '#0f172a',
     padding: 12,
+  },
+  featureFlagItem: {
+    gap: 6,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1e293b',
   },
   featureFlagHeader: {
     flexDirection: 'row',
