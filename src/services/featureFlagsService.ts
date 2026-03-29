@@ -2,6 +2,7 @@ import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { DEFAULT_FEATURE_FLAGS, FeatureFlags } from '../models/featureFlags';
 import { parseFirebaseError } from '../utils/firebaseError';
+import { getCurrentUid } from './authService';
 import { getFirebaseFirestore } from './firebase';
 
 const FEATURE_FLAGS_REF_PATH = ['config', 'feature_flags'] as const;
@@ -39,6 +40,7 @@ export function subscribeFeatureFlags(
 
 export async function atualizarFeatureFlags(partial: Partial<FeatureFlags>): Promise<void> {
   try {
+    await getCurrentUid();
     const db = getFirebaseFirestore();
     const ref = doc(db, ...FEATURE_FLAGS_REF_PATH);
     await setDoc(

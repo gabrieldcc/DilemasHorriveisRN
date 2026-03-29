@@ -248,6 +248,7 @@ export function ModeSelectionScreen() {
               onChangeText={setAdminPin}
               placeholder={t('modeSelection.pinPlaceholder')}
               placeholderTextColor="#64748b"
+              keyboardType="number-pad"
               secureTextEntry
               style={styles.modalInput}
             />

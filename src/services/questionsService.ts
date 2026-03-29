@@ -303,6 +303,7 @@ async function buscarPerguntasComunidade(language: ReturnType<typeof getAppLangu
 
 export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void> {
   try {
+    await getCurrentUid();
     const db = getFirebaseFirestore();
     const questionsRef = collection(db, 'perguntas', input.modo, 'itens');
     await addDoc(questionsRef, {
@@ -320,6 +321,7 @@ export async function removerPergunta(modo: ModoJogo, id: string): Promise<void>
     if (!isModoJogoConteudo(modo)) {
       throw new Error(t('error.question.invalidModeRemoval'));
     }
+    await getCurrentUid();
     const db = getFirebaseFirestore();
     await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
   } catch (error) {
@@ -433,6 +435,7 @@ export async function enviarSugestaoPergunta(input: SugestaoInput): Promise<void
 
 export async function buscarSugestoes(status?: SugestaoStatus): Promise<SugestaoPergunta[]> {
   try {
+    await getCurrentUid();
     const db = getFirebaseFirestore();
     const ref = collection(db, 'sugestoes');
     const snapshot = await getDocs(query(ref, orderBy('createdAt', 'desc'), limit(120)));
@@ -453,6 +456,7 @@ export async function buscarSugestoes(status?: SugestaoStatus): Promise<Sugestao
 
 export async function atualizarSugestaoPergunta(id: string, input: SugestaoAtualizacaoInput): Promise<void> {
   try {
+    await getCurrentUid();
     const normalized = normalizeSuggestionInput(input);
     const db = getFirebaseFirestore();
     await updateDoc(doc(db, 'sugestoes', id), {
