@@ -692,8 +692,8 @@ export function GameScreen() {
           <View style={styles.hiddenShareCanvas} pointerEvents="none">
             <View ref={shareTemplateRef} collapsable={false} style={styles.shareExportContainer}>
               <View style={styles.shareExportLogoWrap}>
-                <Text style={styles.shareExportLogoTop}>DILEMAS</Text>
-                <Text style={styles.shareExportLogoBottom}>Horríveis</Text>
+                <Text style={styles.shareExportLogoTop}>Bad</Text>
+                <Text style={styles.shareExportLogoBottom}>Pick</Text>
               </View>
               <View style={styles.shareExportCard}>
                 <Text style={styles.shareExportQuestion}>{currentQuestion.titulo}</Text>
@@ -1097,10 +1097,10 @@ const styles = StyleSheet.create({
   },
   shareExportLogoTop: {
     color: '#e2e8f0',
-    fontSize: 54,
+    fontSize: 68,
     letterSpacing: 6,
     fontWeight: '500',
-    lineHeight: 60,
+    lineHeight: 74,
     textAlign: 'center',
   },
   shareExportLogoBottom: {
