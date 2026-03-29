@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { ModoJogo, OpcaoEscolha } from '../models/game';
-import { alternarPerguntaFavorita, isPerguntaFavorita } from '../services/questionsService';
+import { alternarPerguntaFavorita, carregarFavoritosDoUsuario } from '../services/questionsService';
 import { useGameStore } from '../store/gameStore';
 
 export function useGame(modo: ModoJogo) {
@@ -18,6 +18,7 @@ export function useGame(modo: ModoJogo) {
   } = useGameStore();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadQuestions(modo);
@@ -28,32 +29,34 @@ export function useGame(modo: ModoJogo) {
   useEffect(() => {
     let isMounted = true;
 
-    const loadFavoriteStatus = async () => {
-      if (!currentQuestion) {
-        if (isMounted) {
-          setIsFavorite(false);
-        }
-        return;
-      }
-
+    const loadFavorites = async () => {
       try {
-        const favoriteStatus = await isPerguntaFavorita(currentQuestion);
+        const loaded = await carregarFavoritosDoUsuario();
         if (isMounted) {
-          setIsFavorite(favoriteStatus);
+          setFavoriteIds(loaded);
         }
       } catch {
         if (isMounted) {
-          setIsFavorite(false);
+          setFavoriteIds(new Set());
         }
       }
     };
 
-    void loadFavoriteStatus();
+    void loadFavorites();
 
     return () => {
       isMounted = false;
     };
-  }, [currentQuestion]);
+  }, []);
+
+  useEffect(() => {
+    if (!currentQuestion) {
+      setIsFavorite(false);
+      return;
+    }
+
+    setIsFavorite(favoriteIds.has(`${currentQuestion.modo}__${currentQuestion.id}`));
+  }, [currentQuestion, favoriteIds]);
 
   const selectOption = useCallback(
     (option: OpcaoEscolha) => {
@@ -66,9 +69,9 @@ export function useGame(modo: ModoJogo) {
     [selectedOption, setSelectedOption]
   );
 
-  const toggleFavorite = useCallback(async () => {
+  const toggleFavorite = useCallback(async (): Promise<boolean | null> => {
     if (!currentQuestion || isFavoriteLoading) {
-      return;
+      return null;
     }
 
     const previousValue = isFavorite;
@@ -78,15 +81,28 @@ export function useGame(modo: ModoJogo) {
     try {
       const nextValue = await alternarPerguntaFavorita(currentQuestion);
       setIsFavorite(nextValue);
+      setFavoriteIds((current) => {
+        const next = new Set(current);
+        const favoriteId = `${currentQuestion.modo}__${currentQuestion.id}`;
+        if (nextValue) {
+          next.add(favoriteId);
+        } else {
+          next.delete(favoriteId);
+        }
+        return next;
+      });
 
       if (modo === ModoJogo.favoritas && !nextValue) {
         await loadQuestions(modo, { force: true });
       }
+
+      return nextValue;
     } catch (error) {
       setIsFavorite(previousValue);
       if (__DEV__) {
         console.error('[useGame] Falha ao alternar favorito:', error);
       }
+      return null;
     } finally {
       setIsFavoriteLoading(false);
     }

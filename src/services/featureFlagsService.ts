@@ -1,4 +1,4 @@
-import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { DEFAULT_FEATURE_FLAGS, FeatureFlags } from '../models/featureFlags';
 import { parseFirebaseError } from '../utils/firebaseError';
@@ -14,28 +14,19 @@ function sanitizeFlags(data: Record<string, unknown> | undefined): FeatureFlags 
   };
 }
 
-export function subscribeFeatureFlags(
-  onData: (flags: FeatureFlags) => void,
-  onError?: (error: Error) => void
-): () => void {
-  const db = getFirebaseFirestore();
-  const ref = doc(db, ...FEATURE_FLAGS_REF_PATH);
-
-  return onSnapshot(
-    ref,
-    (snapshot) => {
-      if (!snapshot.exists()) {
-        onData(DEFAULT_FEATURE_FLAGS);
-        return;
-      }
-
-      onData(sanitizeFlags(snapshot.data() as Record<string, unknown>));
-    },
-    (error) => {
-      const parsed = new Error(parseFirebaseError(error));
-      onError?.(parsed);
+export async function fetchFeatureFlags(): Promise<FeatureFlags> {
+  try {
+    const db = getFirebaseFirestore();
+    const ref = doc(db, ...FEATURE_FLAGS_REF_PATH);
+    const snapshot = await getDoc(ref);
+    if (!snapshot.exists()) {
+      return DEFAULT_FEATURE_FLAGS;
     }
-  );
+
+    return sanitizeFlags(snapshot.data() as Record<string, unknown>);
+  } catch (error) {
+    throw new Error(parseFirebaseError(error));
+  }
 }
 
 export async function atualizarFeatureFlags(partial: Partial<FeatureFlags>): Promise<void> {

@@ -75,7 +75,9 @@ export default function RootLayout() {
       }
     };
 
-    void runFirebaseStartupCheck();
+    if (__DEV__) {
+      void runFirebaseStartupCheck();
+    }
 
     return () => {
       stopListeningFeatureFlags();

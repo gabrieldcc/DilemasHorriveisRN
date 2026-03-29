@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { DEFAULT_FEATURE_FLAGS, FeatureFlags } from '../models/featureFlags';
-import { subscribeFeatureFlags } from '../services/featureFlagsService';
+import { fetchFeatureFlags } from '../services/featureFlagsService';
 
 interface FeatureFlagsState {
   flags: FeatureFlags;
@@ -12,46 +12,40 @@ interface FeatureFlagsState {
   setFlagsLocal: (next: Partial<FeatureFlags>) => void;
 }
 
-let unsubscribeFn: (() => void) | null = null;
-
 export const useFeatureFlagsStore = create<FeatureFlagsState>((set, get) => ({
   flags: DEFAULT_FEATURE_FLAGS,
   isLoaded: false,
   error: null,
   startListening: () => {
-    if (unsubscribeFn) {
+    if (get().isLoaded) {
       return;
     }
 
-    unsubscribeFn = subscribeFeatureFlags(
-      (flags) => {
+    if (!get().isLoaded) {
+      set({ isLoaded: false });
+    }
+
+    void fetchFeatureFlags()
+      .then((flags) => {
         set({
           flags,
           isLoaded: true,
           error: null,
         });
-      },
-      (error) => {
+      })
+      .catch((error) => {
         set({
           flags: DEFAULT_FEATURE_FLAGS,
           isLoaded: true,
           error: error.message,
         });
         if (__DEV__) {
-          console.error('[FeatureFlags] Falha ao ouvir flags:', error);
+          console.error('[FeatureFlags] Falha ao carregar flags:', error);
         }
-      }
-    );
-
-    if (!get().isLoaded) {
-      set({ isLoaded: false });
-    }
+      });
   },
   stopListening: () => {
-    if (unsubscribeFn) {
-      unsubscribeFn();
-      unsubscribeFn = null;
-    }
+    // No-op: flags are fetched once per session to reduce recurring reads.
   },
   setFlagsLocal: (next) => {
     set((state) => ({

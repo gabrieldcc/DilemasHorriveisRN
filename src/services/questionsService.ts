@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   limit,
   orderBy,
   query,
@@ -20,6 +21,13 @@ import { isModoJogoConteudo } from '../utils/gameModes';
 import { resolveLocalizedField } from '../utils/localizedText';
 import { parseFirebaseError } from '../utils/firebaseError';
 import { getCurrentUid } from './authService';
+import {
+  clearCachedQuestionsForMode,
+  getContentVersion,
+  invalidateContentVersionsCache,
+  readCachedQuestions,
+  writeCachedQuestions,
+} from './contentCacheService';
 import { getFirebaseFirestore } from './firebase';
 import { getUserProfile } from './profileService';
 import { t } from '../i18n';
@@ -60,6 +68,8 @@ export interface SugestaoAtualizacaoInput {
   opcaoB: string;
   modoSugerido: ModoJogoConteudo;
 }
+
+const CONTENT_VERSIONS_PATH = ['config', 'content_versions'] as const;
 
 function mapPerguntaDoc(
   raw: Record<string, unknown>,
@@ -235,13 +245,22 @@ export async function buscarPerguntasPorModo(modo: ModoJogo): Promise<Pergunta[]
       return buscarPerguntasComunidade(language);
     }
 
+    const version = await getContentVersion(modo);
+    const cachedQuestions = await readCachedQuestions<Pergunta>(modo, language, version);
+    if (cachedQuestions) {
+      return cachedQuestions;
+    }
+
     const db = getFirebaseFirestore();
     const questionsRef = collection(db, 'perguntas', modo, 'itens');
     const snapshot = await getDocs(questionsRef);
 
-    return snapshot.docs.map((questionDoc) =>
+    const questions = snapshot.docs.map((questionDoc) =>
       mapPerguntaDoc(questionDoc.data() as Record<string, unknown>, language, questionDoc.id, modo)
     );
+
+    await writeCachedQuestions(modo, language, version, questions);
+    return questions;
   } catch (error) {
     if (__DEV__) {
       console.error(`[Firestore] Falha ao buscar perguntas do modo "${modo}".`, error);
@@ -301,6 +320,20 @@ async function buscarPerguntasComunidade(language: ReturnType<typeof getAppLangu
   return mapped.filter((item): item is Pergunta => item !== null);
 }
 
+async function bumpContentVersion(modo: ModoJogoConteudo): Promise<void> {
+  const db = getFirebaseFirestore();
+  await setDoc(
+    doc(db, ...CONTENT_VERSIONS_PATH),
+    {
+      [modo]: increment(1),
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true }
+  );
+  invalidateContentVersionsCache();
+  await clearCachedQuestionsForMode(modo);
+}
+
 export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void> {
   try {
     await getCurrentUid();
@@ -311,6 +344,7 @@ export async function adicionarPergunta(input: NovaPerguntaInput): Promise<void>
       opcaoA: input.opcaoA,
       opcaoB: input.opcaoB,
     });
+    await bumpContentVersion(input.modo);
   } catch (error) {
     throw new Error(parseFirebaseError(error));
   }
@@ -324,6 +358,7 @@ export async function removerPergunta(modo: ModoJogo, id: string): Promise<void>
     await getCurrentUid();
     const db = getFirebaseFirestore();
     await deleteDoc(doc(db, 'perguntas', modo, 'itens', id));
+    await bumpContentVersion(modo);
   } catch (error) {
     throw new Error(parseFirebaseError(error));
   }
@@ -336,6 +371,19 @@ export async function isPerguntaFavorita(pergunta: Pergunta): Promise<boolean> {
     const favoriteRef = doc(db, 'users', uid, 'favoritos', getFavoriteDocId(pergunta));
     const snapshot = await getDoc(favoriteRef);
     return snapshot.exists();
+  } catch (error) {
+    throw new Error(parseFirebaseError(error));
+  }
+}
+
+export async function carregarFavoritosDoUsuario(): Promise<Set<string>> {
+  try {
+    const db = getFirebaseFirestore();
+    const uid = await getCurrentUid();
+    const favoritesRef = collection(db, 'users', uid, 'favoritos');
+    const snapshot = await getDocs(favoritesRef);
+
+    return new Set(snapshot.docs.map((favoriteDoc) => favoriteDoc.id));
   } catch (error) {
     throw new Error(parseFirebaseError(error));
   }
@@ -534,6 +582,7 @@ export async function aprovarSugestaoPergunta(id: string, input?: SugestaoAtuali
       reviewedBy: uid,
       updatedAt: serverTimestamp(),
     });
+    await bumpContentVersion(mergedInput.modoSugerido);
   } catch (error) {
     if (error instanceof Error && !('code' in (error as object))) {
       throw error;

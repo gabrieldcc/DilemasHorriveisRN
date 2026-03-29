@@ -31,7 +31,6 @@ import {
   alternarLikeComentario,
   buscarComentariosPergunta,
   ComentarioPergunta,
-  contarComentariosPergunta,
   removerComentarioPergunta,
 } from '../services/commentsService';
 import { useGame } from '../hooks/useGame';
@@ -169,32 +168,7 @@ export function GameScreen() {
   }, [navigation, currentIndex, total, modo]);
 
   useEffect(() => {
-    let isMounted = true;
-    const loadCommentsCount = async () => {
-      if (!currentQuestion) {
-        if (isMounted) {
-          setCommentsCount(0);
-        }
-        return;
-      }
-
-      try {
-        const totalComments = await contarComentariosPergunta(currentQuestion);
-        if (isMounted) {
-          setCommentsCount(totalComments);
-        }
-      } catch {
-        if (isMounted) {
-          setCommentsCount(0);
-        }
-      }
-    };
-
-    void loadCommentsCount();
-
-    return () => {
-      isMounted = false;
-    };
+    setCommentsCount(0);
   }, [currentQuestion?.id, currentQuestion?.modo]);
 
   useEffect(() => {
@@ -260,7 +234,9 @@ export function GameScreen() {
     }
     favoriteScale.value = withSequence(withTiming(1.2, { duration: 110 }), withTiming(1, { duration: 110 }));
     void toggleFavorite().then((isNowFavorite) => {
-      if (currentQuestion) void trackToggleFavorite(currentQuestion, isNowFavorite);
+      if (currentQuestion && typeof isNowFavorite === 'boolean') {
+        void trackToggleFavorite(currentQuestion, isNowFavorite);
+      }
     });
   };
 
