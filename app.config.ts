@@ -2,6 +2,7 @@ import { ExpoConfig, ConfigContext } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.EAS_BUILD_PROFILE ?? process.env.EXPO_PUBLIC_BUILD_PROFILE ?? 'local';
+  const buildPlatform = (process.env.EAS_BUILD_PLATFORM ?? '').trim().toLowerCase();
   const plugins: ExpoConfig['plugins'] = ['expo-router'];
   plugins.push('@react-native-firebase/app');
   plugins.push('@react-native-firebase/crashlytics');
@@ -17,11 +18,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const androidAdmobAppId = isProductionBuild ? androidAdmobAppIdEnv : androidAdmobAppIdEnv || testAndroidAppId;
   const iosAdmobAppId = isProductionBuild ? iosAdmobAppIdEnv : iosAdmobAppIdEnv || testIosAppId;
 
-  if (isProductionBuild && !androidAdmobAppId) {
+  const validateAndroidAppId = !isProductionBuild ? false : buildPlatform ? buildPlatform === 'android' : true;
+  const validateIosAppId = !isProductionBuild ? false : buildPlatform ? buildPlatform === 'ios' : true;
+
+  if (validateAndroidAppId && !androidAdmobAppId) {
     throw new Error('EXPO_PUBLIC_ADMOB_ANDROID_APP_ID é obrigatório para build production.');
   }
 
-  if (isProductionBuild && !iosAdmobAppId) {
+  if (validateIosAppId && !iosAdmobAppId) {
     throw new Error('EXPO_PUBLIC_ADMOB_IOS_APP_ID é obrigatório para build production.');
   }
 
