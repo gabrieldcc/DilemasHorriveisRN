@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
 
 import { AnalyticsService } from './analyticsService';
+import { adsBuildProfile, shouldUseTestAdIds } from './adsRuntime';
 
 type AdEvents = {
   onLoaded?: () => void;
@@ -9,16 +9,9 @@ type AdEvents = {
   onError?: (error?: Error) => void;
 };
 
-const BUILD_PROFILE =
-  ((Constants.expoConfig?.extra as { buildProfile?: string } | undefined)?.buildProfile ??
-    process.env.EXPO_PUBLIC_BUILD_PROFILE ??
-    'local')
-    .toString()
-    .toLowerCase();
-
 // Habilita anúncios também em Dev Client; produção continua usando IDs reais se configurados.
 const ADS_ENABLED = true;
-const USE_TEST_IDS = BUILD_PROFILE !== 'production';
+const USE_TEST_IDS = shouldUseTestAdIds;
 
 let InterstitialAd: any;
 let AdEventType: any;
@@ -80,7 +73,7 @@ export async function initializeAds() {
   try {
     await mobileAds().initialize();
     if (__DEV__) {
-      console.info('[Ads] SDK inicializado.');
+      console.info('[Ads] SDK inicializado.', { buildProfile: adsBuildProfile, useTestIds: USE_TEST_IDS });
     }
     return true;
   } catch (error) {

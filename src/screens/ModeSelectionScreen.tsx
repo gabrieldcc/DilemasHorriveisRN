@@ -70,6 +70,7 @@ export function ModeSelectionScreen() {
   const insets = useSafeAreaInsets();
   const unlockAdmin = useAdminStore((state) => state.unlock);
   const featureFlags = useFeatureFlagsStore((state) => state.flags);
+  const featureFlagsLoaded = useFeatureFlagsStore((state) => state.isLoaded);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
   const [adminError, setAdminError] = useState<string | null>(null);
@@ -84,7 +85,9 @@ export function ModeSelectionScreen() {
   const [showGameTypeModal, setShowGameTypeModal] = useState(false);
   const [pendingMode, setPendingMode] = useState<ModoJogo | null>(null);
 
-  const visibleModes = GAME_MODES.filter((mode) => featureFlags[MODE_VISIBILITY_FLAG[mode.value]]);
+  const visibleModes = featureFlagsLoaded
+    ? GAME_MODES.filter((mode) => featureFlags[MODE_VISIBILITY_FLAG[mode.value]])
+    : [];
 
   useEffect(() => {
     let isMounted = true;
@@ -234,22 +237,24 @@ export function ModeSelectionScreen() {
         </View>
 
         <View style={styles.listContainer}>
-          {visibleModes.map((mode) => {
-            const ui = MODE_UI[mode.value as ModoJogo];
-            return (
-              <ModeCard
-                key={mode.value}
-                title={loadingMode === mode.value ? `${getModoLabel(mode.value as ModoJogo)}...` : getModoLabel(mode.value as ModoJogo)}
-                icon={ui?.icon}
-                subtitle={ui?.subtitle}
-                tag={ui?.tag}
-                onPress={() => void handleSelectMode(mode.value as ModoJogo)}
-              />
-            );
-          })}
+          {featureFlagsLoaded
+            ? visibleModes.map((mode) => {
+                const ui = MODE_UI[mode.value as ModoJogo];
+                return (
+                  <ModeCard
+                    key={mode.value}
+                    title={loadingMode === mode.value ? `${getModoLabel(mode.value as ModoJogo)}...` : getModoLabel(mode.value as ModoJogo)}
+                    icon={ui?.icon}
+                    subtitle={ui?.subtitle}
+                    tag={ui?.tag}
+                    onPress={() => void handleSelectMode(mode.value as ModoJogo)}
+                  />
+                );
+              })
+            : null}
         </View>
 
-        {featureFlags.suggestButtonEnabled ? (
+        {featureFlagsLoaded && featureFlags.suggestButtonEnabled ? (
           <Pressable
             onPress={() => router.push('/suggest' as never)}
             style={({ pressed }) => [styles.suggestButton, { marginBottom: insets.bottom + 16 }, pressed && styles.suggestButtonPressed]}

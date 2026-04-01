@@ -1,13 +1,6 @@
 import { Platform, StyleSheet, View } from 'react-native';
-import Constants from 'expo-constants';
 import { trackAdClick, trackAdImpression } from '../../services/analyticsService';
-
-const BUILD_PROFILE =
-  ((Constants.expoConfig?.extra as { buildProfile?: string } | undefined)?.buildProfile ??
-    process.env.EXPO_PUBLIC_BUILD_PROFILE ??
-    'local')
-    .toString()
-    .toLowerCase();
+import { adsBuildProfile, shouldUseTestAdIds } from '../../services/adsRuntime';
 
 const ADS_ENABLED = true;
 
@@ -52,14 +45,14 @@ export function AdBanner() {
     return null;
   }
 
-  const adUnitId = BUILD_PROFILE === 'production' ? getAdUnitId() : TestIds.BANNER;
+  const adUnitId = shouldUseTestAdIds ? TestIds.BANNER : getAdUnitId();
 
   if (!adUnitId) {
     return null;
   }
 
   if (__DEV__) {
-    console.info('[Ads][Banner] Rendering banner', { adUnitId, buildProfile: BUILD_PROFILE });
+    console.info('[Ads][Banner] Rendering banner', { adUnitId, buildProfile: adsBuildProfile, useTestIds: shouldUseTestAdIds });
   }
 
   return (
